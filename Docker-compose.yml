@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  mysql:
+    container_name: database-container
+    image: mysql:8.0
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql-data:/var/lib/mysql
+    networks:
+      service-net-app:
+  
+  accesses:
+    container_name: accesses-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/accesses
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=password
+    ports:
+      - "8080:8080"
+    networks:
+      service-net-app:
+    restart: on-failure
+
+networks:
+  service-net-app:
+
+volumes:
+  mysql-data:
