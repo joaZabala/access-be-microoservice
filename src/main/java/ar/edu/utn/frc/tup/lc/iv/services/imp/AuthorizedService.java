@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Service
 public class AuthorizedService {
-
     /**
      * Repository to access Authorized entities from the database.
      */

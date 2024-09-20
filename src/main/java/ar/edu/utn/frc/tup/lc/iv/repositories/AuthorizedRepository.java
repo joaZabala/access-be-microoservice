@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * repository of authorize.
+ * Repository of Authorized.
  */
 @Repository
 public interface AuthorizedRepository extends JpaRepository<AuthorizedEntity, Long> {

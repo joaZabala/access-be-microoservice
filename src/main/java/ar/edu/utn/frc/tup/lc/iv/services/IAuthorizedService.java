@@ -10,7 +10,6 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthorizedDTO;
  * It provides a method to retrieve all authorized persons.
  */
 public interface IAuthorizedService {
-
     /**
      * Retrieves a list of all authorized persons.
      * 
