@@ -32,7 +32,7 @@ public class AuthorizedService {
     /**
      * Retrieves all authorized entities from the repository and maps them to
      * a list of {@link AuthorizedDTO}.
-     * 
+     *
      * @return a list of AuthorizedDTO representing the authorized entities.
      */
     public List<AuthorizedDTO> getAuthorized() {

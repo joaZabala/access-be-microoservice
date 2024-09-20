@@ -12,7 +12,7 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthorizedDTO;
 public interface IAuthorizedService {
     /**
      * Retrieves a list of all authorized persons.
-     * 
+     *
      * @return A list of {@link AuthorizedDTO} representing all authorized persons.
      */
     List<AuthorizedDTO> getAuthorized();
