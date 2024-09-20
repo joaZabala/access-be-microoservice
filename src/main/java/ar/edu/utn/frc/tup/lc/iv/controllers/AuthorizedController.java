@@ -1,15 +1,16 @@
 package ar.edu.utn.frc.tup.lc.iv.controllers;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthorizedDTO;
+import ar.edu.utn.frc.tup.lc.iv.services.imp.AuthorizedService;
+
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +21,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/authorized")
 public class AuthorizedController {
+
+
+    /**
+     * Authorized Service dependency injection.
+     */
+    @Autowired
+    private AuthorizedService authorizedService;
+
     /**
      * Creates a new authorized person.
      * @param authorizedDto The DTO containing the details of
@@ -37,8 +46,7 @@ public class AuthorizedController {
      */
     @GetMapping
     public List<AuthorizedDTO> getAllAuthorized() {
-        // No implementation
-        return new ArrayList<>();
+        return authorizedService.getAuthorized();
     }
 
     /**

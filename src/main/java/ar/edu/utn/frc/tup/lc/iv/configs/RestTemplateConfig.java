@@ -7,13 +7,18 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
 
+
+/**
+ * Configuration class to define the RestTemplate bean.
+ * This configures the connection using RestTemplate.
+ */
 @Configuration
 public class RestTemplateConfig {
 
     /**
      * Creates and configures a RestTemplate bean.
      *
-     * @param restTemplateBuilder A builder provided by Spring Boot to create and configure RestTemplate instances.
+     * @param restTemplateBuilder RestTemplate Builder instance.
      * @return A fully configured RestTemplate instance.
      */
     @Bean
