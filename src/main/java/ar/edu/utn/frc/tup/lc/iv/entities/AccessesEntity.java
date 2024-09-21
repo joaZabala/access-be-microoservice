@@ -25,8 +25,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "Acceses")
-public class AccesesEntity extends AuditBaseEntity {
+@Table(name = "Accesses")
+public class AccessesEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Acceses.
      */
@@ -34,6 +34,12 @@ public class AccesesEntity extends AuditBaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "access_id")
     private Long accessId;
+    /**
+     * The authorized range associated.
+     */
+    @ManyToOne
+    @JoinColumn(name = "auth_range_id")
+    private AuthorizedRangesEntity authRange;
     /**
      * Date and time of entry to the neighborhood.
      */
@@ -60,6 +66,13 @@ public class AccesesEntity extends AuditBaseEntity {
      */
     @Column(name = "vehicle_description")
     private String vehicleDescription;
+    /**
+     * Visitor associated with the access.
+     */
+    @ManyToOne
+    @JoinColumn(name = "visitor_id")
+    private VisitorsEntity visitor;
+
     /**
      * Observations on access.
      */

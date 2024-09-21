@@ -14,7 +14,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 /**
  * Entity class representing the authorized ranges.
  * The authorized ranges define a time frame for which an
@@ -45,13 +48,8 @@ public class AuthorizedRangesEntity extends AuditBaseEntity {
      * Unique Authorized identifier.
      */
     @ManyToOne
-    @JoinColumn(name = "auth_id")
-    private AuthorizedEntity authorized;
-    /**
-     * Unique parcel identifier.
-     */
-    @Column(name = "parcel_id")
-    private Long parcelId;
+    @JoinColumn(name = "visitor_id")
+    private VisitorsEntity visitorId;
     /**
      * External ID to identify Suppliers, Employees, Owners and Cohabitants.
      */
@@ -61,10 +59,40 @@ public class AuthorizedRangesEntity extends AuditBaseEntity {
      * Date from to form the authorized range.
      */
     @Column(name = "date_from")
-    private LocalDateTime dateFrom;
+    private LocalDate dateFrom;
     /**
      * Date until to form the authorized range.
      */
     @Column(name = "date_to")
-    private LocalDateTime dateTo;
+    private LocalDate dateTo;
+    /**
+     * The start time of the authorized range.
+     */
+    @Column(name = "hour_from")
+    private LocalTime hourFrom;
+    /**
+     * The end time of the authorized range.
+     */
+    @Column(name = "hour_to")
+    private LocalTime hourTo;
+    /**
+     * Days of the week when access is allowed (Monday, Tuesday,...).
+     */
+    @Column(name = "days")
+    private String days;
+    /**
+     * Unique identifier of the plot associated with the range.
+     */
+    @Column(name = "plot_id")
+    private Long plotId;
+    /**
+     * Additional comments.
+     */
+    @Column(name = "comments")
+    private String comment;
+    /**
+     * Status indicating if the range is active.
+     */
+    @Column(name = "is_active")
+    private boolean isActive;
 }

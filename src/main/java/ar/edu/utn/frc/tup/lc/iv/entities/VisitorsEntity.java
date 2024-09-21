@@ -11,7 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 /**
  * Entity class representing an authorized person.
  * Each authorized person has personal details such as name,
@@ -22,15 +22,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "Authorized")
-public class AuthorizedEntity extends AuditBaseEntity {
+@Table(name = "Visitors")
+public class VisitorsEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Authorized.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "auth_id")
-    private Long authId;
+    @Column(name = "visitor_id")
+    private Long visitorId;
     /**
      * Name of the authorized person.
      */
@@ -50,7 +50,19 @@ public class AuthorizedEntity extends AuditBaseEntity {
      * Birth Date of the authorized person.
      */
     @Column(name = "birth_date")
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
+    /**
+     * Identifier of the owner who authorizes an operation.
+     */
+    @Column(name = "owner_id")
+    private Long ownerId;
+
+    /**
+     * If a visitor is active or not.
+     */
+    @Column(name = "is_active")
+    private boolean isActive;
+
     /**
      * Constant for the maximum length of the 'name' field.
      */
