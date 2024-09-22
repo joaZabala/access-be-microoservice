@@ -85,7 +85,7 @@ loadScripts(document, 'script');</script>
 <h1 title="Class AuthorizedController" class="title">Class AuthorizedController</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">ar.edu.utn.frc.tup.lc.iv.controllers.AuthorizedController</div>
+<div class="inheritance">ar.edu.utn.frc.tup.lc.iv.controllers.VisitorController</div>
 </div>
 <section class="class-description" id="class-description">
 <div class="horizontal-scroll">
@@ -126,23 +126,23 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createAuthorized(ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthorizedDTO)" class="member-name-link">createAuthorized</a><wbr>(<a href="../dtos/common/authorized/AuthorizedDTO.html" title="class in ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized">AuthorizedDTO</a>&nbsp;authorizedDto)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createAuthorized(ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthorizedDTO)" class="member-name-link">createAuthorized</a><wbr>(<a href="../dtos/common/authorized/AuthorizedDTO.html" title="class in ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor">AuthorizedDTO</a>&nbsp;visitorDto)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Creates a new authorized person.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../dtos/common/authorized/AuthorizedDTO.html" title="class in ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized">AuthorizedDTO</a>&gt;</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../dtos/common/authorized/AuthorizedDTO.html" title="class in ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor">AuthorizedDTO</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAllAuthorized()" class="member-name-link">getAllAuthorized</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Retrieves a list of all authorized persons.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../dtos/common/authorized/AuthorizedDTO.html" title="class in ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized">AuthorizedDTO</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../dtos/common/authorized/AuthorizedDTO.html" title="class in ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor">AuthorizedDTO</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAuthorizedById(java.lang.Long)" class="member-name-link">getAuthorizedById</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;authId)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Retrieves a specific authorized person by their ID.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateAuthorized(java.lang.Long,ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthorizedDTO)" class="member-name-link">updateAuthorized</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;authId,
- <a href="../dtos/common/authorized/AuthorizedDTO.html" title="class in ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized">AuthorizedDTO</a>&nbsp;authorizedDto)</code></div>
+ <a href="../dtos/common/authorized/AuthorizedDTO.html" title="class in ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor">AuthorizedDTO</a>&nbsp;visitorDto)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Updates an existing authorized person by their ID.</div>
 </div>
@@ -185,11 +185,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@PostMapping
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">createAuthorized</span><wbr><span class="parameters">(@RequestBody
- <a href="../dtos/common/authorized/AuthorizedDTO.html" title="class in ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized">AuthorizedDTO</a>&nbsp;authorizedDto)</span></div>
+ <a href="../dtos/common/authorized/AuthorizedDTO.html" title="class in ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor">AuthorizedDTO</a>&nbsp;visitorDto)</span></div>
 <div class="block">Creates a new authorized person.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>authorizedDto</code> - The DTO containing the details of
+<dd><code>visitorDto</code> - The DTO containing the details of
  the authorized person to create.</dd>
 </dl>
 </div>
@@ -200,7 +200,7 @@ loadScripts(document, 'script');</script>
 <h3>getAllAuthorized</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@GetMapping
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../dtos/common/authorized/AuthorizedDTO.html" title="class in ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized">AuthorizedDTO</a>&gt;</span>&nbsp;<span class="element-name">getAllAuthorized</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../dtos/common/authorized/AuthorizedDTO.html" title="class in ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor">AuthorizedDTO</a>&gt;</span>&nbsp;<span class="element-name">getAllAuthorized</span>()</div>
 <div class="block">Retrieves a list of all authorized persons.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -215,7 +215,7 @@ loadScripts(document, 'script');</script>
 <h3>getAuthorizedById</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@GetMapping("/{authId}")
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../dtos/common/authorized/AuthorizedDTO.html" title="class in ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized">AuthorizedDTO</a></span>&nbsp;<span class="element-name">getAuthorizedById</span><wbr><span class="parameters">(@PathVariable
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../dtos/common/authorized/AuthorizedDTO.html" title="class in ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor">AuthorizedDTO</a></span>&nbsp;<span class="element-name">getAuthorizedById</span><wbr><span class="parameters">(@PathVariable
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;authId)</span></div>
 <div class="block">Retrieves a specific authorized person by their ID.</div>
 <dl class="notes">
@@ -236,13 +236,13 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateAuthorized</span><wbr><span class="parameters">(@PathVariable
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;authId,
  @RequestBody
- <a href="../dtos/common/authorized/AuthorizedDTO.html" title="class in ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized">AuthorizedDTO</a>&nbsp;authorizedDto)</span></div>
+ <a href="../dtos/common/authorized/AuthorizedDTO.html" title="class in ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor">AuthorizedDTO</a>&nbsp;visitorDto)</span></div>
 <div class="block">Updates an existing authorized person by their ID.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>authId</code> - The unique identifier of the authorized
  person to update.</dd>
-<dd><code>authorizedDto</code> - The DTO containing the updated
+<dd><code>visitorDto</code> - The DTO containing the updated
  details of the authorized person.</dd>
 </dl>
 </div>

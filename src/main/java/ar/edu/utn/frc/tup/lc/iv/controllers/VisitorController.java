@@ -1,8 +1,10 @@
 package ar.edu.utn.frc.tup.lc.iv.controllers;
 
-import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthorizedDTO;
-import ar.edu.utn.frc.tup.lc.iv.services.imp.AuthorizedService;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequestDto;
+import ar.edu.utn.frc.tup.lc.iv.services.VisitorService;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,24 +21,24 @@ import java.util.List;
  * and update authorized persons.
  */
 @RestController
-@RequestMapping("/authorized")
-public class AuthorizedController {
-
+@RequestMapping("/visitor")
+public class VisitorController {
 
     /**
      * Authorized Service dependency injection.
      */
     @Autowired
-    private AuthorizedService authorizedService;
+    private VisitorService visitorService;
 
     /**
-     * Creates a new authorized person.
-     * @param authorizedDto The DTO containing the details of
+     * Creates a new visitor person.
+     * @param visitorRequest The DTO containing the details of
      * the authorized person to create.
+     * @return VisitorDto
      */
-    @PostMapping
-    public void createAuthorized(@RequestBody AuthorizedDTO authorizedDto) {
-        // No implementation
+    @PostMapping("/create")
+    public ResponseEntity<VisitorDTO> createVisitor(@RequestBody VisitorRequestDto visitorRequest) {
+        return ResponseEntity.ok(visitorService.createNewVisitor(visitorRequest));
     }
 
     /**
@@ -44,31 +46,30 @@ public class AuthorizedController {
      * @return A list of AuthorizedDto objects representing
      * all authorized persons.
      */
-    @GetMapping
-    public List<AuthorizedDTO> getAllAuthorized() {
-        return authorizedService.getAuthorized();
+    @GetMapping("/getAll")    public List<VisitorDTO> getAllVisitors() {
+        return visitorService.getAllVisitors();
     }
 
     /**
      * Retrieves a specific authorized person by their ID.
-     * @param authId The unique identifier of the authorized person.
+     * @param visitorId The unique identifier of the authorized person.
      * @return The AuthorizedDto object representing the authorized
      * person with the specified ID.
      */
-    @GetMapping("/{authId}")
-    public AuthorizedDTO getAuthorizedById(@PathVariable Long authId) {
+    @GetMapping("/{visitorId}")
+    public VisitorDTO getAuthorizedById(@PathVariable Long visitorId) {
         return null;
     }
 
     /**
      * Updates an existing authorized person by their ID.
-     * @param authId The unique identifier of the authorized
+     * @param visitorId The unique identifier of the authorized
      * person to update.
-     * @param authorizedDto The DTO containing the updated
+     * @param visitorDto The DTO containing the updated
      * details of the authorized person.
      */
-    @PutMapping("/{authId}")
-    public void updateAuthorized(@PathVariable Long authId, @RequestBody AuthorizedDTO authorizedDto) {
+    @PutMapping("/{visitorId}")
+    public void updateAuthorized(@PathVariable Long visitorId, @RequestBody VisitorDTO visitorDto) {
         // No implementation
     }
 }
