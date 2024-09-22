@@ -24,6 +24,10 @@ public class Acceses extends AuditBase {
      */
     private Long accessId;
     /**
+     * The authorized range associated with the access.
+     */
+    private Long authRangeId;
+    /**
      * Date and time of entry to the neighborhood.
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyy hh:mm:ss")
@@ -34,6 +38,10 @@ public class Acceses extends AuditBase {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyy hh:mm:ss")
     private LocalDateTime exitDate;
     /**
+     * Unique identifier for the vehicle type associated with the access.
+     */
+    private Long vehicleTypeId;
+    /**
      * Vehicle registration.
      */
     private String vehicleReg;
@@ -41,6 +49,10 @@ public class Acceses extends AuditBase {
      * Vehicle Description.
      */
     private String vehicleDescription;
+    /**
+     * Visitor associated with the access.
+     */
+    private Long visitorId;
     /**
      * Observations on access.
      */
