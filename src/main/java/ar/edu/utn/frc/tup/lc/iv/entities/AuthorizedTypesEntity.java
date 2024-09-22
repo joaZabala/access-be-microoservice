@@ -25,7 +25,7 @@ public class AuthorizedTypesEntity extends AuditBaseEntity {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "auth_type_id")
+    @Column(name = "id")
     private Long authTypeId;
     /**
      * Description of Authorized type.

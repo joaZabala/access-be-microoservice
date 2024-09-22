@@ -32,7 +32,7 @@ public class AccessesEntity extends AuditBaseEntity {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "access_id")
+    @Column(name = "id")
     private Long accessId;
     /**
      * The authorized range associated.

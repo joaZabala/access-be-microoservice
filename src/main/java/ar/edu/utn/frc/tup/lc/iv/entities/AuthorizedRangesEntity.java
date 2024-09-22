@@ -35,7 +35,7 @@ public class AuthorizedRangesEntity extends AuditBaseEntity {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "auth_range_id")
+    @Column(name = "id")
     private Long authRangeId;
     /**
      * Unique Authorized type identifier.

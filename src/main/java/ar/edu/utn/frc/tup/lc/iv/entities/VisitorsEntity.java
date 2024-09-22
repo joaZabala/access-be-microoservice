@@ -29,7 +29,7 @@ public class VisitorsEntity extends AuditBaseEntity {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "visitor_id")
+    @Column(name = "id")
     private Long visitorId;
     /**
      * Name of the authorized person.
