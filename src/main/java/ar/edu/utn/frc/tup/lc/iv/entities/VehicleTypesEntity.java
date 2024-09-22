@@ -25,7 +25,7 @@ public class VehicleTypesEntity extends AuditBaseEntity {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "vehicle_type_id")
+    @Column(name = "id")
     private Long vehicleTypeId;
     /**
      * Description of the vehicle Types.
