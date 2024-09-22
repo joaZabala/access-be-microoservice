@@ -2,11 +2,12 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorsRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthorizedDTO;
-import ar.edu.utn.frc.tup.lc.iv.repositories.AuthorizedRepository;
 import lombok.NoArgsConstructor;
 
 /**
@@ -21,7 +22,7 @@ public class AuthorizedService {
      * Repository to access Authorized entities from the database.
      */
     @Autowired
-    private AuthorizedRepository authorizedRepository;
+    private VisitorsRepository authorizedRepository;
 
     /**
      * ModelMapper for converting between entities and DTOs.
