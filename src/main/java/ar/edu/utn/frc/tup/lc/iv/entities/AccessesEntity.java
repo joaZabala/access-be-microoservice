@@ -76,6 +76,6 @@ public class AccessesEntity extends AuditBaseEntity {
     /**
      * Observations on access.
      */
-    @Column
+    @Column(name = "comment")
     private String comments;
 }

@@ -87,7 +87,7 @@ public class AuthorizedRangesEntity extends AuditBaseEntity {
     /**
      * Additional comments.
      */
-    @Column(name = "comments")
+    @Column(name = "comment")
     private String comment;
     /**
      * Status indicating if the range is active.
