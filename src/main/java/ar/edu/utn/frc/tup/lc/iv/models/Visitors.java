@@ -1,7 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
