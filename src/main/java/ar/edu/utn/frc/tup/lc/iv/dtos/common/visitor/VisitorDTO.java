@@ -18,7 +18,7 @@ public class VisitorDTO {
     /**
      * Unique identifier for the authorized person.
      */
-    private Long authId;
+    private Long ownerId;
 
     /**
      * First name of the authorized person. Maximum of 50 characters.

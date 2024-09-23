@@ -1,6 +1,5 @@
 package ar.edu.utn.frc.tup.lc.iv.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,7 +36,7 @@ public class Visitors  extends AuditBase {
     /**
      * Birth Date of the authorized person.
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyy")
+   // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyy")
     private LocalDate birthDate;
     /**
      * Identifier of the owner who authorizes an operation.

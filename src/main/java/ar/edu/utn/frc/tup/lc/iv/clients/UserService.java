@@ -1,9 +1,12 @@
 package ar.edu.utn.frc.tup.lc.iv.clients;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -33,9 +36,9 @@ public class UserService {
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             return response.getBody();
         } else if (response.getStatusCode().is4xxClientError()) {
-            throw new IllegalArgumentException("Owner with ID " + id + " does not exist");
+            throw new EntityNotFoundException("El usuario con el id " + id + " no existe");
         } else {
-            throw new IllegalArgumentException();
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
         }
 
     }

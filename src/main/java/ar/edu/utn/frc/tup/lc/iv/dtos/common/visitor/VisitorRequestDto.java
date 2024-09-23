@@ -39,5 +39,5 @@ public class VisitorRequestDto {
     /**
      *  id of the user that autorize.
      */
-    private Long idAuthorizedUser;
+    private Long ownerId;
 }

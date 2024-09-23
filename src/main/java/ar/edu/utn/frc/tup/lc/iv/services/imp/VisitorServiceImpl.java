@@ -14,8 +14,10 @@ import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorsRepository;
 import ar.edu.utn.frc.tup.lc.iv.services.VisitorService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import lombok.NoArgsConstructor;
+import org.springframework.web.client.HttpClientErrorException;
 
 /**
  * Service implementation for handling operations related to Authorized
@@ -37,7 +39,7 @@ public class VisitorServiceImpl implements VisitorService {
     @Autowired
     private ModelMapper modelMapper;
     /**
-     *  service of the user.
+     * service of the user.
      */
     @Autowired
     private UserService userService;
@@ -58,17 +60,20 @@ public class VisitorServiceImpl implements VisitorService {
     /**
      * Creates or updates a visitor.
      *
-     * @param  visitorRequestDto request DTO with visitor details.
+     * @param visitorRequestDto request DTO with visitor details.
      * @return the VisitorDTO with the authorization details.
      */
     @Override
     public VisitorDTO createNewVisitor(VisitorRequestDto visitorRequestDto) {
         VisitorsEntity existVisitordEntity =
                 visitorsRepository.findByDocNumber(visitorRequestDto.getDocNumber());
-        UserDto user = userService.getUserById(visitorRequestDto.getIdAuthorizedUser());
+
+        UserDto user = userService.getUserById(visitorRequestDto.getOwnerId());
+        if (user == null) {
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "El user no existe");
+        }
 
         VisitorsEntity visitorEntity;
-
         if (Objects.nonNull(existVisitordEntity)) {
             visitorEntity = existVisitordEntity;
         } else {
@@ -77,11 +82,11 @@ public class VisitorServiceImpl implements VisitorService {
         }
 
         visitorEntity.setName(visitorRequestDto.getName());
-        visitorEntity.setBirthDate(visitorRequestDto.getBirthDate());
         visitorEntity.setLastName(visitorRequestDto.getLastname());
         visitorEntity.setDocNumber(visitorRequestDto.getDocNumber());
+        visitorEntity.setBirthDate(visitorRequestDto.getBirthDate());
+        visitorEntity.setOwnerId(visitorRequestDto.getOwnerId());
         visitorEntity.setLastUpdatedDate(LocalDateTime.now());
-        visitorEntity.setCreatedUser(user.getId());
         return modelMapper.map(visitorsRepository.save(visitorEntity), VisitorDTO.class);
     }
 }

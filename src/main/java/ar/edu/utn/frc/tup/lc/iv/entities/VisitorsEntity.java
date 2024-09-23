@@ -1,5 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +13,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+
 /**
  * Entity class representing an authorized person.
  * Each authorized person has personal details such as name,
@@ -34,12 +36,12 @@ public class VisitorsEntity extends AuditBaseEntity {
     /**
      * Name of the authorized person.
      */
-    @Column(length = NAME_MAX_LENGTH)
+    @Column(length = NAME_MAX_LENGTH, name = "name")
     private String name;
     /**
      * LastName of the authorized person.
      */
-    @Column(length = LAST_NAME_MAX_LENGTH)
+    @Column(length = LAST_NAME_MAX_LENGTH, name = "lastname")
     private String lastName;
     /**
      * Document Number of the authorized person.
@@ -50,6 +52,7 @@ public class VisitorsEntity extends AuditBaseEntity {
      * Birth Date of the authorized person.
      */
     @Column(name = "birth_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
     /**
      * Identifier of the owner who authorizes an operation.
