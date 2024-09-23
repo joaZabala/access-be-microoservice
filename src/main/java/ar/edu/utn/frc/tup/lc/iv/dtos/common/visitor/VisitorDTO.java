@@ -14,7 +14,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Data
 public class VisitorDTO {
-
+    /**
+     * Unique identifier of the Authorized.
+     */
+    private Long visitorId;
     /**
      * Unique identifier for the authorized person.
      */
