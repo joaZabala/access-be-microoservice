@@ -66,6 +66,13 @@ public class AccessesEntity extends AuditBaseEntity {
      */
     @Column(name = "vehicle_description")
     private String vehicleDescription;
+
+    /**
+     * Identifier of the owner who authorizes an operation.
+     */
+    @Column(name = "owner_id")
+    private Long ownerId;
+
     /**
      * Visitor associated with the access.
      */

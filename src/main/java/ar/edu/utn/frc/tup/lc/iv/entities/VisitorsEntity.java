@@ -54,11 +54,6 @@ public class VisitorsEntity extends AuditBaseEntity {
     @Column(name = "birth_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
-    /**
-     * Identifier of the owner who authorizes an operation.
-     */
-    @Column(name = "owner_id")
-    private Long ownerId;
 
     /**
      * If a visitor is active or not.

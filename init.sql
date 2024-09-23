@@ -20,7 +20,6 @@ CREATE TABLE visitors(
     lastname VARCHAR(50) NOT NULL,
     doc_number INT,
     birth_date DATE,
-    owner_id BIGINT,
     is_active BOOLEAN NOT NULL,
     PRIMARY KEY (id)
 );
@@ -33,6 +32,7 @@ CREATE TABLE accesses (
     vehicle_type_id BIGINT,
     vehicle_reg VARCHAR(7),
     vehicle_description VARCHAR(100),
+    owner_id BIGINT,
     visitor_id BIGINT,
     comments VARCHAR(500),
     PRIMARY KEY (id),
@@ -62,10 +62,10 @@ INSERT INTO vehicle_types (description) VALUES ('Car'), ('Motorcycle'), ('Truck'
 
 INSERT INTO authorized_types (description) VALUES ('Employee'), ('Visitor'), ('Contractor');
 
-INSERT INTO visitors (name, lastname, doc_number, birth_date, owner_id, is_active)
-VALUES ('John', 'Doe', 123456, '1980-01-01',1, true),
-       ('Jane', 'Smith', 234567, '1990-02-02',2, true),
-       ('Bob', 'Brown', 345678, '1975-03-03',3, true);
+INSERT INTO visitors (name, lastname, doc_number, birth_date, is_active)
+VALUES ('John', 'Doe', 123456, '1980-01-01', true),
+       ('Jane', 'Smith', 234567, '1990-02-02', true),
+       ('Bob', 'Brown', 345678, '1975-03-03', true);
 
 INSERT INTO authorized_ranges (auth_type_id, visitor_id, plot_id, external_id, date_from, date_to, hour_from, hour_to,days, is_active)
 VALUES (1, 1, 1001, 2001, '2024-09-01', null,'08:00:00', '18:00:00', 'MONDAY-WEDNESDAY-FRIDAY', true),
