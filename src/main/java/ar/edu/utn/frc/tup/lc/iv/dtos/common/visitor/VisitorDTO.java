@@ -40,4 +40,9 @@ public class VisitorDTO {
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
+
+    /**
+     * If a visitor is active or not.
+     */
+    private boolean isActive;
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import java.util.List;
 
 /**
@@ -31,27 +32,31 @@ public class VisitorController {
     private VisitorService visitorService;
 
     /**
-     * Creates a new visitor person.
+     * Creates a new visitor or update person already existing.
+     *
      * @param visitorRequest The DTO containing the details of
-     * the authorized person to create.
+     *                       the authorized person to create.
      * @return VisitorDto
      */
-    @PostMapping("/create")
+    @PostMapping("/upsert")
     public ResponseEntity<VisitorDTO> createVisitor(@RequestBody VisitorRequestDto visitorRequest) {
-        return ResponseEntity.ok(visitorService.createNewVisitor(visitorRequest));
+        return ResponseEntity.ok(visitorService.saveOrUpdateVisitor(visitorRequest));
     }
 
     /**
      * Retrieves a list of all authorized persons.
+     *
      * @return A list of AuthorizedDto objects representing
      * all authorized persons.
      */
-    @GetMapping("/getAll")    public List<VisitorDTO> getAllVisitors() {
+    @GetMapping("/getAll")
+    public List<VisitorDTO> getAllVisitors() {
         return visitorService.getAllVisitors();
     }
 
     /**
      * Retrieves a specific authorized person by their ID.
+     *
      * @param visitorId The unique identifier of the authorized person.
      * @return The AuthorizedDto object representing the authorized
      * person with the specified ID.
@@ -63,10 +68,11 @@ public class VisitorController {
 
     /**
      * Updates an existing authorized person by their ID.
-     * @param visitorId The unique identifier of the authorized
-     * person to update.
+     *
+     * @param visitorId  The unique identifier of the authorized
+     *                   person to update.
      * @param visitorDto The DTO containing the updated
-     * details of the authorized person.
+     *                   details of the authorized person.
      */
     @PutMapping("/{visitorId}")
     public void updateAuthorized(@PathVariable Long visitorId, @RequestBody VisitorDTO visitorDto) {

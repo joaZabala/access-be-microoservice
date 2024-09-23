@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+
 /**
  * DTO for creating or updating an authorized person.
  */
@@ -37,7 +38,12 @@ public class VisitorRequestDto {
     private LocalDate birthDate;
 
     /**
-     *  id of the user that autorize.
+     * id of the user that autorize.
      */
     private Long ownerId;
+
+    /**
+     * If a visitor is active or not.
+     */
+    private boolean isActive;
 }

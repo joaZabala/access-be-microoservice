@@ -25,7 +25,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "Visitors")
-public class VisitorsEntity extends AuditBaseEntity {
+public class VisitorEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Authorized.
      */
@@ -60,6 +60,11 @@ public class VisitorsEntity extends AuditBaseEntity {
      */
     @Column(name = "is_active")
     private boolean isActive;
+    /**
+     * Identifier of the owner who authorizes an operation.
+     */
+    @Column(name = "owner_id")
+    private Long ownerId;
 
     /**
      * Constant for the maximum length of the 'name' field.

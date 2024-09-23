@@ -19,12 +19,12 @@ public interface VisitorService {
     List<VisitorDTO> getAllVisitors();
 
     /**
-     * Creates a new authorization based on the provided data.
+     * Creates a new visitor or update based on the provided data.
      *
      * @param authorizedRequestDto Object containing the necessary data
      *                             to create a new authorization.
      * @return An AuthorizedDTO object representing
      * the newly created authorization.
      */
-    VisitorDTO createNewVisitor(VisitorRequestDto authorizedRequestDto);
+    VisitorDTO saveOrUpdateVisitor(VisitorRequestDto authorizedRequestDto);
 }

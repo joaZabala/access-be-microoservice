@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Objects;
+
 /**
  * UserService communicates with the user microservice.
  */
@@ -35,7 +37,7 @@ public class UserService {
 
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             return response.getBody();
-        } else if (response.getStatusCode().is4xxClientError()) {
+        } else if (Objects.isNull(response.getBody())) {
             throw new EntityNotFoundException("El usuario con el id " + id + " no existe");
         } else {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
