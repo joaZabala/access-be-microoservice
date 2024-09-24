@@ -44,11 +44,8 @@ public class UserRestClient {
 
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             return response.getBody();
-        } else if (Objects.isNull(response.getBody())) {
-            throw new EntityNotFoundException("El usuario con el id " + id + " no existe");
         } else {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+            throw new EntityNotFoundException("El usuario con el id " + id + " no existe");
         }
-
     }
 }
