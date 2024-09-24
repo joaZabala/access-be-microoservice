@@ -78,7 +78,7 @@ public class AccessesEntity extends AuditBaseEntity {
      */
     @ManyToOne
     @JoinColumn(name = "visitor_id")
-    private VisitorsEntity visitor;
+    private VisitorEntity visitor;
 
     /**
      * Observations on access.
