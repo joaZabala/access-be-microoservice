@@ -31,7 +31,7 @@ public class VisitorDTO {
     /**
      * Last name of the authorized person. Maximum of 50 characters.
      */
-    private String lastname;
+    private String lastName;
 
     /**
      * Document number of the authorized person.
