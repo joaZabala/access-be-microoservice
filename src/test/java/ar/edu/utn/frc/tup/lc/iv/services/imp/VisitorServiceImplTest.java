@@ -12,10 +12,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -42,25 +39,32 @@ class VisitorServiceImplTest {
     }
     @Test
     void getAllVisitors() {
-
-        VisitorEntity visitorEntity = new VisitorEntity(1L,"juan","perez",40252203L
-                , LocalDate.now(),true,1L);
-
-        VisitorEntity visitorEntity1 = new VisitorEntity(1L,"joaquin","perez",40252255L
-                , LocalDate.now(),true,1L);
+        //given
+        VisitorEntity visitorEntity = new VisitorEntity(1L, "juan", "perez", 40252203L, LocalDate.now(), true, 1L);
+        VisitorEntity visitorEntity1 = new VisitorEntity(2L, "joaquin", "perez", 40252255L, LocalDate.now(), true, 1L);
 
         List<VisitorEntity> visitorEntityList = new ArrayList<>();
         visitorEntityList.add(visitorEntity);
         visitorEntityList.add(visitorEntity1);
 
-        Pageable pageable = PageRequest.of(0, 10);
+
+        // Creo un objeto Pageable
+        Pageable pageable = PageRequest.of(0, 10,
+                Sort.by("lastName")
+                        .and(Sort.by("name")));
+
+
         Page<VisitorEntity> visitorPage = new PageImpl<>(visitorEntityList, pageable, visitorEntityList.size());
 
-        when(visitorRepository.findAll(pageable)).thenReturn(visitorPage);
+        // when
+        when(visitorRepository.findAll(any(Pageable.class))).thenReturn(visitorPage);
 
-        List<VisitorDTO> listResult =  visitorService.getAllVisitors(0 , 10);
+        //then
+        List<VisitorDTO> listResult = visitorService.getAllVisitors(0, 10);
 
-        assertEquals(listResult.size() , 2);
+        assertEquals(2, listResult.size());
+        assertEquals("juan", listResult.get(0).getName());
+        assertEquals("joaquin", listResult.get(1).getName());
     }
 
     @Test
