@@ -3,7 +3,7 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.RegisterAuthorizationRangesDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthorizedRangesEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthorizedTypesEntity;
-import ar.edu.utn.frc.tup.lc.iv.entities.VisitorsEntity;
+import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthorizedRanges;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthorizedRangesRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +52,7 @@ public class AuthorizedRangesServiceTest {
         AuthorizedTypesEntity authorizedType = new AuthorizedTypesEntity();
         authorizedType.setAuthTypeId(1L);
         authorizedRangeEntity.setAuthType(authorizedType);
-        VisitorsEntity visitor = new VisitorsEntity();
+        VisitorEntity visitor = new VisitorEntity();
         visitor.setVisitorId(2L);
         authorizedRangeEntity.setVisitorId(visitor);
         authorizedRangeEntity.setExternalId(3L);
@@ -104,7 +104,7 @@ public class AuthorizedRangesServiceTest {
         AuthorizedTypesEntity authorizedType = new AuthorizedTypesEntity();
         authorizedType.setAuthTypeId(1L);
         authorizedRangeEntity.setAuthType(authorizedType);
-        VisitorsEntity visitor = new VisitorsEntity();
+        VisitorEntity visitor = new VisitorEntity();
         visitor.setVisitorId(2L);
         authorizedRangeEntity.setVisitorId(visitor);
         authorizedRangeEntity.setExternalId(3L);
