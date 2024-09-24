@@ -13,10 +13,11 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequestDto;
 public interface VisitorService {
     /**
      * Retrieves a list of all authorized persons.
-     *
+     * @param page the page number for pagination
+     * @param size the size of the page
      * @return A list of {@link VisitorDTO} representing all authorized persons.
      */
-    List<VisitorDTO> getAllVisitors();
+    List<VisitorDTO> getAllVisitors(int page, int size);
 
     /**
      * Creates a new visitor or update based on the provided data.

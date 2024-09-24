@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import ar.edu.utn.frc.tup.lc.iv.clients.UserDto;
-import ar.edu.utn.frc.tup.lc.iv.clients.UserService;
+import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequestDto;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
@@ -14,6 +14,9 @@ import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
 import ar.edu.utn.frc.tup.lc.iv.services.VisitorService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import lombok.NoArgsConstructor;
 
@@ -40,17 +43,22 @@ public class VisitorServiceImpl implements VisitorService {
      * service of the user.
      */
     @Autowired
-    private UserService userService;
+    private UserRestClient userRestClient;
 
     /**
      * Retrieves all authorized entities from the repository and maps them to
      * a list of {@link VisitorDTO}.
      *
-     * @return a list of AuthorizedDTO representing the authorized entities.
+     * @param page the number of the page to retrieve.
+     * @param size the number of records per page.
+     * @return a list of {@link VisitorDTO} representing the authorized entities.
      */
     @Override
-    public List<VisitorDTO> getAllVisitors() {
-        return visitorRepository.findAll().stream()
+    public List<VisitorDTO> getAllVisitors(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<VisitorEntity> visitorPage = visitorRepository.findAll(pageable);
+
+        return visitorPage.stream()
                 .map(entity -> modelMapper.map(entity, VisitorDTO.class))
                 .collect(Collectors.toList());
     }
@@ -66,7 +74,7 @@ public class VisitorServiceImpl implements VisitorService {
         VisitorEntity existVisitorEntity =
                 visitorRepository.findByDocNumber(visitorRequestDto.getDocNumber());
 
-        UserDto owner = userService.getUserById(visitorRequestDto.getOwnerId());
+        UserDto owner = userRestClient.getUserById(visitorRequestDto.getOwnerId());
 
         VisitorEntity visitorEntity;
         if (Objects.nonNull(existVisitorEntity)) {

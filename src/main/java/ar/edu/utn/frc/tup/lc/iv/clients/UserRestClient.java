@@ -3,6 +3,7 @@ package ar.edu.utn.frc.tup.lc.iv.clients;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,12 +17,18 @@ import java.util.Objects;
  */
 @NoArgsConstructor
 @Service
-public class UserService {
+public class UserRestClient {
     /**
      * Mapper for converting between models and DTOs.
      */
     @Autowired
     private RestTemplate restTemplate;
+
+    /**
+     * Resource url for comunicate with users.
+     */
+    @Value("${user.service.url}")
+    private String userServiceUrl;
 
     /**
      * Fetches user details by ID.
@@ -33,7 +40,7 @@ public class UserService {
     public UserDto getUserById(Long id) {
 
         ResponseEntity<UserDto> response =
-                restTemplate.getForEntity("https://retoolapi.dev/1iZtKu/data/" + id, UserDto.class);
+                restTemplate.getForEntity(userServiceUrl + "/" + id, UserDto.class);
 
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             return response.getBody();

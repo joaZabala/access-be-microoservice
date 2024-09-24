@@ -1,18 +1,21 @@
 package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import ar.edu.utn.frc.tup.lc.iv.clients.UserDto;
-import ar.edu.utn.frc.tup.lc.iv.clients.UserService;
+import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequestDto;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
-import ar.edu.utn.frc.tup.lc.iv.services.VisitorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,7 +31,7 @@ class VisitorServiceImplTest {
     private VisitorRepository visitorRepository;
 
     @MockBean
-    private UserService userService;
+    private UserRestClient userRestClient;
 
     @SpyBean
     private VisitorServiceImpl visitorService;
@@ -50,9 +53,12 @@ class VisitorServiceImplTest {
         visitorEntityList.add(visitorEntity);
         visitorEntityList.add(visitorEntity1);
 
-        when(visitorRepository.findAll()).thenReturn(visitorEntityList);
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<VisitorEntity> visitorPage = new PageImpl<>(visitorEntityList, pageable, visitorEntityList.size());
 
-        List<VisitorDTO> listResult =  visitorService.getAllVisitors();
+        when(visitorRepository.findAll(pageable)).thenReturn(visitorPage);
+
+        List<VisitorDTO> listResult =  visitorService.getAllVisitors(0 , 10);
 
         assertEquals(listResult.size() , 2);
     }
@@ -68,7 +74,7 @@ class VisitorServiceImplTest {
         when(visitorRepository.findByDocNumber(12345678L)).thenReturn(visitorEntity);
 
         UserDto userDto = new UserDto(1L,"Carlos Sainz");
-        when(userService.getUserById(1L)).thenReturn(userDto);
+        when(userRestClient.getUserById(1L)).thenReturn(userDto);
 
         VisitorEntity visitorEntitySave = new VisitorEntity(1L,"joaquin","zabala",12345678L,LocalDate.of(2005,3,17),true,1L);
         when(visitorRepository.save(any(VisitorEntity.class))).thenReturn(visitorEntitySave);
@@ -93,7 +99,7 @@ class VisitorServiceImplTest {
         when(visitorRepository.findByDocNumber(12345678L)).thenReturn(null);
 
         UserDto userDto = new UserDto(1L,"Carlos Sainz");
-        when(userService.getUserById(1L)).thenReturn(userDto);
+        when(userRestClient.getUserById(1L)).thenReturn(userDto);
 
         VisitorEntity visitorEntitySave = new VisitorEntity(1L,"joaquin","zabala",12345678L,LocalDate.of(2005,3,17),true,1L);
         when(visitorRepository.save(any(VisitorEntity.class))).thenReturn(visitorEntitySave);
