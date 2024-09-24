@@ -36,6 +36,7 @@ CREATE TABLE accesses (
     visitor_id BIGINT,
     comments VARCHAR(500),
     PRIMARY KEY (id),
+    FOREIGN KEY (visitor_id) REFERENCES visitors(id),
     FOREIGN KEY (vehicle_type_id) REFERENCES vehicle_types(id)
 );
 
@@ -58,9 +59,9 @@ CREATE TABLE authorized_ranges (
 );
 
 
-INSERT INTO vehicle_types (description) VALUES ('Car'), ('Motorcycle'), ('Truck');
+INSERT INTO vehicle_types (description) VALUES ('Automóvil'), ('Motocicleta'), ('Camión'), ('Utilitario'), ('Colectivo');
 
-INSERT INTO authorized_types (description) VALUES ('Employee'), ('Visitor'), ('Contractor');
+INSERT INTO authorized_types (description) VALUES ('Empleado'), ('Visitante'), ('Proveedor'), ('Dueño'), ('Trabajador') ;
 
 INSERT INTO visitors (name, lastname, doc_number, birth_date, is_active)
 VALUES ('John', 'Doe', 123456, '1980-01-01', true),
@@ -68,11 +69,15 @@ VALUES ('John', 'Doe', 123456, '1980-01-01', true),
        ('Bob', 'Brown', 345678, '1975-03-03', true);
 
 INSERT INTO authorized_ranges (auth_type_id, visitor_id, plot_id, external_id, date_from, date_to, hour_from, hour_to,days, is_active)
-VALUES (1, 1, 1001, 2001, '2024-09-01', null,'08:00:00', '18:00:00', 'MONDAY-WEDNESDAY-FRIDAY', true),
-       (2, 2, 1002, 2002, '2024-09-02', null, null, null,null, true),
-       (3, 3, 1003, 2003, '2024-09-03', '2024-12-31', null, null,null, true);
+VALUES (2, 1, 1001, null, '2024-09-01', null,'08:00:00', '18:00:00', 'MONDAY-WEDNESDAY-FRIDAY', true),
+       (2, 2, 1002, null, '2024-09-02', null, null, null,null, true),
+       (2, 3, 1003, null, '2024-09-03', '2024-12-31', null, null,null, true),
+       (1, null, null, 5, '2020-01-01', '2030-01-01', '08:00:00', '18:00:00','MONDAY-TUESDAY-WEDNESDAY-THURSDAY-FRIDAY', true);
 
-INSERT INTO accesses (auth_range_id, entry_date, exit_date, vehicle_type_id, vehicle_reg, vehicle_description, comments)
-VALUES (1, '2024-09-17 08:00:00', '2024-09-17 18:00:00', 1, 'ABC123', 'Toyota Corolla', 'No issues'),
-       (2, '2024-09-17 09:00:00', '2024-09-17 17:00:00', 2, 'XYZ789', 'Harley Davidson', 'Late entry'),
-       (3, '2024-09-17 10:00:00', '2024-09-17 16:00:00', 3, 'LMN456', 'Ford F150', 'Damaged gate on entry');
+INSERT INTO accesses (auth_range_id, entry_date, exit_date, vehicle_type_id, vehicle_reg, vehicle_description, comments, owner_id, visitor_id)
+VALUES (1, '2024-09-17 08:00:00', '2024-09-17 18:00:00', 1, 'ABC123', 'Toyota Corolla', 'No issues', 1, null),
+       (2, '2024-09-17 09:00:00', '2024-09-17 17:00:00', 2, 'XYZ789', 'Harley Davidson', 'Late entry', 1, null),
+       (3, '2024-09-17 10:00:00', '2024-09-17 16:00:00', 3, 'LMN456', 'Ford F150', 'Damaged gate on entry', null, null),
+       (null, '2024-09-22 10:00:00', '2024-09-22 16:00:00',1, 'ABC123', 'Toyota Corolla', 'No issues',1,1),
+       (4, '2024-09-23 07:58:05', '2024-09-23 17:59:23', 1, 'LKY852', 'Ford Fiesta', null, null,null),
+       (4, '2024-09-24 08:01:32', '2024-09-23 18:06:52', 1, 'LKY852', 'Ford Fiesta', null, null,null);

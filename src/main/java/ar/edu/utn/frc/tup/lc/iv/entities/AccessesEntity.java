@@ -1,17 +1,7 @@
 package ar.edu.utn.frc.tup.lc.iv.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Column;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 /**
@@ -26,9 +16,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "Accesses")
+@Getter
+@Setter
+//public class AccessesEntity extends AuditBaseEntity {
 public class AccessesEntity extends AuditBaseEntity {
     /**
-     * Unique identifier of the Acceses.
+     * Unique identifier of the Accesses.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,6 +76,6 @@ public class AccessesEntity extends AuditBaseEntity {
     /**
      * Observations on access.
      */
-    @Column(name = "comment")
+    @Column(name = "comments")
     private String comments;
 }
