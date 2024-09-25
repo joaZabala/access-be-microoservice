@@ -50,17 +50,17 @@ class VisitorControllerTest {
 
         when(visitorService.saveOrUpdateVisitor(visitorRequestDto)).thenReturn(visitorResponseDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/visitor/upsert")
+        mockMvc.perform(MockMvcRequestBuilders.put("/visitor")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(visitorRequestDto)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.visitorId").value(1L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.ownerId").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.visitor_id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.owner_id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Mario"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Cenna"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.docNumber").value(12345678L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.birthDate").value("01-01-1990"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.last_name").value("Cenna"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.doc_number").value(12345678L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.birth_date").value("01-01-1990"));
     }
 
     @Test
@@ -70,25 +70,25 @@ class VisitorControllerTest {
 
         when(visitorService.getAllVisitors(0, 10)).thenReturn(List.of(visitor1, visitor2));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/visitor/getAll")
+        mockMvc.perform(MockMvcRequestBuilders.get("/visitor")
                         .param("page", "0")
                         .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].visitorId").value(1L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].ownerId").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].visitor_id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].owner_id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Mario"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].lastName").value("Cenna"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].docNumber").value(12345678L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].birthDate").value("01-01-1990"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].active").value(true))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].visitorId").value(2L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].ownerId").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].last_name").value("Cenna"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].doc_number").value(12345678L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].birth_date").value("01-01-1990"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].is_active").value(true))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].visitor_id").value(2L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].owner_id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Mary"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].lastName").value("Jane"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].docNumber").value(87654321L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].birthDate").value("20-05-1985"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].active").value(false));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].last_name").value("Jane"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].doc_number").value(87654321L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].birth_date").value("20-05-1985"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].is_active").value(false));
     }
 }
