@@ -1,6 +1,7 @@
 package ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,35 +18,42 @@ public class VisitorDTO {
     /**
      * Unique identifier of the Authorized.
      */
+    @JsonProperty("visitor_id")
     private Long visitorId;
     /**
      * Unique identifier for the authorized person.
      */
+    @JsonProperty("owner_id")
     private Long ownerId;
 
     /**
      * First name of the authorized person. Maximum of 50 characters.
      */
+    @JsonProperty("name")
     private String name;
 
     /**
      * Last name of the authorized person. Maximum of 50 characters.
      */
+    @JsonProperty("last_name")
     private String lastName;
 
     /**
      * Document number of the authorized person.
      */
+    @JsonProperty("doc_number")
     private Long docNumber;
 
     /**
      * Birthdate of the authorized person.
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonProperty("birth_date")
     private LocalDate birthDate;
 
     /**
      * If a visitor is active or not.
      */
+    @JsonProperty("is_active")
     private boolean isActive;
 }
