@@ -75,4 +75,5 @@ public class VisitorEntity extends AuditBaseEntity {
      * Constant for the maximum length of the 'lastName' field.
      */
     public static final int LAST_NAME_MAX_LENGTH = 50;
+
 }
