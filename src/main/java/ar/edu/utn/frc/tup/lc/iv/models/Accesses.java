@@ -18,9 +18,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Acceses extends AuditBase {
+public class Accesses extends AuditBase {
     /**
-     * Unique identifier of the Acceses.
+     * Unique identifier of the Accesses.
      */
     private Long accessId;
     /**
@@ -40,7 +40,7 @@ public class Acceses extends AuditBase {
     /**
      * Unique identifier for the vehicle type associated with the access.
      */
-    private Long vehicleTypeId;
+    private VehicleTypes vehicleType;
     /**
      * Vehicle registration.
      */

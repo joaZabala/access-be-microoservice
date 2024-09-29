@@ -89,7 +89,7 @@ public class VisitorServiceImpl implements VisitorService {
         }
 
         visitorEntity.setName(visitorRequestDto.getName());
-        visitorEntity.setLastName(visitorRequestDto.getLastname());
+        visitorEntity.setLastName(visitorRequestDto.getLastName());
         visitorEntity.setDocNumber(visitorRequestDto.getDocNumber());
         visitorEntity.setBirthDate(visitorRequestDto.getBirthDate());
         visitorEntity.setOwnerId(owner.getId());

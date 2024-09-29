@@ -30,7 +30,7 @@ public class AuthorizedTypesEntity extends AuditBaseEntity {
     /**
      * Description of Authorized type.
      */
-    @Column(length = DESCRIPTION_MAX_LENGTH)
+    @Column(name = "description", length = DESCRIPTION_MAX_LENGTH)
     private String description;
     /**
      * Constant for the maximum length of the 'description' field.
