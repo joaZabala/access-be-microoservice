@@ -1,7 +1,21 @@
 package ar.edu.utn.frc.tup.lc.iv.entities;
 
-import jakarta.persistence.*;
-import lombok.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 
 import java.time.LocalDateTime;
 /**
@@ -61,10 +75,10 @@ public class AccessesEntity extends AuditBaseEntity {
     private String vehicleDescription;
 
     /**
-     * Identifier of the owner who authorizes an operation.
+     * Identifier of plot of related access.
      */
-    @Column(name = "owner_id")
-    private Long ownerId;
+    @Column(name = "plot_id")
+    private Long plotId;
 
     /**
      * Visitor associated with the access.
@@ -72,6 +86,12 @@ public class AccessesEntity extends AuditBaseEntity {
     @ManyToOne
     @JoinColumn(name = "visitor_id")
     private VisitorsEntity visitor;
+
+    /**
+     * Identifier of supplier employee.
+     */
+    @Column(name = "supplier_employee_id")
+    private Long supplierEmployeeId;
 
     /**
      * Observations on access.
