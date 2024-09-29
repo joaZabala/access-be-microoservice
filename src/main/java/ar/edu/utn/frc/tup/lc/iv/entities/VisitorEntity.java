@@ -13,7 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDate;
 
 /**
@@ -29,7 +28,7 @@ import java.time.LocalDate;
 @Table(name = "Visitors")
 @Getter
 @Setter
-public class VisitorsEntity extends AuditBaseEntity {
+public class VisitorEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Authorized.
      */
