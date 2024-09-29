@@ -26,7 +26,7 @@ public class VisitorRequestDto {
      * Last name of the authorized person. Maximum of 50 characters.
      */
     @JsonProperty("last_name")
-    private String lastname;
+    private String lastName;
 
     /**
      * Document number of the authorized person.
