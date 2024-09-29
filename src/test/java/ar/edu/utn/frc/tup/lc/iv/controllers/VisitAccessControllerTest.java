@@ -36,13 +36,13 @@ class VisitAccessControllerTest {
         when(visitAccessService.getVisitAccesses(1001L,
                 LocalDate.of(2024,1,1),
                 LocalDate.of (2024,12,31))).thenReturn(accessesList);
-        this.mockMvc.perform(get("/VisitAccess?plot=1001&date_from=2024-01-01&date_to=2024-12-31&visitor_id="))
+        this.mockMvc.perform(get("/visit-access?plot=1001&date_from=2024-01-01&date_to=2024-12-31&visitor_id="))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].last_name").value("Casona"));
         when(visitAccessService.getVisitAccessesByID(1001L, 1L,
                 LocalDate.of(2024,1,1),
                 LocalDate.of (2024,12,31))).thenReturn(accessesList);
-        this.mockMvc.perform(get("/VisitAccess?plot=1001&date_from=2024-01-01&date_to=2024-12-31&visitor_id=1"))
+        this.mockMvc.perform(get("/visit-access?plot=1001&date_from=2024-01-01&date_to=2024-12-31&visitor_id=1"))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].last_name").value("Casona"));
     }
