@@ -51,7 +51,7 @@ public class AuthorizedRangesEntity extends AuditBaseEntity {
      */
     @ManyToOne
     @JoinColumn(name = "visitor_id")
-    private VisitorsEntity visitorId;
+    private VisitorEntity visitorId;
     /**
      * External ID to identify Suppliers, Employees, Owners and Cohabitants.
      */
