@@ -41,7 +41,7 @@ class VisitorControllerTest {
         VisitorRequestDto visitorRequestDto = new VisitorRequestDto();
         visitorRequestDto.setOwnerId(1L);
         visitorRequestDto.setName("Mario");
-        visitorRequestDto.setLastname("Cenna");
+        visitorRequestDto.setLastName("Cenna");
         visitorRequestDto.setDocNumber(12345678L);
         visitorRequestDto.setBirthDate(LocalDate.of(1990, 1, 1));
 
