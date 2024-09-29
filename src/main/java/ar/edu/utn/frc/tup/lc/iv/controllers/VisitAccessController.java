@@ -14,7 +14,7 @@ import java.util.List;
  * Controller for managing visit access requests and responses.
  */
 @RestController
-@RequestMapping("/VisitAccess")
+@RequestMapping("/visit-access")
 public class VisitAccessController {
     /**
      * Visit Access Service dependency injection.

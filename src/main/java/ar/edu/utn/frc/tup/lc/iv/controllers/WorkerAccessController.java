@@ -14,7 +14,7 @@ import java.util.List;
  * Controller for managing worker access requests and responses.
  */
 @RestController
-@RequestMapping("/WorkerAccess")
+@RequestMapping("/worker-access")
 public class WorkerAccessController {
     /**
      * Worker Access Service dependency injection.

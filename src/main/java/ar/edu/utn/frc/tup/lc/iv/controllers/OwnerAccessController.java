@@ -14,7 +14,7 @@ import java.util.List;
  * Controller for managing owner access requests and responses.
  */
 @RestController
-@RequestMapping("/OwnerAccess")
+@RequestMapping("/owner-access")
 public class OwnerAccessController {
 
     /**

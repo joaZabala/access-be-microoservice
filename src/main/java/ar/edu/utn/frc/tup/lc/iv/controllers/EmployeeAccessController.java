@@ -16,7 +16,7 @@ import java.util.List;
  * and specified date range.
  */
 @RestController
-@RequestMapping("/EmployeeAccess")
+@RequestMapping("/employee-access")
 public class EmployeeAccessController {
 
     /**

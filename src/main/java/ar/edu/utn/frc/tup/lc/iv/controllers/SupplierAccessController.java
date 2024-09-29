@@ -14,7 +14,7 @@ import java.util.List;
  * Controller for managing supplier access requests and responses.
  */
 @RestController
-@RequestMapping("/SupplierAccess")
+@RequestMapping("/supplier-access")
 public class SupplierAccessController {
     /**
      * Supplier Access Service dependency injection.
