@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,7 +32,7 @@ class SupplierAccessServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this); // Initialize mocks
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -59,7 +58,7 @@ class SupplierAccessServiceTest {
                 .thenReturn(workerAccessDTO);
 
         List<WorkerAccessDTO> result = supplierAccessService.getSupplierAccessList(
-                "Trabajador", 123L, LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31));
+                "Proveedor", 123L, LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31));
 
         verify(supplierAccessRepository).getSupplierAccessesList(any(), any(), any(), any());
 
