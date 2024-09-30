@@ -4,11 +4,11 @@ import java.io.IOException;
 
 public interface IQRService {
     /**
-     * Genera un código QR para un visitante dado su número de documento.
+     * Generates a QR code with the information of a specific visitor.
      *
-     * @param docNumber Número de documento del visitante.
-     * @return URL de la imagen QR generada.
-     * @throws IOException si ocurre un error al generar el código QR.
+     * @param docNumber Document number of the visitor for whom the QR code should be generated.
+     * @return A byte array representing the QR code image in PNG format.
+     * @throws IOException If there is an issue while generating the QR code.
      */
     byte[] generateQrForVisitor(Long docNumber) throws IOException;
 }

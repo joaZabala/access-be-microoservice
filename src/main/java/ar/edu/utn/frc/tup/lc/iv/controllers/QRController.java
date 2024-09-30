@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
+/**
+ * Controller for handling QR code-related requests.
+ * This class exposes a REST API endpoint to generate QR codes for visitors based on their document number.
+ */
 @RestController
 @RequestMapping("/api/qr")
 public class QRController {
@@ -16,6 +20,12 @@ public class QRController {
     @Autowired
     private IQRService qrService;
 
+    /**
+     * Endpoint to generate a QR code for a visitor based on their document number.
+     *
+     * @param docNumber The document number of the visitor for whom the QR code should be generated.
+     * @return A ResponseEntity containing the QR code image in byte format, or an error response in case of failure.
+     */
     @GetMapping("/{docNumber}")
     public ResponseEntity<byte[]> generateQr(@PathVariable Long docNumber) {
         try {
