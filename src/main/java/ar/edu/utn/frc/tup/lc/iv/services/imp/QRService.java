@@ -16,15 +16,26 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 
+/**
+ * Implementation of the QR code generation service for visitors.
+ * This class uses the ZXing library to generate QR codes based on the information of a
+ * visitor stored in the database.
+ */
 @Service
 public class QRService implements IQRService {
 
     @Autowired
     private VisitorRepository visitorsRepository;
 
+    /**
+     * Generates a QR code with the information of a specific visitor.
+     *
+     * @param docNumber Document number of the visitor for whom the QR code should be generated.
+     * @return A byte array representing the QR code image in PNG format.
+     * @throws IOException If there is an issue while generating the QR code.
+     */
     @Override
     public byte[] generateQrForVisitor(Long docNumber) throws IOException {
-        // Busca al visitante en la base de datos
         VisitorEntity visitor = visitorsRepository.findByDocNumber(docNumber);
 
         if (visitor == null) {
@@ -35,12 +46,10 @@ public class QRService implements IQRService {
                 ", Apellido: " + visitor.getLastName() +
                 ", Documento: " + visitor.getDocNumber();
 
-        // Generar el código QR utilizando ZXing
         try {
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
             BitMatrix bitMatrix = qrCodeWriter.encode(qrData, BarcodeFormat.QR_CODE, 150, 150);
-
-            // Convertir el código QR a bytes
+            
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
             return outputStream.toByteArray();
