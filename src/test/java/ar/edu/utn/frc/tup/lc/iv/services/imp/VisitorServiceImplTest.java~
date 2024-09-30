@@ -38,14 +38,16 @@ class VisitorServiceImplTest {
         MockitoAnnotations.openMocks(this);
     }
     @Test
-    void getAllVisitors() {
+    void getAllVisitorsTest() {
         //given
-        VisitorEntity visitorEntity = new VisitorEntity(1L, "juan", "perez", 40252203L, LocalDate.now(), true, 1L);
-        VisitorEntity visitorEntity1 = new VisitorEntity(2L, "joaquin", "perez", 40252255L, LocalDate.now(), true, 1L);
+        VisitorEntity visitorEntity = new VisitorEntity(1L, "juan", "Perez", 40252203L, LocalDate.now(), true, 1L);
+        VisitorEntity visitorEntity1 = new VisitorEntity(2L, "joaquin", "Perez", 40252255L, LocalDate.now(), true, 1L);
+        VisitorEntity visitorEntity2 = new VisitorEntity(3L, "Sofia", "Zabala", 40589999L, LocalDate.now(), false, 1L);
 
         List<VisitorEntity> visitorEntityList = new ArrayList<>();
         visitorEntityList.add(visitorEntity);
         visitorEntityList.add(visitorEntity1);
+        visitorEntityList.add(visitorEntity2);
 
 
         // Creo un objeto Pageable
@@ -68,7 +70,7 @@ class VisitorServiceImplTest {
     }
 
     @Test
-    void saverOrUpdateVisitorExistingVisitor() {
+    void saverOrUpdateVisitorExistingVisitorTest() {
         //given
         VisitorRequestDto visitorRequestDto =
                 new VisitorRequestDto("joaquin","zabala",12345678L,LocalDate.of(2005,3,17),1L,true);
@@ -94,7 +96,7 @@ class VisitorServiceImplTest {
     }
 
     @Test
-    void saveOrUpdateVisitorNoExistVisitor() {
+    void saveOrUpdateVisitorNoExistVisitorTest() {
         //given
         VisitorRequestDto visitorRequestDto =
                 new VisitorRequestDto("joaquin","zabala",12345678L,LocalDate.of(2005,3,17),1L,true);
@@ -118,5 +120,34 @@ class VisitorServiceImplTest {
 
     }
 
+    @Test
+    void getBydocNumberTest() {
+        VisitorEntity visitorEntity = new VisitorEntity(1L, "juan", "perez", 40252203L, LocalDate.now(), true, 1L);
+        when(visitorRepository.findByDocNumber(40252203L)).thenReturn(visitorEntity);
 
+        VisitorDTO visitorDTO = visitorService.getVisitorByDocNumber(40252203L);
+        assertEquals(visitorEntity.getDocNumber(), visitorDTO.getDocNumber());
+    }
+
+    @Test
+    void getBydocNumberNoExistTest() {
+        when(visitorRepository.findByDocNumber(40252203L)).thenReturn(null);
+
+        VisitorDTO visitorDTO = visitorService.getVisitorByDocNumber(40252203L);
+        assertNull(visitorDTO);
+    }
+
+    @Test
+    void deleteVisitorTest() {
+        VisitorEntity visitorEntity = new VisitorEntity(1L, "juan", "perez", 40252203L, LocalDate.now(), true, 1L);
+        when(visitorRepository.findByDocNumber(40252203L)).thenReturn(visitorEntity);
+
+        VisitorEntity visitorEntitySave = new VisitorEntity(1L, "juan", "perez", 40252203L, LocalDate.now(), false, 1L);
+        when(visitorRepository.save(any(VisitorEntity.class))).thenReturn(visitorEntitySave);
+
+        VisitorDTO visitorDTO = visitorService.deleteVisitor(40252203L);
+
+        assertEquals(visitorEntity.getDocNumber(), visitorDTO.getDocNumber());
+        assertFalse(visitorDTO.isActive());
+    }
 }

@@ -122,7 +122,7 @@ class VisitorControllerTest {
         when(visitorService.deleteVisitor(12345678L)).thenReturn(visitorDTO);
 
         // hago la petición DELETE
-        mockMvc.perform(MockMvcRequestBuilders.delete("/visitor/deactivate/12345678")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/visitor/12345678")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())

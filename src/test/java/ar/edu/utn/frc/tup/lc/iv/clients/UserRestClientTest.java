@@ -9,6 +9,8 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -49,4 +51,33 @@ class UserRestClientTest {
         Assertions.assertEquals("El usuario con el id " + userDto.getId() + " no existe", exception.getMessage());
     }
 
+    @Test
+    void getAllUsers() {
+
+        UserDto[] userDtos = {
+                new UserDto(1L, "LMaldonado"),
+                new UserDto(2L, "AMartinez")
+        };
+
+        when(restTemplate.getForEntity("https://retoolapi.dev/1iZtKu/data", UserDto[].class))
+                .thenReturn(ResponseEntity.ok(userDtos));
+
+        List<UserDto> result = userRestClient.getAllUsers();
+
+        Assertions.assertEquals(2, result.size());
+        Assertions.assertEquals("LMaldonado", result.get(0).getUserName());
+        Assertions.assertEquals("AMartinez", result.get(1).getUserName());
+    }
+
+    @Test
+    void getAllUsersThrowsExceptionWhenNoUsersFound() {
+        when(restTemplate.getForEntity("https://retoolapi.dev/1iZtKu/data", UserDto[].class))
+                .thenReturn(ResponseEntity.ok(null));
+
+        EntityNotFoundException exception = Assertions.assertThrows(EntityNotFoundException.class, () -> {
+            userRestClient.getAllUsers();
+        });
+
+        Assertions.assertEquals("No existen usuarios", exception.getMessage());
+    }
 }

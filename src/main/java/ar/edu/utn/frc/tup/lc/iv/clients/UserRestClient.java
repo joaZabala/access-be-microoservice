@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 /**
  * UserService communicates with the user microservice.
  */
@@ -42,6 +44,23 @@ public class UserRestClient {
             return response.getBody();
         } else {
             throw new EntityNotFoundException("El usuario con el id " + id + " no existe");
+        }
+    }
+
+    /**
+     * fetches all users details.
+     *
+     * @return list of users.
+     */
+    public List<UserDto> getAllUsers() {
+
+        ResponseEntity<UserDto[]> users = restTemplate.getForEntity(userServiceUrl, UserDto[].class);
+
+        if (users.getStatusCode().is2xxSuccessful() && users.getBody() != null) {
+
+            return List.of(users.getBody());
+        } else {
+            throw new EntityNotFoundException("No existen usuarios");
         }
     }
 }
