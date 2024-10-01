@@ -11,8 +11,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import java.time.LocalDate;
 
 /**
@@ -26,8 +24,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "Visitors")
-@Getter
-@Setter
 public class VisitorEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Authorized.
@@ -78,4 +74,5 @@ public class VisitorEntity extends AuditBaseEntity {
      * Constant for the maximum length of the 'lastName' field.
      */
     public static final int LAST_NAME_MAX_LENGTH = 50;
+
 }
