@@ -7,11 +7,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import java.time.LocalDate;
 
 /**
@@ -25,6 +26,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "Visitors")
+@Getter
+@Setter
 public class VisitorEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Authorized.
@@ -36,12 +39,12 @@ public class VisitorEntity extends AuditBaseEntity {
     /**
      * Name of the authorized person.
      */
-    @Column(length = NAME_MAX_LENGTH, name = "name")
+    @Column(name = "name", length = NAME_MAX_LENGTH)
     private String name;
     /**
      * LastName of the authorized person.
      */
-    @Column(length = LAST_NAME_MAX_LENGTH, name = "lastname")
+    @Column(name = "lastname", length = LAST_NAME_MAX_LENGTH)
     private String lastName;
     /**
      * Document Number of the authorized person.

@@ -6,10 +6,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Entity class representing the types of vehicles.
  */
@@ -19,6 +22,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "Vehicle_Types")
+@Getter
+@Setter
 public class VehicleTypesEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Authorized Types.
@@ -30,8 +35,8 @@ public class VehicleTypesEntity extends AuditBaseEntity {
     /**
      * Description of the vehicle Types.
      */
-    @Column(length = DESCRIPTION_MAX_LENGTH)
-    private String description;
+    @Column(name = "description", length = DESCRIPTION_MAX_LENGTH)
+    private String carDescription;
     /**
      * Constant for the maximum length of the 'description' field.
      */
