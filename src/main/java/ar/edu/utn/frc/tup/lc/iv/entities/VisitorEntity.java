@@ -7,11 +7,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import java.time.LocalDate;
 
 /**
@@ -36,12 +35,12 @@ public class VisitorEntity extends AuditBaseEntity {
     /**
      * Name of the authorized person.
      */
-    @Column(length = NAME_MAX_LENGTH, name = "name")
+    @Column(name = "name", length = NAME_MAX_LENGTH)
     private String name;
     /**
      * LastName of the authorized person.
      */
-    @Column(length = LAST_NAME_MAX_LENGTH, name = "lastname")
+    @Column(name = "lastname", length = LAST_NAME_MAX_LENGTH)
     private String lastName;
     /**
      * Document Number of the authorized person.
@@ -75,4 +74,5 @@ public class VisitorEntity extends AuditBaseEntity {
      * Constant for the maximum length of the 'lastName' field.
      */
     public static final int LAST_NAME_MAX_LENGTH = 50;
+
 }
