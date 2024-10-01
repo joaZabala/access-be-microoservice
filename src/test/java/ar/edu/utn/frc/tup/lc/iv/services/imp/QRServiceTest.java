@@ -25,7 +25,7 @@ public class QRServiceTest {
     @Mock
     private VisitorRepository visitorRepository;
 
-    @Spy 
+    @Spy
     @InjectMocks
     private QRService qrService;
 
