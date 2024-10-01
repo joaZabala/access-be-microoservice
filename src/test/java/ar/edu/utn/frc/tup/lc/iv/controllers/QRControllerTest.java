@@ -38,11 +38,9 @@ public class QRControllerTest {
     void generateQrErrorTest() throws Exception {
 
         Long docNumber = 12345678L;
-
-        // Simulamos un error al generar el código QR.
+        
         when(qrService.generateQrForVisitor(docNumber)).thenThrow(new IOException("Error generating QR code"));
 
-        // Realizamos la solicitud y verificamos que se devuelva un código de estado 500.
         mockMvc.perform(get("/api/qr/{docNumber}", docNumber))
                 .andExpect(status().isInternalServerError());
     }
