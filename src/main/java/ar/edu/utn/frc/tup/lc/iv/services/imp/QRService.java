@@ -13,24 +13,35 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 
 /**
  * Implementation of the QR code generation service for visitors.
- * This class uses the ZXing library to generate QR codes based on the information of a
+ * This class uses the ZXing library to generate
+ * QR codes based on the information of a
  * visitor stored in the database.
  */
 @Service
 public class QRService implements IQRService {
+    /**
+     * Default constructor required by the AtLeastOneConstructor rule.
+     */
+    public QRService() {
+    }
 
+    /**
+     * Visitor Repository dependency injection.
+     */
     @Autowired
     private VisitorRepository visitorsRepository;
 
     /**
+     * const for a width ande height of a qr code.
+     */
+    private static final int WH = 150;
+    /**
      * Generates a QR code with the information of a specific visitor.
-     *
-     * @param docNumber Document number of the visitor for whom the QR code should be generated.
+     * @param docNumber Document number of the visitor
+     * for whom the QR code should be generated.
      * @return A byte array representing the QR code image in PNG format.
      * @throws IOException If there is an issue while generating the QR code.
      */
@@ -42,19 +53,19 @@ public class QRService implements IQRService {
             throw new IllegalArgumentException("No se encontró un visitante con el número de documento proporcionado.");
         }
 
-        String qrData = "Nombre: " + visitor.getName() +
-                ", Apellido: " + visitor.getLastName() +
-                ", Documento: " + visitor.getDocNumber();
+        String qrData = "Nombre: " + visitor.getName() + ", "
+                + "Apellido: " + visitor.getLastName() + ", "
+                + "Documento: " + visitor.getDocNumber();
 
         try {
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
-            BitMatrix bitMatrix = qrCodeWriter.encode(qrData, BarcodeFormat.QR_CODE, 150, 150);
+            BitMatrix bitMatrix = qrCodeWriter.encode(qrData, BarcodeFormat.QR_CODE, WH, WH);
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
             return outputStream.toByteArray();
         } catch (WriterException e) {
-            throw new IOException("Error al generar el código QR: " + e.getMessage());
+            throw new IOException("Error al generar el código QR: " + e);
         }
     }
 }

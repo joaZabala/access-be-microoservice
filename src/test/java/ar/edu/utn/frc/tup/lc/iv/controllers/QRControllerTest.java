@@ -30,7 +30,7 @@ public class QRControllerTest {
 
         when(qrService.generateQrForVisitor(docNumber)).thenReturn(qrCode);
 
-        mockMvc.perform(get("/api/qr/{docNumber}", docNumber))
+        mockMvc.perform(get("/qr/{docNumber}", docNumber))
                 .andExpect(status().isOk());
     }
 
@@ -41,7 +41,7 @@ public class QRControllerTest {
         
         when(qrService.generateQrForVisitor(docNumber)).thenThrow(new IOException("Error generating QR code"));
 
-        mockMvc.perform(get("/api/qr/{docNumber}", docNumber))
+        mockMvc.perform(get("/qr/{docNumber}", docNumber))
                 .andExpect(status().isInternalServerError());
     }
 }
