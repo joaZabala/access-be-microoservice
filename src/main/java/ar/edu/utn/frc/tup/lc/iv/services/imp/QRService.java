@@ -8,6 +8,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,23 +22,19 @@ import java.io.IOException;
  * visitor stored in the database.
  */
 @Service
+@NoArgsConstructor
 public class QRService implements IQRService {
     /**
-     * Default constructor required by the AtLeastOneConstructor rule.
-     */
-    public QRService() {
-    }
-
-    /**
-     * Visitor Repository dependency injection.
+     * Visitor Repository to inject dependency.
      */
     @Autowired
     private VisitorRepository visitorsRepository;
 
     /**
-     * const for a width ande height of a qr code.
+     * Constant for the width and height of a QR code.
      */
     private static final int WH = 150;
+
     /**
      * Generates a QR code with the information of a specific visitor.
      * @param docNumber Document number of the visitor
@@ -53,9 +50,9 @@ public class QRService implements IQRService {
             throw new IllegalArgumentException("No se encontró un visitante con el número de documento proporcionado.");
         }
 
-        String qrData = "Nombre: " + visitor.getName() + ", "
-                + "Apellido: " + visitor.getLastName() + ", "
-                + "Documento: " + visitor.getDocNumber();
+        String qrData = "Name: " + visitor.getName() + ", "
+                + "Last Name: " + visitor.getLastName() + ", "
+                + "Document: " + visitor.getDocNumber();
 
         try {
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
@@ -65,7 +62,7 @@ public class QRService implements IQRService {
             MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
             return outputStream.toByteArray();
         } catch (WriterException e) {
-            throw new IOException("Error al generar el código QR: " + e);
+            throw new IOException("Error generating QR code.", e); // Preserve the stack trace
         }
     }
 }
