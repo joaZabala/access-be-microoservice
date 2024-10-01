@@ -14,7 +14,7 @@ import java.io.IOException;
  * This class exposes a REST API endpoint to generate QR codes for visitors based on their document number.
  */
 @RestController
-@RequestMapping("/api/qr")
+@RequestMapping("/qr")
 public class QRController {
 
     @Autowired
