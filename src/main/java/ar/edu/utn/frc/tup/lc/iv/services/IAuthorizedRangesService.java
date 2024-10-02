@@ -26,5 +26,5 @@ public interface IAuthorizedRangesService {
      * @return {@code true} if there is a valid invitation for the specified document number,
      *         {@code false} otherwise
      */
-    Boolean HasInvitation(Long documentNumber);
+    Boolean hasInvitation(Long documentNumber);
 }
