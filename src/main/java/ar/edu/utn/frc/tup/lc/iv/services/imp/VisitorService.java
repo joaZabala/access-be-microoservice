@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import lombok.NoArgsConstructor;
 
@@ -79,7 +80,12 @@ public class VisitorService implements IVisitorService {
         VisitorEntity existVisitorEntity =
                 visitorRepository.findByDocNumber(visitorRequestDto.getDocNumber());
 
-        UserDto owner = userRestClient.getUserById(visitorRequestDto.getOwnerId());
+        ResponseEntity<UserDto> owner = userRestClient.getUserById(visitorRequestDto.getOwnerId());
+
+        if (!owner.getStatusCode().is2xxSuccessful()) {
+            throw new EntityNotFoundException("El usuario con el id " + visitorRequestDto.getOwnerId() + " no existe");
+        }
+        UserDto ownerDto = owner.getBody();
 
         VisitorEntity visitorEntity;
         if (Objects.nonNull(existVisitorEntity)) {
@@ -93,7 +99,8 @@ public class VisitorService implements IVisitorService {
         visitorEntity.setLastName(visitorRequestDto.getLastName());
         visitorEntity.setDocNumber(visitorRequestDto.getDocNumber());
         visitorEntity.setBirthDate(visitorRequestDto.getBirthDate());
-        visitorEntity.setOwnerId(owner.getId());
+        assert ownerDto != null;
+        visitorEntity.setOwnerId(ownerDto.getId());
         visitorEntity.setActive(visitorRequestDto.isActive());
         visitorEntity.setLastUpdatedDate(LocalDateTime.now());
         return modelMapper.map(visitorRepository.save(visitorEntity), VisitorDTO.class);

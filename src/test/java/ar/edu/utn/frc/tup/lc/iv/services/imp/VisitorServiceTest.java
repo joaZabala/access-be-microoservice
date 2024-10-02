@@ -15,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -46,7 +48,6 @@ class VisitorServiceTest {
         // Given
         VisitorEntity visitorEntity = new VisitorEntity(1L, "juan", "Perez", 40252203L, LocalDate.now(), true, 1L);
         VisitorEntity visitorEntity1 = new VisitorEntity(2L, "joaquin", "Perez", 40252255L, LocalDate.now(), true, 1L);
-       // VisitorEntity visitorEntity2 = new VisitorEntity(2L, "joaquin", "Perez", 40252288L, LocalDate.now(), false, 1L);
 
         List<VisitorEntity> visitorEntityList = Arrays.asList(visitorEntity, visitorEntity1);
 
@@ -78,7 +79,7 @@ class VisitorServiceTest {
         when(visitorRepository.findByDocNumber(12345678L)).thenReturn(visitorEntity);
 
         UserDto userDto = new UserDto(1L,"Carlos Sainz");
-        when(userRestClient.getUserById(1L)).thenReturn(userDto);
+        when(userRestClient.getUserById(1L)).thenReturn(ResponseEntity.ok(userDto));
 
         VisitorEntity visitorEntitySave = new VisitorEntity(1L,"joaquin","zabala",12345678L,LocalDate.of(2005,3,17),true,1L);
         when(visitorRepository.save(any(VisitorEntity.class))).thenReturn(visitorEntitySave);
@@ -103,7 +104,7 @@ class VisitorServiceTest {
         when(visitorRepository.findByDocNumber(12345678L)).thenReturn(null);
 
         UserDto userDto = new UserDto(1L,"Carlos Sainz");
-        when(userRestClient.getUserById(1L)).thenReturn(userDto);
+        when(userRestClient.getUserById(1L)).thenReturn(ResponseEntity.ok(userDto));
 
         VisitorEntity visitorEntitySave = new VisitorEntity(1L,"joaquin","zabala",12345678L,LocalDate.of(2005,3,17),true,1L);
         when(visitorRepository.save(any(VisitorEntity.class))).thenReturn(visitorEntitySave);
@@ -115,6 +116,19 @@ class VisitorServiceTest {
         VisitorDTO visitorDTOResult = visitorService.saveOrUpdateVisitor(visitorRequestDto);
 
         assertEquals(visitorDTOExpected , visitorDTOResult);
+
+    }
+
+    @Test
+    void saveOrUpdateVisitorNoExistOwnerTest(){
+        VisitorRequestDto visitorRequestDto =new VisitorRequestDto();
+        visitorRequestDto.setDocNumber(12345678L);
+        visitorRequestDto.setOwnerId(11L);
+
+        when(visitorRepository.findByDocNumber(12345678L)).thenReturn(null);
+        when(userRestClient.getUserById(11L)).thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+
+        assertThrows(EntityNotFoundException.class, () -> visitorService.saveOrUpdateVisitor(visitorRequestDto));
 
     }
 
