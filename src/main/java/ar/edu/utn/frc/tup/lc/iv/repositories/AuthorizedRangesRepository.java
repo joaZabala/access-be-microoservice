@@ -15,13 +15,14 @@ import java.time.LocalTime;
 @Service
 public interface AuthorizedRangesRepository extends JpaRepository<AuthorizedRangesEntity, Long> {
     @Query("SELECT CASE WHEN COUNT(ac) > 0 THEN true ELSE false END " +
-            "FROM AccessControl ac " +
-            "WHERE ac.IsActive " +
-            "AND (:startDate IS NULL OR (ac.StartDate IS NULL OR ac.StartDate <= :startDate) " +
-            "AND (ac.EndDate IS NULL OR ac.EndDate >= :startDate)) " +
-            "AND (:startHour IS NULL OR (ac.StartHour IS NULL OR ac.StartHour <= :startHour) " +
-            "AND (ac.EndHour IS NULL OR ac.EndHour >= :startHour)) " +
-            "AND ac.DocumentNumber = :documentNumber " +
+            "FROM AuthorizedRangesEntity ac " +
+            "LEFT JOIN ac.visitorId v " +
+            "WHERE ac.isActive = true " +
+            "AND (:startDate IS NULL OR (ac.dateFrom IS NULL OR ac.dateFrom <= :startDate) " +
+            "AND (ac.dateTo IS NULL OR ac.dateTo >= :startDate)) " +
+            "AND (:startHour IS NULL OR (ac.hourFrom IS NULL OR ac.hourFrom <= :startHour) " +
+            "AND (ac.hourTo IS NULL OR ac.hourTo >= :startHour)) " +
+            "AND v.docNumber = :documentNumber " +
             "AND (:day IS NULL OR ac.days LIKE CONCAT('%', :day, '%'))")
     boolean hasInvitation(
             @Param("startDate") LocalDate startDate,
@@ -30,3 +31,4 @@ public interface AuthorizedRangesRepository extends JpaRepository<AuthorizedRang
             @Param("day") String day
     );
 }
+
