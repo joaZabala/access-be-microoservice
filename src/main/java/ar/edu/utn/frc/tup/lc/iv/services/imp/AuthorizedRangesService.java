@@ -49,19 +49,23 @@ public class AuthorizedRangesService implements IAuthorizedRangesService {
         if (authorizedRangeDTO == null) {
             throw new IllegalArgumentException("AuthorizedRangeDTO must not be null");
         }
+
         AuthorizedRangesEntity authorizedRangeEntity = modelMapper.map(authorizedRangeDTO, AuthorizedRangesEntity.class);
         authorizedRangeEntity.setActive(true);
-        if (authorizedRangeDTO.getDayOfWeeks() != null) {
+        if (authorizedRangeDTO.getDayOfWeeks() != null && !authorizedRangeDTO.getDayOfWeeks().isEmpty()) {
 
             String daysString = authorizedRangeDTO.getDayOfWeeks().stream()
                     .map(DayOfWeek::name)
                     .collect(Collectors.joining("-"));
 
             authorizedRangeEntity.setDays(daysString);
+
+        } else {
+            authorizedRangeEntity.setDays(null);
         }
 
         AuthorizedRangesEntity auhorizedRange = authorizedRangesRepository.save(authorizedRangeEntity);
 
-        return modelMapper.map(auhorizedRange, AuthorizedRanges.class);
+        return new AuthorizedRanges(auhorizedRange);
     }
 }

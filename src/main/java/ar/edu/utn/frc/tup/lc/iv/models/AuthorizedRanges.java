@@ -1,5 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.models;
 
+import ar.edu.utn.frc.tup.lc.iv.entities.AuthorizedRangesEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -76,5 +77,25 @@ public class AuthorizedRanges extends AuditBase {
      * Indicates whether the authorization is currently active.
      */
     private boolean isActive;
-
+    /**
+     * Constructor that initializes AuthorizedRanges from AuthorizedRangesEntity.
+     *
+     * @param authorizedRangesEntity the AuthorizedRangesEntity object
+     */
+    public AuthorizedRanges(AuthorizedRangesEntity authorizedRangesEntity) {
+        this.authRangeId = authorizedRangesEntity.getAuthRangeId();
+        this.authType = authorizedRangesEntity.getAuthType() != null
+                ? authorizedRangesEntity.getAuthType().getAuthTypeId() : null;
+        this.visitorId = authorizedRangesEntity.getVisitorId() != null
+                ? authorizedRangesEntity.getVisitorId().getVisitorId() : null;
+        this.externalId = authorizedRangesEntity.getExternalId();
+        this.dateFrom = authorizedRangesEntity.getDateFrom();
+        this.dateTo = authorizedRangesEntity.getDateTo();
+        this.hourFrom = authorizedRangesEntity.getHourFrom();
+        this.hourTo = authorizedRangesEntity.getHourTo();
+        this.days = authorizedRangesEntity.getDays();
+        this.plotId = authorizedRangesEntity.getPlotId();
+        this.comment = authorizedRangesEntity.getComment();
+        this.isActive = authorizedRangesEntity.isActive();
+    }
 }
