@@ -58,14 +58,12 @@ public class VisitorService implements IVisitorService {
     @Override
     public List<VisitorDTO> getAllVisitors(int page, int size) {
         Pageable pageable = PageRequest.of(page, size,
-                Sort.by("lastName")
-                        .and(Sort.by("name")));
+                Sort.by("lastName").and(Sort.by("name")));
 
-        Page<VisitorEntity> visitorPage =
-                visitorRepository.findAll(pageable);
+        Page<VisitorEntity> visitorPage = visitorRepository.findAllByActive(true, pageable);
 
+        // Convertimos el Page en una lista de VisitorDTO
         return visitorPage.stream()
-                .filter(VisitorEntity::isActive)
                 .map(entity -> modelMapper.map(entity, VisitorDTO.class))
                 .collect(Collectors.toList());
     }

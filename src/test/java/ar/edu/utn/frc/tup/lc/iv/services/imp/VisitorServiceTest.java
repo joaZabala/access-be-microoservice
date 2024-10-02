@@ -18,11 +18,13 @@ import org.springframework.data.domain.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 @SpringBootTest
 class VisitorServiceTest {
 
@@ -41,27 +43,19 @@ class VisitorServiceTest {
     }
     @Test
     void getAllVisitorsTest() {
-        //given
+        // Given
         VisitorEntity visitorEntity = new VisitorEntity(1L, "juan", "Perez", 40252203L, LocalDate.now(), true, 1L);
         VisitorEntity visitorEntity1 = new VisitorEntity(2L, "joaquin", "Perez", 40252255L, LocalDate.now(), true, 1L);
-        VisitorEntity visitorEntity2 = new VisitorEntity(3L, "Sofia", "Zabala", 40589999L, LocalDate.now(), false, 1L);
+       // VisitorEntity visitorEntity2 = new VisitorEntity(2L, "joaquin", "Perez", 40252288L, LocalDate.now(), false, 1L);
 
-        List<VisitorEntity> visitorEntityList = new ArrayList<>();
-        visitorEntityList.add(visitorEntity);
-        visitorEntityList.add(visitorEntity1);
-        visitorEntityList.add(visitorEntity2);
+        List<VisitorEntity> visitorEntityList = Arrays.asList(visitorEntity, visitorEntity1);
 
-
-        // Creo un objeto Pageable
-        Pageable pageable = PageRequest.of(0, 10,
-                Sort.by("lastName")
-                        .and(Sort.by("name")));
-
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("lastName").and(Sort.by("name")));
 
         Page<VisitorEntity> visitorPage = new PageImpl<>(visitorEntityList, pageable, visitorEntityList.size());
 
-        // when
-        when(visitorRepository.findAll(any(Pageable.class))).thenReturn(visitorPage);
+        //when
+        when(visitorRepository.findAllByActive(true, pageable)).thenReturn(visitorPage);
 
         //then
         List<VisitorDTO> listResult = visitorService.getAllVisitors(0, 10);
@@ -69,6 +63,8 @@ class VisitorServiceTest {
         assertEquals(2, listResult.size());
         assertEquals("juan", listResult.get(0).getName());
         assertEquals("joaquin", listResult.get(1).getName());
+
+        verify(visitorRepository, times(1)).findAllByActive(true, pageable);
     }
 
     @Test
