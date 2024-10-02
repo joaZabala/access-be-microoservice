@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 public interface VisitorRepository extends JpaRepository<VisitorEntity, Long> {
     /**
      * Finds a visitor entity by document number.
-     *
      * @param docNumber the document number of the authorized person.
      * @return the visitor entity with the specified document number.
      */
