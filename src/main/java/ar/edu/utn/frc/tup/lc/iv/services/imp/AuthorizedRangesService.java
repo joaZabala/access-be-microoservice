@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.stream.Collectors;
 
 /**
@@ -63,5 +66,20 @@ public class AuthorizedRangesService implements IAuthorizedRangesService {
         AuthorizedRangesEntity auhorizedRange = authorizedRangesRepository.save(authorizedRangeEntity);
 
         return modelMapper.map(auhorizedRange, AuthorizedRanges.class);
+    }
+    /**
+     * Checks if a person with a given document number has a valid invitation based on
+     * the current date, time, and day of the week.
+     *
+     * @param documentNumber the unique identification number of the person being checked
+     * @return {@code true} if there is a valid invitation for the specified document number,
+     *         {@code false} otherwise
+     */
+    @Override
+    public Boolean HasInvitation(Long documentNumber) {
+        LocalTime localTime = LocalTime.now();
+        LocalDate localDate = LocalDate.now();
+        DayOfWeek dayOfWeek = localDate.getDayOfWeek();
+        return authorizedRangesRepository.hasInvitation(localDate, localTime ,documentNumber,dayOfWeek.toString());
     }
 }

@@ -18,4 +18,13 @@ public interface IAuthorizedRangesService {
      *  @return AuthorizedRanges
      */
     AuthorizedRanges registerAuthorizedRange(RegisterAuthorizationRangesDTO authorizedRangeDTO);
+    /**
+     * Checks if a person with a given document number has a valid invitation based on
+     * the current date, time, and day of the week.
+     *
+     * @param documentNumber the unique identification number of the person being checked
+     * @return {@code true} if there is a valid invitation for the specified document number,
+     *         {@code false} otherwise
+     */
+    Boolean HasInvitation(Long documentNumber);
 }

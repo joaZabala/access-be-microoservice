@@ -148,4 +148,5 @@ public class AuthorizedRangesServiceTest {
 
         assertEquals("AuthorizedRangeDTO must not be null", exception.getMessage());
     }
+
 }
