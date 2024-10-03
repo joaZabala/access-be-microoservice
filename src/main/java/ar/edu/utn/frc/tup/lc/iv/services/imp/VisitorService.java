@@ -11,13 +11,15 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequestDto;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
-import ar.edu.utn.frc.tup.lc.iv.services.VisitorService;
+import ar.edu.utn.frc.tup.lc.iv.services.IVisitorService;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import lombok.NoArgsConstructor;
 
@@ -28,7 +30,7 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @Service
-public class VisitorServiceImpl implements VisitorService {
+public class VisitorService implements IVisitorService {
     /**
      * Repository to access Authorized entities from the database.
      */
@@ -57,11 +59,11 @@ public class VisitorServiceImpl implements VisitorService {
     @Override
     public List<VisitorDTO> getAllVisitors(int page, int size) {
         Pageable pageable = PageRequest.of(page, size,
-                Sort.by("lastName")
-                        .and(Sort.by("name")));
+                Sort.by("lastName").and(Sort.by("name")));
 
-        Page<VisitorEntity> visitorPage = visitorRepository.findAll(pageable);
+        Page<VisitorEntity> visitorPage = visitorRepository.findAllByActive(true, pageable);
 
+        // Convertimos el Page en una lista de VisitorDTO
         return visitorPage.stream()
                 .map(entity -> modelMapper.map(entity, VisitorDTO.class))
                 .collect(Collectors.toList());
@@ -78,7 +80,12 @@ public class VisitorServiceImpl implements VisitorService {
         VisitorEntity existVisitorEntity =
                 visitorRepository.findByDocNumber(visitorRequestDto.getDocNumber());
 
-        UserDto owner = userRestClient.getUserById(visitorRequestDto.getOwnerId());
+        ResponseEntity<UserDto> owner = userRestClient.getUserById(visitorRequestDto.getOwnerId());
+
+        if (!owner.getStatusCode().is2xxSuccessful()) {
+            throw new EntityNotFoundException("El usuario con el id " + visitorRequestDto.getOwnerId() + " no existe");
+        }
+        UserDto ownerDto = owner.getBody();
 
         VisitorEntity visitorEntity;
         if (Objects.nonNull(existVisitorEntity)) {
@@ -92,9 +99,47 @@ public class VisitorServiceImpl implements VisitorService {
         visitorEntity.setLastName(visitorRequestDto.getLastName());
         visitorEntity.setDocNumber(visitorRequestDto.getDocNumber());
         visitorEntity.setBirthDate(visitorRequestDto.getBirthDate());
-        visitorEntity.setOwnerId(owner.getId());
+        assert ownerDto != null;
+        visitorEntity.setOwnerId(ownerDto.getId());
         visitorEntity.setActive(visitorRequestDto.isActive());
         visitorEntity.setLastUpdatedDate(LocalDateTime.now());
         return modelMapper.map(visitorRepository.save(visitorEntity), VisitorDTO.class);
     }
+
+    /**
+     * fetch visitor by docNumber.
+     *
+     * @param docNumber document number of the visitor.
+     * @return VisitorDTO.
+     */
+    @Override
+    public VisitorDTO getVisitorByDocNumber(Long docNumber) {
+        VisitorEntity visitorEntity = visitorRepository.findByDocNumber(docNumber);
+
+        if (Objects.isNull(visitorEntity)) {
+            throw new EntityNotFoundException("No existe el visitante con el numero de documento " + docNumber);
+        } else {
+            return modelMapper.map(visitorEntity, VisitorDTO.class);
+        }
+    }
+
+    /**
+     * Deactivate visitor by docNumber.
+     *
+     * @param docNumber document number of the visitor.
+     * @return VisitorDTO.
+     */
+    @Override
+    public VisitorDTO deleteVisitor(Long docNumber) {
+        VisitorEntity visitorEntity = visitorRepository.findByDocNumber(docNumber);
+
+        if (Objects.isNull(visitorEntity)) {
+            throw new EntityNotFoundException("No existe el visitante con el numero de documento " + docNumber);
+        }
+        visitorEntity.setActive(false);
+        visitorEntity.setLastUpdatedDate(LocalDateTime.now());
+
+        return modelMapper.map(visitorRepository.save(visitorEntity), VisitorDTO.class);
+    }
+
 }

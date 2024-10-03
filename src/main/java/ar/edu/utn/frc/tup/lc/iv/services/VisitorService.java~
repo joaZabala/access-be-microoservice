@@ -28,4 +28,8 @@ public interface VisitorService {
      * the newly created authorization.
      */
     VisitorDTO saveOrUpdateVisitor(VisitorRequestDto authorizedRequestDto);
+
+    VisitorDTO getVisitorByDocNumber(Long docNumber);
+
+    VisitorDTO reVisitor(Long docNumber);
 }

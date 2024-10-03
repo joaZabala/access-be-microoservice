@@ -2,16 +2,18 @@ package ar.edu.utn.frc.tup.lc.iv.controllers;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequestDto;
-import ar.edu.utn.frc.tup.lc.iv.services.VisitorService;
+import ar.edu.utn.frc.tup.lc.iv.services.IVisitorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+
 
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class VisitorController {
      * Authorized Service dependency injection.
      */
     @Autowired
-    private VisitorService visitorService;
+    private IVisitorService visitorService;
 
     /**
      * Retrieves a list of all visitors.
@@ -51,8 +53,8 @@ public class VisitorController {
      * person with the specified ID.
      */
     @GetMapping("/{docNumber}")
-    public VisitorDTO getVisitorByDocNumber(@PathVariable Long docNumber) {
-        return null;
+    public ResponseEntity<VisitorDTO> getVisitorByDocNumber(@PathVariable Long docNumber) {
+        return ResponseEntity.ok(visitorService.getVisitorByDocNumber(docNumber));
     }
 
     /**
@@ -60,10 +62,22 @@ public class VisitorController {
      *
      * @param visitorRequest The DTO containing the details
      *                       to create or update Visitor.
-     * @return VisitorDto
+     * @return VisitorDto.
      */
     @PutMapping()
-    public ResponseEntity<VisitorDTO> updateAuthorized(@RequestBody VisitorRequestDto visitorRequest) {
+    public ResponseEntity<VisitorDTO> generateVisitor(@RequestBody VisitorRequestDto visitorRequest) {
         return ResponseEntity.ok(visitorService.saveOrUpdateVisitor(visitorRequest));
     }
+
+    /**
+     * Deactivate visitor by docNumber.
+     *
+     * @param docNumber document number of the visitor.
+     * @return VisitorDTO.
+     */
+    @DeleteMapping("/deactivate/{docNumber}")
+    public ResponseEntity<VisitorDTO> deleteVisitor(@PathVariable Long docNumber) {
+        return ResponseEntity.ok(visitorService.deleteVisitor(docNumber));
+    }
+
 }
