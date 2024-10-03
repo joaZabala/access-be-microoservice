@@ -85,6 +85,8 @@ public class AuthorizedRangesService implements IAuthorizedRangesService {
         LocalTime localTime = LocalTime.now();
         LocalDate localDate = LocalDate.now();
         DayOfWeek dayOfWeek = localDate.getDayOfWeek();
-        return authorizedRangesRepository.hasInvitation(localDate, localTime, documentNumber, dayOfWeek.toString());
+        String day = dayOfWeek.toString().toUpperCase();
+        return authorizedRangesRepository.hasInvitation(localDate, localTime, documentNumber,
+                day);
     }
 }

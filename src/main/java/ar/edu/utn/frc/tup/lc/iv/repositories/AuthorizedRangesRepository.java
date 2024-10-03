@@ -14,16 +14,16 @@ import java.time.LocalTime;
  */
 @Service
 public interface AuthorizedRangesRepository extends JpaRepository<AuthorizedRangesEntity, Long> {
-    @Query("SELECT CASE WHEN COUNT(ac) > 0 THEN true ELSE false END "
-            + "FROM AuthorizedRangesEntity ac "
-            + "LEFT JOIN ac.visitorId v "
-            + "WHERE ac.isActive = true "
-            + "AND (:startDate IS NULL OR (ac.dateFrom IS NULL OR ac.dateFrom <= :startDate) "
-            + "AND (ac.dateTo IS NULL OR ac.dateTo >= :startDate)) "
-            + "AND (:startHour IS NULL OR (ac.hourFrom IS NULL OR ac.hourFrom <= :startHour) "
-            + "AND (ac.hourTo IS NULL OR ac.hourTo >= :startHour)) "
-            + "AND v.docNumber = :documentNumber "
-            + "AND (:day IS NULL OR ac.days LIKE CONCAT('%', :day, '%'))")
+    @Query("SELECT CASE WHEN COUNT(ac) > 0 THEN true ELSE false END " +
+            "FROM AuthorizedRangesEntity ac " +
+            "LEFT JOIN ac.visitorId v " +
+            "WHERE ac.isActive = true " +
+            "AND (ac.dateFrom IS NULL OR ac.dateFrom <= :startDate) " +
+            "AND (ac.dateTo IS NULL OR ac.dateTo >= :startDate) " +
+            "AND (ac.hourFrom IS NULL OR ac.hourFrom <= :startHour) " +
+            "AND (ac.hourTo IS NULL OR ac.hourTo >= :startHour) " +
+            "AND v.docNumber = :documentNumber " +
+            "AND (ac.days IS NULL OR ac.days LIKE CONCAT('%', :day, '%'))")
     boolean hasInvitation(
             @Param("startDate") LocalDate startDate,
             @Param("startHour") LocalTime startHour,
