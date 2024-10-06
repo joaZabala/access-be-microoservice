@@ -49,11 +49,12 @@ public class AuthorizedRangesController {
      * Checks if a person with the given document number has a valid invitation.
      *
      * @param documentNumber the document number of the user to check
-     * @return {@code ResponseEntity<Boolean>} returns {@code true} if a valid invitation exists,
-     *         {@code false} otherwise, with an appropriate HTTP status code.
+     * @return {@code ResponseEntity<Boolean>} returns {@code true} if a
+     * valid invitation exists, {@code false} otherwise, with an
+     * appropriate HTTP status code.
      */
     @GetMapping("{document-number}/valid")
-    public ResponseEntity<Boolean> hasInvitationValid(@PathVariable("document-number") Long documentNumber) {
+    public ResponseEntity<Boolean> checkInvitationValid(@PathVariable("document-number") Long documentNumber) {
         Boolean hasInvitation = authorizedRangesService.hasInvitation(documentNumber);
         return new ResponseEntity<>(hasInvitation, HttpStatus.OK);
     }

@@ -14,16 +14,25 @@ import java.time.LocalTime;
  */
 @Service
 public interface AuthorizedRangesRepository extends JpaRepository<AuthorizedRangesEntity, Long> {
-    @Query("SELECT CASE WHEN COUNT(ac) > 0 THEN true ELSE false END " +
-            "FROM AuthorizedRangesEntity ac " +
-            "LEFT JOIN ac.visitorId v " +
-            "WHERE ac.isActive = true " +
-            "AND (ac.dateFrom IS NULL OR ac.dateFrom <= :startDate) " +
-            "AND (ac.dateTo IS NULL OR ac.dateTo >= :startDate) " +
-            "AND (ac.hourFrom IS NULL OR ac.hourFrom <= :startHour) " +
-            "AND (ac.hourTo IS NULL OR ac.hourTo >= :startHour) " +
-            "AND v.docNumber = :documentNumber " +
-            "AND (ac.days IS NULL OR ac.days LIKE CONCAT('%', :day, '%'))")
+    /**
+     * Checks if the visitor has a valid invitation.
+     * @param startDate      The date to check for access validity.
+     * @param startHour      The time to check for access validity.
+     * @param documentNumber The visitor's document number.
+     * @param day            The day to check for access validity
+     * @return true if the visitor has a valid invitation; false otherwise.
+     */
+
+    @Query("SELECT CASE WHEN COUNT(ac) > 0 THEN true ELSE false END "
+            + "FROM AuthorizedRangesEntity ac "
+            + "LEFT JOIN ac.visitorId v "
+            + "WHERE ac.isActive = true "
+            + "AND (ac.dateFrom IS NULL OR ac.dateFrom <= :startDate) "
+            + "AND (ac.dateTo IS NULL OR ac.dateTo >= :startDate) "
+            + "AND (ac.hourFrom IS NULL OR ac.hourFrom <= :startHour) "
+            + "AND (ac.hourTo IS NULL OR ac.hourTo >= :startHour) "
+            + "AND v.docNumber = :documentNumber "
+            + "AND (ac.days IS NULL OR ac.days LIKE CONCAT('%', :day, '%'))")
     boolean hasInvitation(
             @Param("startDate") LocalDate startDate,
             @Param("startHour") LocalTime startHour,
