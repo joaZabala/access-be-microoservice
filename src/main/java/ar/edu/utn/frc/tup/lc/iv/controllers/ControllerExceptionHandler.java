@@ -75,7 +75,7 @@ public class ControllerExceptionHandler {
      */
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorApi> handleError(EntityNotFoundException exception) {
-        ErrorApi error = buildError("Not found - The element required was not found", HttpStatus.NOT_FOUND);
+        ErrorApi error = buildError(exception.getMessage(), HttpStatus.NOT_FOUND);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
     /**
