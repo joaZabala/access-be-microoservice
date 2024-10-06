@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -37,11 +40,12 @@ public class AuthorizedRangesService implements IAuthorizedRangesService {
      */
     @Autowired
     private AuthorizedRangesRepository authorizedRangesRepository;
+
     /**
      * Registers a new authorized range.
      *
      * @param authorizedRangeDTO the data transfer object containing the
-     * details of the authorized range to register.
+     *                           details of the authorized range to register.
      * @return AuthorizedRanges
      */
     @Override
@@ -67,5 +71,23 @@ public class AuthorizedRangesService implements IAuthorizedRangesService {
         AuthorizedRangesEntity auhorizedRange = authorizedRangesRepository.save(authorizedRangeEntity);
 
         return new AuthorizedRanges(auhorizedRange);
+    }
+
+    /**
+     * Checks if a person with the given document number
+     * has a valid invitation.
+     * @param documentNumber The person's
+     * identification number.
+     * @return {@code true} if a
+     * valid invitation exists, {@code false} otherwise.
+     */
+    @Override
+    public Boolean hasInvitation(Long documentNumber) {
+        LocalTime localTime = LocalTime.now();
+        LocalDate localDate = LocalDate.now();
+        DayOfWeek dayOfWeek = localDate.getDayOfWeek();
+        String day = dayOfWeek.toString().toUpperCase(Locale.ROOT);
+        return authorizedRangesRepository.hasInvitation(localDate, localTime, documentNumber,
+                day);
     }
 }

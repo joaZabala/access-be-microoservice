@@ -22,7 +22,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
+@SpringBootTest
 public class AuthorizedRangesServiceTest {
     @InjectMocks
     private AuthorizedRangesService authorizedRangesService;

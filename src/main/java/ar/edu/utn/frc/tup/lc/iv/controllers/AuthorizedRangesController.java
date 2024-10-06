@@ -6,10 +6,16 @@ import ar.edu.utn.frc.tup.lc.iv.services.imp.AuthorizedRangesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
+
+
+
+
 /**
  * Controller class for managing authorized ranges.
  * This class provides endpoints to create, retrieve,
@@ -37,5 +43,19 @@ public class AuthorizedRangesController {
     public ResponseEntity<AuthorizedRanges> registerAuthorizedRange(@RequestBody RegisterAuthorizationRangesDTO authorizedRangeDto) {
         AuthorizedRanges response = authorizedRangesService.registerAuthorizedRange(authorizedRangeDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    /**
+     * Checks if a person with the given document number has a valid invitation.
+     *
+     * @param documentNumber the document number of the user to check
+     * @return {@code ResponseEntity<Boolean>} returns {@code true} if a
+     * valid invitation exists, {@code false} otherwise, with an
+     * appropriate HTTP status code.
+     */
+    @GetMapping("{document-number}/valid")
+    public ResponseEntity<Boolean> checkInvitationValid(@PathVariable("document-number") Long documentNumber) {
+        Boolean hasInvitation = authorizedRangesService.hasInvitation(documentNumber);
+        return new ResponseEntity<>(hasInvitation, HttpStatus.OK);
     }
 }
