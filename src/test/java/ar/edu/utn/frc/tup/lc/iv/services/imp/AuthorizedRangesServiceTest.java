@@ -12,9 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
 
@@ -148,4 +150,25 @@ public class AuthorizedRangesServiceTest {
 
         assertEquals("AuthorizedRangeDTO must not be null", exception.getMessage());
     }
+
+    @Test
+    public void hasNotInvitationTest() {
+
+        LocalDate localDate = LocalDate.of(2022, 1, 1);
+        LocalTime localTime = LocalTime.of(9, 0);
+        DayOfWeek dayOfWeek = localDate.getDayOfWeek();
+
+       when(authorizedRangesRepository.hasInvitation(localDate, localTime, 12345678L , dayOfWeek.name()))
+               .thenReturn(false);
+
+       assertFalse(authorizedRangesService.hasInvitation(12345678L));
+    }
+
+    @Test
+    public void hasInvitationTest() {
+        when(authorizedRangesRepository.hasInvitation(any(LocalDate.class), any(LocalTime.class), any(Long.class) , any(String.class))).thenReturn(true);
+        assertTrue(authorizedRangesService.hasInvitation(12345678L));
+    }
+
+
 }

@@ -20,4 +20,5 @@ public class UserDto {
      * name of user.
      */
     private String userName;
+
 }

@@ -2,7 +2,7 @@ package ar.edu.utn.frc.tup.lc.iv.controllers;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequestDto;
-import ar.edu.utn.frc.tup.lc.iv.services.VisitorService;
+import ar.edu.utn.frc.tup.lc.iv.services.IVisitorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ class VisitorControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private VisitorService visitorService;
+    private IVisitorService visitorService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -87,5 +87,51 @@ class VisitorControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].doc_number").value(87654321L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].birth_date").value("20-05-1985"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].is_active").value(false));
+    }
+
+    @Test
+    void getVisitorByDocNumberTest() throws Exception {
+        //DTO de respuesta
+        VisitorDTO visitorDto =
+                new VisitorDTO(1L, 1L, "Mario", "Cenna", 12345678L, LocalDate.of(1990, 1, 1), true);
+
+        // Simulo la respuesta del servicio
+        when(visitorService.getVisitorByDocNumber(12345678L)).thenReturn(visitorDto);
+
+        // hago la solicitud GET con el número de documento
+        mockMvc.perform(MockMvcRequestBuilders.get("/visitor/12345678")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                // Verifica que el estado de la respuesta sea 200 OK
+                .andExpect(status().isOk())
+                // Verifica el contenido del JSON devuelto
+                .andExpect(MockMvcResultMatchers.jsonPath("$.visitor_id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.owner_id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Mario"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.last_name").value("Cenna"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.doc_number").value(12345678L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.birth_date").value("01-01-1990"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.is_active").value(true));
+    }
+
+    @Test
+    void deleteVisitorTest() throws Exception {
+        VisitorDTO visitorDTO =
+                new VisitorDTO(1L, 1L, "Mario", "Cenna", 12345678L, LocalDate.of(1990, 1, 1), false);
+
+        when(visitorService.deleteVisitor(12345678L)).thenReturn(visitorDTO);
+
+        // hago la petición DELETE
+        mockMvc.perform(MockMvcRequestBuilders.delete("/visitor/deactivate/12345678")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.visitor_id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.owner_id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Mario"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.last_name").value("Cenna"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.doc_number").value(12345678L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.birth_date").value("01-01-1990"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.is_active").value(false));
     }
 }

@@ -18,4 +18,13 @@ public interface IAuthorizedRangesService {
      *  @return AuthorizedRanges
      */
     AuthorizedRanges registerAuthorizedRange(RegisterAuthorizationRangesDTO authorizedRangeDTO);
+    /**
+     * Checks if a person with the given document number
+     * has a valid invitation.
+     * @param documentNumber The person's
+     * identification number.
+     * @return {@code true} if a
+     * valid invitation exists, {@code false} otherwise.
+     */
+    Boolean hasInvitation(Long documentNumber);
 }
