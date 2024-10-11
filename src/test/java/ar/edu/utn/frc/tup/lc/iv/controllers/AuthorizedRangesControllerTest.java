@@ -50,7 +50,6 @@ class AuthorizedRangesControllerTest {
 
         AuthorizedRanges authorizedRanges = new AuthorizedRanges(
                 1L,
-                rangeDto.getAuthTypeId(),
                 rangeDto.getVisitorId(),
                 rangeDto.getExternalId(),
                 rangeDto.getDateFrom(),

@@ -43,7 +43,7 @@ class VisitorControllerTest {
         visitorRequestDto.setBirthDate(LocalDate.of(1990, 1, 1));
 
         VisitorDTO visitorResponseDto =
-                new VisitorDTO(1L, 1L, "Mario", "Cenna", 12345678L, LocalDate.of(1990, 1, 1), true);
+                new VisitorDTO(1L, "Mario", "Cenna", 12345678L, LocalDate.of(1990, 1, 1), 1L, true);
 
         when(visitorService.saveOrUpdateVisitor(visitorRequestDto)).thenReturn(visitorResponseDto);
 
@@ -62,8 +62,8 @@ class VisitorControllerTest {
 
     @Test
     void getAllVisitors() throws Exception {
-        VisitorDTO visitor1 = new VisitorDTO(1L, 1L, "Mario", "Cenna", 12345678L, LocalDate.of(1990, 1, 1), true);
-        VisitorDTO visitor2 = new VisitorDTO(2L, 1L, "Mary", "Jane", 87654321L, LocalDate.of(1985, 5, 20), false);
+        VisitorDTO visitor1 = new VisitorDTO(1L, "Mario", "Cenna", 12345678L, LocalDate.of(1990, 1, 1), 1L, true);
+        VisitorDTO visitor2 = new VisitorDTO(2L, "Mary", "Jane", 87654321L, LocalDate.of(1985, 5, 20), 1L, false);
 
         when(visitorService.getAllVisitors(0, 10)).thenReturn(List.of(visitor1, visitor2));
 
@@ -93,7 +93,7 @@ class VisitorControllerTest {
     void getVisitorByDocNumberTest() throws Exception {
         //DTO de respuesta
         VisitorDTO visitorDto =
-                new VisitorDTO(1L, 1L, "Mario", "Cenna", 12345678L, LocalDate.of(1990, 1, 1), true);
+                new VisitorDTO(1L, "Mario", "Cenna", 12345678L, LocalDate.of(1990, 1, 1), 1L, true);
 
         // Simulo la respuesta del servicio
         when(visitorService.getVisitorByDocNumber(12345678L)).thenReturn(visitorDto);
@@ -117,7 +117,7 @@ class VisitorControllerTest {
     @Test
     void deleteVisitorTest() throws Exception {
         VisitorDTO visitorDTO =
-                new VisitorDTO(1L, 1L, "Mario", "Cenna", 12345678L, LocalDate.of(1990, 1, 1), false);
+                new VisitorDTO(1L, "Mario", "Cenna", 12345678L, LocalDate.of(1990, 1, 1), 1L, false);
 
         when(visitorService.deleteVisitor(12345678L)).thenReturn(visitorDTO);
 

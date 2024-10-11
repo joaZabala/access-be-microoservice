@@ -2,7 +2,6 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.RegisterAuthorizationRangesDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthorizedRangesEntity;
-import ar.edu.utn.frc.tup.lc.iv.entities.AuthorizedTypesEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthorizedRanges;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthorizedRangesRepository;
@@ -12,11 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
 
@@ -51,9 +48,6 @@ public class AuthorizedRangesServiceTest {
         authorizedRangeDTO.setDayOfWeeks(null);
 
         AuthorizedRangesEntity authorizedRangeEntity = new AuthorizedRangesEntity();
-        AuthorizedTypesEntity authorizedType = new AuthorizedTypesEntity();
-        authorizedType.setAuthTypeId(1L);
-        authorizedRangeEntity.setAuthType(authorizedType);
         VisitorEntity visitor = new VisitorEntity();
         visitor.setVisitorId(2L);
         authorizedRangeEntity.setVisitorId(visitor);
@@ -67,7 +61,6 @@ public class AuthorizedRangesServiceTest {
 
         AuthorizedRanges authorizedRanges = new AuthorizedRanges(
                 authorizedRangeEntity.getAuthRangeId(),
-                authorizedRangeEntity.getAuthType().getAuthTypeId(),
                 authorizedRangeEntity.getVisitorId().getVisitorId(),
                 authorizedRangeEntity.getExternalId(),
                 authorizedRangeEntity.getDateFrom(),
@@ -77,15 +70,13 @@ public class AuthorizedRangesServiceTest {
                 authorizedRangeEntity.getDays(),
                 authorizedRangeEntity.getPlotId(),
                 authorizedRangeEntity.getComment(),
-                authorizedRangeEntity.isActive()
-        );
+                authorizedRangeEntity.isActive());
         when(modelMapper.map(authorizedRangeDTO, AuthorizedRangesEntity.class)).thenReturn(authorizedRangeEntity);
         when(authorizedRangesRepository.save(any(AuthorizedRangesEntity.class))).thenReturn(authorizedRangeEntity);
         when(modelMapper.map(authorizedRangeEntity, AuthorizedRanges.class)).thenReturn(authorizedRanges);
         authorizedRangesService.registerAuthorizedRange(authorizedRangeDTO);
 
         verify(authorizedRangesRepository, times(1)).save(any(AuthorizedRangesEntity.class));
-        assertEquals(1L, authorizedRangeEntity.getAuthType().getAuthTypeId());
         assertEquals(2L, authorizedRangeEntity.getVisitorId().getVisitorId());
         assertNull(authorizedRangeEntity.getDays());
     }
@@ -103,9 +94,6 @@ public class AuthorizedRangesServiceTest {
         authorizedRangeDTO.setDayOfWeeks(Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.FRIDAY));
 
         AuthorizedRangesEntity authorizedRangeEntity = new AuthorizedRangesEntity();
-        AuthorizedTypesEntity authorizedType = new AuthorizedTypesEntity();
-        authorizedType.setAuthTypeId(1L);
-        authorizedRangeEntity.setAuthType(authorizedType);
         VisitorEntity visitor = new VisitorEntity();
         visitor.setVisitorId(2L);
         authorizedRangeEntity.setVisitorId(visitor);
@@ -119,7 +107,6 @@ public class AuthorizedRangesServiceTest {
 
         AuthorizedRanges authorizedRanges = new AuthorizedRanges(
                 authorizedRangeEntity.getAuthRangeId(),
-                authorizedRangeEntity.getAuthType().getAuthTypeId(),
                 authorizedRangeEntity.getVisitorId().getVisitorId(),
                 authorizedRangeEntity.getExternalId(),
                 authorizedRangeEntity.getDateFrom(),
@@ -129,15 +116,13 @@ public class AuthorizedRangesServiceTest {
                 authorizedRangeEntity.getDays(),
                 authorizedRangeEntity.getPlotId(),
                 authorizedRangeEntity.getComment(),
-                authorizedRangeEntity.isActive()
-        );
+                authorizedRangeEntity.isActive());
         when(modelMapper.map(authorizedRangeDTO, AuthorizedRangesEntity.class)).thenReturn(authorizedRangeEntity);
         when(authorizedRangesRepository.save(any(AuthorizedRangesEntity.class))).thenReturn(authorizedRangeEntity);
         when(modelMapper.map(authorizedRangeEntity, AuthorizedRanges.class)).thenReturn(authorizedRanges);
         authorizedRangesService.registerAuthorizedRange(authorizedRangeDTO);
 
         verify(authorizedRangesRepository, times(1)).save(any(AuthorizedRangesEntity.class));
-        assertEquals(1L, authorizedRangeEntity.getAuthType().getAuthTypeId());
         assertEquals(2L, authorizedRangeEntity.getVisitorId().getVisitorId());
     }
 
@@ -158,17 +143,17 @@ public class AuthorizedRangesServiceTest {
         LocalTime localTime = LocalTime.of(9, 0);
         DayOfWeek dayOfWeek = localDate.getDayOfWeek();
 
-       when(authorizedRangesRepository.hasInvitation(localDate, localTime, 12345678L , dayOfWeek.name()))
-               .thenReturn(false);
+        when(authorizedRangesRepository.hasInvitation(localDate, localTime, 12345678L, dayOfWeek.name()))
+                .thenReturn(false);
 
-       assertFalse(authorizedRangesService.hasInvitation(12345678L));
+        assertFalse(authorizedRangesService.hasInvitation(12345678L));
     }
 
     @Test
     public void hasInvitationTest() {
-        when(authorizedRangesRepository.hasInvitation(any(LocalDate.class), any(LocalTime.class), any(Long.class) , any(String.class))).thenReturn(true);
+        when(authorizedRangesRepository.hasInvitation(any(LocalDate.class), any(LocalTime.class), any(Long.class),
+                any(String.class))).thenReturn(true);
         assertTrue(authorizedRangesService.hasInvitation(12345678L));
     }
-
 
 }

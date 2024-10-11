@@ -21,12 +21,6 @@ public class VisitorDTO {
     @JsonProperty("visitor_id")
     private Long visitorId;
     /**
-     * Unique identifier for the authorized person.
-     */
-    @JsonProperty("owner_id")
-    private Long ownerId;
-
-    /**
      * First name of the authorized person. Maximum of 50 characters.
      */
     @JsonProperty("name")
@@ -50,6 +44,11 @@ public class VisitorDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @JsonProperty("birth_date")
     private LocalDate birthDate;
+    /**
+     * Unique identifier for the authorized person.
+     */
+    @JsonProperty("owner_id")
+    private Long ownerId;
 
     /**
      * If a visitor is active or not.

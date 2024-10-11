@@ -76,20 +76,13 @@ public class VisitAccessService implements IVisitAccessService {
         modelMapper.typeMap(AccessesEntity.class, VisitAccessDTO.class)
                 .addMapping(src -> src.getVehicleType().getCarDescription(), VisitAccessDTO::setCarDescription);
 
-        if (accessesEntity.getAuthRange() == null) {
+        if (accessesEntity.getAuth() == null) {
             modelMapper.typeMap(AccessesEntity.class, VisitAccessDTO.class)
-                    .addMapping(src -> src.getVisitor().getName(), VisitAccessDTO::setName);
+                    .addMapping(src -> src.getAuth().getVisitor().getName(), VisitAccessDTO::setName);
             modelMapper.typeMap(AccessesEntity.class, VisitAccessDTO.class)
-                    .addMapping(src -> src.getVisitor().getLastName(), VisitAccessDTO::setLastName);
+                    .addMapping(src -> src.getAuth().getVisitor().getLastName(), VisitAccessDTO::setLastName);
             modelMapper.typeMap(AccessesEntity.class, VisitAccessDTO.class)
-                    .addMapping(src -> src.getVisitor().getDocNumber(), VisitAccessDTO::setDocNumber);
-        } else {
-            modelMapper.typeMap(AccessesEntity.class, VisitAccessDTO.class)
-                    .addMapping(src -> src.getAuthRange().getVisitorId().getName(), VisitAccessDTO::setName);
-            modelMapper.typeMap(AccessesEntity.class, VisitAccessDTO.class)
-                    .addMapping(src -> src.getAuthRange().getVisitorId().getLastName(), VisitAccessDTO::setLastName);
-            modelMapper.typeMap(AccessesEntity.class, VisitAccessDTO.class)
-                    .addMapping(src -> src.getAuthRange().getVisitorId().getDocNumber(), VisitAccessDTO::setDocNumber);
+                    .addMapping(src -> src.getAuth().getVisitor().getDocNumber(), VisitAccessDTO::setDocNumber);
         }
         return modelMapper.map(accessesEntity, VisitAccessDTO.class);
     }

@@ -1,6 +1,7 @@
 package ar.edu.utn.frc.tup.lc.iv.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,7 +24,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "Visitors")
+@Table(name = "visitors")
 public class VisitorEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Authorized.
@@ -59,12 +60,6 @@ public class VisitorEntity extends AuditBaseEntity {
      */
     @Column(name = "is_active")
     private boolean isActive;
-    /**
-     * Identifier of the owner who authorizes an operation.
-     */
-    @Column(name = "owner_id")
-    private Long ownerId;
-
     /**
      * Constant for the maximum length of the 'name' field.
      */

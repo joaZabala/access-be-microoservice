@@ -100,7 +100,6 @@ public class VisitorService implements IVisitorService {
         visitorEntity.setDocNumber(visitorRequestDto.getDocNumber());
         visitorEntity.setBirthDate(visitorRequestDto.getBirthDate());
         assert ownerDto != null;
-        visitorEntity.setOwnerId(ownerDto.getId());
         visitorEntity.setActive(visitorRequestDto.isActive());
         visitorEntity.setLastUpdatedDate(LocalDateTime.now());
         return modelMapper.map(visitorRepository.save(visitorEntity), VisitorDTO.class);

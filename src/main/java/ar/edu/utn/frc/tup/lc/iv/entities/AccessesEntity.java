@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "Accesses")
+@Table(name = "accesses")
 @Getter
 @Setter
 //public class AccessesEntity extends AuditBaseEntity {
@@ -45,8 +45,8 @@ public class AccessesEntity extends AuditBaseEntity {
      * The authorized range associated.
      */
     @ManyToOne
-    @JoinColumn(name = "auth_range_id")
-    private AuthorizedRangesEntity authRange;
+    @JoinColumn(name = "auth_id")
+    private AuthEntity auth;
     /**
      * Date and time of entry to the neighborhood.
      */
@@ -79,14 +79,6 @@ public class AccessesEntity extends AuditBaseEntity {
      */
     @Column(name = "plot_id")
     private Long plotId;
-
-    /**
-     * Visitor associated with the access.
-     */
-    @ManyToOne
-    @JoinColumn(name = "visitor_id")
-    private VisitorEntity visitor;
-
     /**
      * Identifier of supplier employee.
      */

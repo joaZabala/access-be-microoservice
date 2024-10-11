@@ -29,10 +29,10 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "authorized_ranges")
+@Table(name = "auth_ranges")
 @Getter
 @Setter
-public class AuthorizedRangesEntity extends AuditBaseEntity {
+public class AuthRangeEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Acceses.
      */
@@ -44,13 +44,8 @@ public class AuthorizedRangesEntity extends AuditBaseEntity {
      * Unique Authorized identifier.
      */
     @ManyToOne
-    @JoinColumn(name = "visitor_id")
-    private VisitorEntity visitorId;
-    /**
-     * External ID to identify Suppliers, Employees, Owners and Cohabitants.
-     */
-    @Column(name = "external_id")
-    private Long externalId;
+    @JoinColumn(name = "auth_id")
+    private AuthEntity authId;
     /**
      * Date from to form the authorized range.
      */

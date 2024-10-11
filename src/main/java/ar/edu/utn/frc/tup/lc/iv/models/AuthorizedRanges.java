@@ -26,10 +26,6 @@ public class AuthorizedRanges extends AuditBase {
      */
     private Long authRangeId;
     /**
-     * Unique Authorized type identifier.
-     */
-    private Long authType;
-    /**
      * Unique Authorized identifier.
      */
     private Long visitorId;
@@ -84,8 +80,6 @@ public class AuthorizedRanges extends AuditBase {
      */
     public AuthorizedRanges(AuthorizedRangesEntity authorizedRangesEntity) {
         this.authRangeId = authorizedRangesEntity.getAuthRangeId();
-        this.authType = authorizedRangesEntity.getAuthType() != null
-                ? authorizedRangesEntity.getAuthType().getAuthTypeId() : null;
         this.visitorId = authorizedRangesEntity.getVisitorId() != null
                 ? authorizedRangesEntity.getVisitorId().getVisitorId() : null;
         this.externalId = authorizedRangesEntity.getExternalId();
