@@ -15,12 +15,22 @@ import ar.edu.utn.frc.tup.lc.iv.services.IAuthRangeService;
 @Service
 public class AuthRangeService implements IAuthRangeService {
 
+    /**
+     * Repository for AuthRange
+     */
     @Autowired
     private AuthRangeRepository authRangeRepository;
 
+    /**
+     * Mapper for AuthRange
+     */
     @Autowired
     private ModelMapper modelMapper;
 
+    /**
+     * Get all AuthRanges
+     * @return List<AuthRangeDTO>
+     */
     @Override
     public List<AuthRangeDTO> getAuthRanges() {
         return authRangeRepository.findAll().stream()

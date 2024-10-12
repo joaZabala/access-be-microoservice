@@ -4,7 +4,6 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.RegisterAuthorizationRangesDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
-import ar.edu.utn.frc.tup.lc.iv.entities.AuthorizedRangesEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthorizedRanges;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthorizedRangesRepository;
@@ -45,6 +44,9 @@ public class AuthorizedRangesService implements IAuthorizedRangesService {
     @Autowired
     private AuthorizedRangesRepository authorizedRangesRepository;
 
+    /**
+     * Repository for accessing auth data.
+     */
     @Autowired
     private AuthRepository authRepository;
 
@@ -63,29 +65,30 @@ public class AuthorizedRangesService implements IAuthorizedRangesService {
             throw new IllegalArgumentException("AuthorizedRangeDTO must not be null");
         }
 
-        AuthRangeEntity authorizedRangeEntity = modelMapper.map(authorizedRangeDTO, AuthRangeEntity.class);
+        AuthRangeEntity authRangeEntity = modelMapper.map(authorizedRangeDTO, AuthRangeEntity.class);
 
-        // aca le seteo el auth si es que tiene
-        if(authorizedRangeDTO.getAuthEntityId() != null && authorizedRangeDTO.getAuthEntityId() != 0L){
+        if (authorizedRangeDTO.getAuthEntityId() != null && authorizedRangeDTO.getAuthEntityId() != 0L) {
             Optional<AuthEntity> authEntity = authRepository.findById(authorizedRangeDTO.getAuthEntityId());
-            authEntity.ifPresent(authEntity1 -> authorizedRangeEntity.setAuthId(authEntity.get()));
-        }else{
-            authorizedRangeEntity.setAuthId(null);
+            authEntity.ifPresent(authRangeEntity::setAuthId);
+
+        } else {
+            authRangeEntity.setAuthId(null);
         }
-        authorizedRangeEntity.setActive(true);
+
+        authRangeEntity.setActive(true);
         if (authorizedRangeDTO.getDayOfWeeks() != null && !authorizedRangeDTO.getDayOfWeeks().isEmpty()) {
 
             String daysString = authorizedRangeDTO.getDayOfWeeks().stream()
                     .map(DayOfWeek::name)
                     .collect(Collectors.joining("-"));
 
-            authorizedRangeEntity.setDays(daysString);
+            authRangeEntity.setDays(daysString);
 
         } else {
-            authorizedRangeEntity.setDays(null);
+            authRangeEntity.setDays(null);
         }
 
-        AuthRangeEntity auhorizedRange = authorizedRangesRepository.save(authorizedRangeEntity);
+        AuthRangeEntity auhorizedRange = authorizedRangesRepository.save(authRangeEntity);
 
         return new AuthorizedRanges(auhorizedRange);
     }

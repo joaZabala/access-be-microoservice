@@ -41,11 +41,6 @@ public class VisitorService implements IVisitorService {
      */
     @Autowired
     private ModelMapper modelMapper;
-    /**
-     * service of the user.
-     */
-    @Autowired
-    private UserRestClient userRestClient;
 
     /**
      * Retrieves all authorized entities from the repository and maps them to

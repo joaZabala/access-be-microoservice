@@ -120,18 +120,6 @@ class VisitorServiceTest {
     }
 
     @Test
-    void saveOrUpdateVisitorNoExistOwnerTest(){
-        VisitorRequest visitorRequest =new VisitorRequest();
-        visitorRequest.setDocNumber(12345678L);
-
-        when(visitorRepository.findByDocNumber(12345678L)).thenReturn(null);
-        when(userRestClient.getUserById(11L)).thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-
-        assertThrows(EntityNotFoundException.class, () -> visitorService.saveOrUpdateVisitor(visitorRequest));
-
-    }
-
-    @Test
     void getBydocNumberTest() {
         VisitorEntity visitorEntity = new VisitorEntity(1L, "juan", "perez", 40252203L, LocalDate.now(), true);
         when(visitorRepository.findByDocNumber(40252203L)).thenReturn(visitorEntity);

@@ -1,9 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.services;
 
-import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.RegisterAuthorizationRangesDTO;
-import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthDTO;
-import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthorizedRanges;
 
 /**

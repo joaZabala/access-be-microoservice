@@ -29,29 +29,53 @@ import java.util.stream.Collectors;
 @Service
 public class AuthService implements IAuthService {
 
+    /**
+     * repository of authorizations
+     */
     @Autowired
     private AuthRepository authRepository;
 
+    /**
+     *  repository of authorization ranges
+     */
     @Autowired
     private AuthRangeRepository authRangeRepository;
 
+    /**
+     * repository of visitors
+     */
     @Autowired
     private VisitorRepository visitorRepository;
 
+    /**
+     * service of visitor
+     */
     @Autowired
     private VisitorService visitorService;
+    /**
+     * authorized ranges service
+     */
     @Autowired
     private AuthorizedRangesService authorizedRangesService;
 
+    /**
+     * ModelMapper for converting between entities and DTOs.
+     */
     @Autowired
     private ModelMapper modelMapper;
 
+    /**
+     *  Retrieves a list of individual authorizations
+     *  by document number.
+     * @param docNumber document number.
+     * @return list of authorized persons.
+     */
     @Override
     public List<AuthDTO> getAuthsByDocNumber(Long docNumber) {
 
         VisitorEntity visitorEntity = visitorRepository.findByDocNumber(docNumber);
 
-        List<AuthEntity> authEntities = authRepository.findByVisitor(visitorEntity.getVisitorId());
+        List<AuthEntity> authEntities = authRepository.findByVisitor(visitorEntity);
 
         List<AuthDTO> authDTOs = new ArrayList<>();
 
@@ -75,10 +99,14 @@ public class AuthService implements IAuthService {
 
     }
 
+    /**
+     * Authorize visitor with authorized ranges.
+     * @param visitorAuthRequest request.
+     * @return authorization created.
+     */
     @Override
     @Transactional
     public AuthDTO authorizeVisitor(VisitorAuthRequest visitorAuthRequest) {
-
         visitorAuthRequest.getVisitorRequest().setActive(true);
 
         //llamo al metodo para crear o modificar visitor
@@ -108,7 +136,6 @@ public class AuthService implements IAuthService {
             authorizedRangesList.add(authorizedRanges);
         }
 
-
         AuthDTO authDTO = modelMapper.map(authEntity, AuthDTO.class);
         authDTO.setAuthRanges(authorizedRangesList.stream()
                 .map(auth -> modelMapper.map(auth, AuthRangeDTO.class)).collect(Collectors.toList()));
@@ -116,11 +143,5 @@ public class AuthService implements IAuthService {
         return authDTO;
 
     }
-
-    @Override
-    public AuthEntity getAuthById(Long authId) {
-        return authRepository.findById(authId).orElse(null);
-    }
-
 
 }

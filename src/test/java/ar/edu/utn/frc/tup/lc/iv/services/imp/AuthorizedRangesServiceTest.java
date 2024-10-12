@@ -1,9 +1,12 @@
 package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.RegisterAuthorizationRangesDTO;
+import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
+import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthorizedRangesEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthorizedRanges;
+import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthorizedRangesRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,24 +14,29 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 public class AuthorizedRangesServiceTest {
-    @InjectMocks
+    @SpyBean
     private AuthorizedRangesService authorizedRangesService;
 
-    @Mock
+    @MockBean
     private AuthorizedRangesRepository authorizedRangesRepository;
 
-    @Mock
-    private ModelMapper modelMapper;
+    @MockBean
+    private AuthRepository authRepository;
 
     @BeforeEach
     public void setUp() {
@@ -37,93 +45,82 @@ public class AuthorizedRangesServiceTest {
 
     @Test
     public void testSaveAuthorizedRangeWithDaysNull() {
-        RegisterAuthorizationRangesDTO authorizedRangeDTO = new RegisterAuthorizationRangesDTO();
-     //   authorizedRangeDTO.setAuthTypeId(1L);
-        authorizedRangeDTO.setVisitorId(2L);
-//        authorizedRangeDTO.setExternalId(3L);
-        authorizedRangeDTO.setDateFrom(LocalDate.now());
-        authorizedRangeDTO.setDateTo(LocalDate.now().plusDays(7));
-        authorizedRangeDTO.setHourFrom(LocalTime.of(9, 0));
-        authorizedRangeDTO.setHourTo(LocalTime.of(17, 0));
-        authorizedRangeDTO.setDayOfWeeks(null);
+        RegisterAuthorizationRangesDTO dto = new RegisterAuthorizationRangesDTO();
+        dto.setAuthEntityId(1L);
+        dto.setVisitorId(1L);
+        dto.setDateFrom(LocalDate.of(2023, 10, 1));
+        dto.setDateTo(LocalDate.of(2024, 10, 1));
+        dto.setHourFrom(LocalTime.of(9, 0));
+        dto.setHourTo(LocalTime.of(17, 0));
+        dto.setDayOfWeeks(null);
 
-        AuthorizedRangesEntity authorizedRangeEntity = new AuthorizedRangesEntity();
-        VisitorEntity visitor = new VisitorEntity();
-        visitor.setVisitorId(2L);
-        authorizedRangeEntity.setVisitorId(visitor);
-        authorizedRangeEntity.setExternalId(3L);
-        authorizedRangeEntity.setDateFrom(LocalDate.now());
-        authorizedRangeEntity.setDateTo(LocalDate.now().plusDays(7));
-        authorizedRangeEntity.setHourFrom(LocalTime.of(9, 0));
-        authorizedRangeEntity.setHourTo(LocalTime.of(17, 0));
-        authorizedRangeEntity.setDays(null);
-        authorizedRangeEntity.setActive(true);
+        AuthEntity authEntity = new AuthEntity();
+        authEntity.setAuthId(1L);
 
-        AuthorizedRanges authorizedRanges = new AuthorizedRanges(
-                authorizedRangeEntity.getAuthRangeId(),
-                authorizedRangeEntity.getVisitorId().getVisitorId(),
-//                authorizedRangeEntity.getExternalId(),
-                authorizedRangeEntity.getDateFrom(),
-                authorizedRangeEntity.getDateTo(),
-                authorizedRangeEntity.getHourFrom(),
-                authorizedRangeEntity.getHourTo(),
-                authorizedRangeEntity.getDays(),
-                authorizedRangeEntity.getPlotId(),
-                authorizedRangeEntity.getComment(),
-                authorizedRangeEntity.isActive());
-        when(modelMapper.map(authorizedRangeDTO, AuthorizedRangesEntity.class)).thenReturn(authorizedRangeEntity);
-       // when(authorizedRangesRepository.save(any(AuthorizedRangesEntity.class))).thenReturn(authorizedRangeEntity);
-        when(modelMapper.map(authorizedRangeEntity, AuthorizedRanges.class)).thenReturn(authorizedRanges);
-        authorizedRangesService.registerAuthorizedRange(authorizedRangeDTO);
+        AuthRangeEntity authRangeEntity = new AuthRangeEntity();
+        authRangeEntity.setAuthId(authEntity);
+        authRangeEntity.setActive(true);
+        authRangeEntity.setDays(null);
 
-        //verify(authorizedRangesRepository, times(1)).save(any(AuthorizedRangesEntity.class));
-        assertEquals(2L, authorizedRangeEntity.getVisitorId().getVisitorId());
-        assertNull(authorizedRangeEntity.getDays());
+        when(authRepository.findById(1L)).thenReturn(Optional.of(authEntity));
+        when(authorizedRangesRepository.save(any(AuthRangeEntity.class))).thenReturn(authRangeEntity);
+
+        // Ejecutar el método bajo prueba
+        AuthorizedRanges result = authorizedRangesService.registerAuthorizedRange(dto);
+
+        // Verificar interacciones con los mocks
+        verify(authRepository).findById(1L);
+        verify(authorizedRangesRepository).save(any(AuthRangeEntity.class));
+
+
+        // Verificar que los resultados sean los esperados
+        assertNotNull(result);
+        assertNull(result.getDays());
+        assertTrue(result.isActive());
     }
 
     @Test
     public void testSaveAuthorizedRange() {
         RegisterAuthorizationRangesDTO authorizedRangeDTO = new RegisterAuthorizationRangesDTO();
-     //   authorizedRangeDTO.setAuthTypeId(1L);
         authorizedRangeDTO.setVisitorId(2L);
-//        authorizedRangeDTO.setExternalId(3L);
         authorizedRangeDTO.setDateFrom(LocalDate.now());
         authorizedRangeDTO.setDateTo(LocalDate.now().plusDays(7));
         authorizedRangeDTO.setHourFrom(LocalTime.of(9, 0));
         authorizedRangeDTO.setHourTo(LocalTime.of(17, 0));
         authorizedRangeDTO.setDayOfWeeks(Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.FRIDAY));
 
-        AuthorizedRangesEntity authorizedRangeEntity = new AuthorizedRangesEntity();
+        // Configurar la entidad AuthEntity y AuthorizedRangesEntity
         VisitorEntity visitor = new VisitorEntity();
         visitor.setVisitorId(2L);
-        authorizedRangeEntity.setVisitorId(visitor);
-        authorizedRangeEntity.setExternalId(3L);
-        authorizedRangeEntity.setDateFrom(LocalDate.now());
-        authorizedRangeEntity.setDateTo(LocalDate.now().plusDays(7));
-        authorizedRangeEntity.setHourFrom(LocalTime.of(9, 0));
-        authorizedRangeEntity.setHourTo(LocalTime.of(17, 0));
-        authorizedRangeEntity.setDays("MONDAY-FRIDAY");
-        authorizedRangeEntity.setActive(true);
 
-        AuthorizedRanges authorizedRanges = new AuthorizedRanges(
-                authorizedRangeEntity.getAuthRangeId(),
-                authorizedRangeEntity.getVisitorId().getVisitorId(),
-//                authorizedRangeEntity.getExternalId(),
-                authorizedRangeEntity.getDateFrom(),
-                authorizedRangeEntity.getDateTo(),
-                authorizedRangeEntity.getHourFrom(),
-                authorizedRangeEntity.getHourTo(),
-                authorizedRangeEntity.getDays(),
-                authorizedRangeEntity.getPlotId(),
-                authorizedRangeEntity.getComment(),
-                authorizedRangeEntity.isActive());
-        when(modelMapper.map(authorizedRangeDTO, AuthorizedRangesEntity.class)).thenReturn(authorizedRangeEntity);
- //       when(authorizedRangesRepository.save(any(AuthorizedRangesEntity.class))).thenReturn(authorizedRangeEntity);
-        when(modelMapper.map(authorizedRangeEntity, AuthorizedRanges.class)).thenReturn(authorizedRanges);
-        authorizedRangesService.registerAuthorizedRange(authorizedRangeDTO);
+        AuthEntity authEntity = new AuthEntity();
+        authEntity.setAuthId(1L);
+        authEntity.setVisitor(visitor);
 
-   //     verify(authorizedRangesRepository, times(1)).save(any(AuthorizedRangesEntity.class));
-        assertEquals(2L, authorizedRangeEntity.getVisitorId().getVisitorId());
+        AuthRangeEntity authRangeEntity = new AuthRangeEntity();
+        authRangeEntity.setDateFrom(LocalDate.now());
+        authRangeEntity.setDateTo(LocalDate.now().plusDays(7));
+        authRangeEntity.setHourFrom(LocalTime.of(9, 0));
+        authRangeEntity.setHourTo(LocalTime.of(17, 0));
+        authRangeEntity.setDays("MONDAY-FRIDAY");
+        authRangeEntity.setAuthId(authEntity);
+        authRangeEntity.setActive(true);
+
+        // Configurar mocks para simular el comportamiento de la base de datos
+        when(authRepository.findById(1L)).thenReturn(Optional.of(authEntity));
+       when(authorizedRangesRepository.save(any(AuthRangeEntity.class))).thenReturn(authRangeEntity);
+
+        // Ejecutar el método bajo prueba
+        AuthorizedRanges result = authorizedRangesService.registerAuthorizedRange(authorizedRangeDTO);
+
+        // Verificaciones
+        assertNotNull(result);
+        assertEquals("MONDAY-FRIDAY", result.getDays());
+        assertTrue(result.isActive());
+        assertEquals(LocalTime.of(9, 0), result.getHourFrom());
+        assertEquals(LocalTime.of(17, 0), result.getHourTo());
+        assertEquals(LocalDate.now(), result.getDateFrom());
+        assertEquals(LocalDate.now().plusDays(7), result.getDateTo());
     }
 
     @Test
