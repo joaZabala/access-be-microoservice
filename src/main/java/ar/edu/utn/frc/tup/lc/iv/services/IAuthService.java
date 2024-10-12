@@ -26,4 +26,13 @@ public interface IAuthService {
      * @return authorization created.
      */
     AuthDTO authorizeVisitor(VisitorAuthRequest visitorAuthRequest);
+
+    
+    /**
+     * Retrieves a list of valid authorizations
+     * by document number.
+     * @param docNumber document number.
+     * @return list of valid authorizations.
+     */
+    List<AuthDTO> getValidAuthsByDocNumber(Long docNumber);
 }

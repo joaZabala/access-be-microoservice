@@ -33,6 +33,11 @@ public class AuthController {
         return authService.getAuthsByDocNumber(docNumber); 
     }
 
+    @GetMapping("/valid")
+    public List<AuthDTO> getValidAuths(@RequestParam Long docNumber) {
+        return authService.getValidAuthsByDocNumber(docNumber);
+    }
+
     /**
      * Authorize visitor with authorized ranges.
      * @param visitorAuthRequest request.

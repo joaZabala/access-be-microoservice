@@ -22,6 +22,9 @@ import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
 import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
 import ar.edu.utn.frc.tup.lc.iv.services.IAuthService;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import java.util.ArrayList;
 
 import java.util.stream.Collectors;
@@ -36,7 +39,7 @@ public class AuthService implements IAuthService {
     private AuthRepository authRepository;
 
     /**
-     *  repository of authorization ranges
+     * repository of authorization ranges
      */
     @Autowired
     private AuthRangeRepository authRangeRepository;
@@ -65,8 +68,9 @@ public class AuthService implements IAuthService {
     private ModelMapper modelMapper;
 
     /**
-     *  Retrieves a list of individual authorizations
-     *  by document number.
+     * Retrieves a list of individual authorizations
+     * by document number.
+     * 
      * @param docNumber document number.
      * @return list of authorized persons.
      */
@@ -101,6 +105,7 @@ public class AuthService implements IAuthService {
 
     /**
      * Authorize visitor with authorized ranges.
+     * 
      * @param visitorAuthRequest request.
      * @return authorization created.
      */
@@ -109,7 +114,7 @@ public class AuthService implements IAuthService {
     public AuthDTO authorizeVisitor(VisitorAuthRequest visitorAuthRequest) {
         visitorAuthRequest.getVisitorRequest().setActive(true);
 
-        //llamo al metodo para crear o modificar visitor
+        // llamo al metodo para crear o modificar visitor
         VisitorDTO visitorDTO = visitorService.saveOrUpdateVisitor(visitorAuthRequest.getVisitorRequest());
 
         AuthEntity authEntity = new AuthEntity();
@@ -122,15 +127,15 @@ public class AuthService implements IAuthService {
         for (AuthRangeRequest authRangeRequest : visitorAuthRequest.getAuthRangeRequest()) {
 
             // Mapear la autorización individual
-            RegisterAuthorizationRangesDTO registerAuthorizationRangesDTO =
-                    modelMapper.map(authRangeRequest, RegisterAuthorizationRangesDTO.class);
+            RegisterAuthorizationRangesDTO registerAuthorizationRangesDTO = modelMapper.map(authRangeRequest,
+                    RegisterAuthorizationRangesDTO.class);
 
             registerAuthorizationRangesDTO.setAuthEntityId(authEntity.getAuthId());
             registerAuthorizationRangesDTO.setVisitorId(visitorDTO.getVisitorId());
 
             // Registrar la autorización
-            AuthorizedRanges authorizedRanges =
-                    authorizedRangesService.registerAuthorizedRange(registerAuthorizationRangesDTO);
+            AuthorizedRanges authorizedRanges = authorizedRangesService
+                    .registerAuthorizedRange(registerAuthorizationRangesDTO);
 
             // Agregarla a la lista
             authorizedRangesList.add(authorizedRanges);
@@ -142,6 +147,48 @@ public class AuthService implements IAuthService {
 
         return authDTO;
 
+    }
+
+    /**
+     * Retrieves a list of valid authorizations
+     * by document number.
+     * 
+     * @param docNumber document number.
+     * @return list of valid authorizations.
+     */
+
+    @Override
+    public List<AuthDTO> getValidAuthsByDocNumber(Long docNumber) {
+
+        List<AuthDTO> dtos = getAuthsByDocNumber(docNumber);
+        List<AuthDTO> validAuths = new ArrayList<>();
+
+        LocalDate currentDate = LocalDate.now();
+        LocalTime currentTime = LocalTime.now();
+
+        for (AuthDTO authDTO : dtos) {
+            List<AuthRangeDTO> validAuthRanges = new ArrayList<>();
+
+            if (authDTO.isActive()) {
+                for (AuthRangeDTO authRangeDTO : authDTO.getAuthRanges()) {
+                    if (authRangeDTO.isActive()
+                            && (authRangeDTO.getDateFrom() == null || !currentDate.isBefore(authRangeDTO.getDateFrom()))
+                            && (authRangeDTO.getDateTo() == null || !currentDate.isAfter(authRangeDTO.getDateTo()))
+                            && (authRangeDTO.getHourFrom() == null || !currentTime.isBefore(authRangeDTO.getHourFrom()))
+                            && (authRangeDTO.getHourTo() == null || !currentTime.isAfter(authRangeDTO.getHourTo()))) {
+
+                        validAuthRanges.add(authRangeDTO);
+                    }
+                }
+                
+                if (!validAuthRanges.isEmpty()) {
+                    authDTO.setAuthRanges(validAuthRanges);
+                    validAuths.add(authDTO);
+                }
+            }
+        }
+
+        return validAuths;
     }
 
 }
