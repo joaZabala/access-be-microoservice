@@ -189,8 +189,7 @@ public class AuthService implements IAuthService {
     }
 
     /**
-     * Create a new authorization
-     * if not exists with the same visitorType.
+     *  Create a new authorization
      * @param visitorDTO visitor
      * @param visitorAuthRequest request
      * @return new authorization
@@ -252,6 +251,7 @@ public class AuthService implements IAuthService {
 
         return authorizedRangesList;
     }
+
 
 
     /**
