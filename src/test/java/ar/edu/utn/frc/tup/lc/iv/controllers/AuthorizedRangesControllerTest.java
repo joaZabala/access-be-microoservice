@@ -36,9 +36,9 @@ class AuthorizedRangesControllerTest {
     @Test
     void registerAuthorizedRange() throws Exception {
         RegisterAuthorizationRangesDTO rangeDto = new RegisterAuthorizationRangesDTO();
-        rangeDto.setAuthTypeId(1L);
+     //   rangeDto.setAuthTypeId(1L);
         rangeDto.setVisitorId(1L);
-        rangeDto.setExternalId(123L);
+        //rangeDto.setExternalId(123L);
         rangeDto.setDateFrom(LocalDate.of(2024, 10, 1));
         rangeDto.setDateTo(LocalDate.of(2024, 10, 31));
         rangeDto.setHourFrom(LocalTime.of(8, 0));
@@ -51,7 +51,7 @@ class AuthorizedRangesControllerTest {
         AuthorizedRanges authorizedRanges = new AuthorizedRanges(
                 1L,
                 rangeDto.getVisitorId(),
-                rangeDto.getExternalId(),
+              //  rangeDto.getExternalId(),
                 rangeDto.getDateFrom(),
                 rangeDto.getDateTo(),
                 rangeDto.getHourFrom(),

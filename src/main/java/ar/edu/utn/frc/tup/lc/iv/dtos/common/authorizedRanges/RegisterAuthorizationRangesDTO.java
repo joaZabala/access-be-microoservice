@@ -1,5 +1,7 @@
 package ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges;
 
+import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,11 +23,12 @@ import java.util.List;
 @Data
 public class RegisterAuthorizationRangesDTO {
 
-    /**
-     * Unique Authorized type identifier.
-     */
-    @JsonProperty("auth_type_id")
-    private Long authTypeId;
+    //todo revisar si es necesario
+//    /**
+//     * Unique Authorized type identifier.
+//     */
+//    @JsonProperty("auth_type_id")
+//    private Long authTypeId;
 
     /**
      * Unique Authorized identifier for the visitor.
@@ -34,27 +37,39 @@ public class RegisterAuthorizationRangesDTO {
     private Long visitorId;
 
     /**
-     * External ID to identify Suppliers, Employees, Owners, and Cohabitants.
+     * Unique Authorized entity identifier.
      */
-    @JsonProperty("external_id")
-    private Long externalId;
+    @JsonProperty("auth_entity_id")
+    private Long authEntityId;
+
+    //todo revisar si es necesario
+//    /**
+//     * External ID to identify Suppliers, Employees, Owners, and Cohabitants.
+//     */
+//    @JsonProperty("external_id")
+//    private Long externalId;
 
     /**
      * Date from which the authorized range is valid.
      */
     @JsonProperty("date_from")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyy")
+    @Schema(type = "string", pattern = "dd-MM-yyy", example = "01-01-2022" , description = "The start date of the authorized range.")
     private LocalDate dateFrom;
 
     /**
      * Date until which the authorized range is valid.
      */
     @JsonProperty("date_to")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyy")
+    @Schema(type = "string", pattern = "dd-MM-yyy", example = "02-01-2024" , description = "The start date of the authorized range.")
     private LocalDate dateTo;
 
     /**
      * The start time of the authorized range.
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    @Schema(type = "string", pattern = "HH:mm:ss", example = "08:00" , description = "The start time of the authorized range.")
     @JsonProperty("hour_from")
     private LocalTime hourFrom;
 
@@ -62,6 +77,7 @@ public class RegisterAuthorizationRangesDTO {
      * The end time of the authorized range.
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    @Schema(type = "string", pattern = "HH:mm:ss", example = "17:00" , description = "The end time of the authorized range.")
     @JsonProperty("hour_to")
     private LocalTime hourTo;
 

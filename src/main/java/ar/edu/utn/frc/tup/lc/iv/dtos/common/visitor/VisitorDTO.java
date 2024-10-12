@@ -44,11 +44,6 @@ public class VisitorDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @JsonProperty("birth_date")
     private LocalDate birthDate;
-    /**
-     * Unique identifier for the authorized person.
-     */
-    @JsonProperty("owner_id")
-    private Long ownerId;
 
     /**
      * If a visitor is active or not.

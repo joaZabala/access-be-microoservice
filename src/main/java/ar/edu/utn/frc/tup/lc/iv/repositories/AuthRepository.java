@@ -7,6 +7,7 @@ import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -17,5 +18,8 @@ public interface AuthRepository extends JpaRepository<AuthEntity, Long> {
 
 
     //find by doc number
-    List<AuthEntity> findByVisitor(VisitorEntity visitor);
+    @Query("SELECT a FROM AuthEntity a WHERE a.visitor.visitorId = :visitorId")
+    List<AuthEntity> findByVisitor(Long visitorId);
+
 }
+

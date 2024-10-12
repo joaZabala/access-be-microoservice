@@ -40,7 +40,7 @@ public class AuthorizedRangesServiceTest {
         RegisterAuthorizationRangesDTO authorizedRangeDTO = new RegisterAuthorizationRangesDTO();
      //   authorizedRangeDTO.setAuthTypeId(1L);
         authorizedRangeDTO.setVisitorId(2L);
-//        authorizedRangeDTO.setExternalId(3L);
+        authorizedRangeDTO.setExternalId(3L);
         authorizedRangeDTO.setDateFrom(LocalDate.now());
         authorizedRangeDTO.setDateTo(LocalDate.now().plusDays(7));
         authorizedRangeDTO.setHourFrom(LocalTime.of(9, 0));
@@ -62,7 +62,7 @@ public class AuthorizedRangesServiceTest {
         AuthorizedRanges authorizedRanges = new AuthorizedRanges(
                 authorizedRangeEntity.getAuthRangeId(),
                 authorizedRangeEntity.getVisitorId().getVisitorId(),
-//                authorizedRangeEntity.getExternalId(),
+                authorizedRangeEntity.getExternalId(),
                 authorizedRangeEntity.getDateFrom(),
                 authorizedRangeEntity.getDateTo(),
                 authorizedRangeEntity.getHourFrom(),
@@ -86,7 +86,7 @@ public class AuthorizedRangesServiceTest {
         RegisterAuthorizationRangesDTO authorizedRangeDTO = new RegisterAuthorizationRangesDTO();
      //   authorizedRangeDTO.setAuthTypeId(1L);
         authorizedRangeDTO.setVisitorId(2L);
-//        authorizedRangeDTO.setExternalId(3L);
+        authorizedRangeDTO.setExternalId(3L);
         authorizedRangeDTO.setDateFrom(LocalDate.now());
         authorizedRangeDTO.setDateTo(LocalDate.now().plusDays(7));
         authorizedRangeDTO.setHourFrom(LocalTime.of(9, 0));
@@ -108,7 +108,7 @@ public class AuthorizedRangesServiceTest {
         AuthorizedRanges authorizedRanges = new AuthorizedRanges(
                 authorizedRangeEntity.getAuthRangeId(),
                 authorizedRangeEntity.getVisitorId().getVisitorId(),
-//                authorizedRangeEntity.getExternalId(),
+                authorizedRangeEntity.getExternalId(),
                 authorizedRangeEntity.getDateFrom(),
                 authorizedRangeEntity.getDateTo(),
                 authorizedRangeEntity.getHourFrom(),

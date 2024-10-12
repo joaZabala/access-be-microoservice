@@ -28,7 +28,7 @@ CREATE TABLE auths (
 -- Tabla de Auth_Ranges
 CREATE TABLE auth_ranges (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    auth_id BIGINT NULL,
+    auth_id BIGINT,
     date_from DATE NOT NULL,
     date_to DATE NOT NULL,
     hour_from TIME NOT NULL,

@@ -1,5 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.repositories;
 
+import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthorizedRangesEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,7 @@ import java.time.LocalTime;
  * Repository of AuthorizedRanges.
  */
 @Service
-public interface AuthorizedRangesRepository extends JpaRepository<AuthorizedRangesEntity, Long> {
+public interface AuthorizedRangesRepository extends JpaRepository<AuthRangeEntity, Long> {
     /**
      * Checks if the visitor has a valid invitation.
      * @param startDate      The date to check for access validity.

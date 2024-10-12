@@ -30,10 +30,10 @@ public class AuthorizedRanges extends AuditBase {
      * Unique Authorized identifier.
      */
     private Long visitorId;
-//    /**
-//     * External ID to identify Suppliers, Employees, Owners and Cohabitants.
-//     */
-//    private Long externalId;
+    /**
+     * External ID to identify Suppliers, Employees, Owners and Cohabitants.
+     */
+    private Long externalId;
     /**
      * Date from to form the authorized range.
      */

@@ -86,7 +86,7 @@ class VisitorServiceTest {
 
         //then
         VisitorDTO visitorDTOExpected =
-                new VisitorDTO(1L,"joaquin","zabala",12345678L,LocalDate.of(2005,3,17), true);
+                new VisitorDTO(1L,"joaquin","zabala",12345678L,LocalDate.of(2005,3,17), 1L, true);
 
         VisitorDTO visitorDTOResult = visitorService.saveOrUpdateVisitor(visitorRequest);
 
@@ -111,7 +111,7 @@ class VisitorServiceTest {
 
         //then
         VisitorDTO visitorDTOExpected =
-                new VisitorDTO(1L, "joaquin","zabala",12345678L,LocalDate.of(2005,3,17),true);
+                new VisitorDTO(1L, "joaquin","zabala",12345678L,LocalDate.of(2005,3,17), 1L, true);
 
         VisitorDTO visitorDTOResult = visitorService.saveOrUpdateVisitor(visitorRequest);
 

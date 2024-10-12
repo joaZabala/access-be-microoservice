@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class VisitorRequestDto {
+public class VisitorRequest {
     /**
      * First name of the authorized person. Maximum of 50 characters.
      */
@@ -41,12 +41,6 @@ public class VisitorRequestDto {
     @Schema(type = "string", pattern = "dd-MM-yyyy", example = "18-09-2024")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
-
-    /**
-     * id of the user that autorize.
-     */
-    @JsonProperty("owner_id")
-    private Long ownerId;
 
     /**
      * If a visitor is active or not.
