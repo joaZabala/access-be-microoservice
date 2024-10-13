@@ -189,8 +189,7 @@ public class AuthService implements IAuthService {
     }
 
     /**
-     * Create a new authorization
-     * if not exists with the same visitorType.
+     *  Create a new authorization
      * @param visitorDTO visitor
      * @param visitorAuthRequest request
      * @return new authorization
@@ -203,7 +202,8 @@ public class AuthService implements IAuthService {
         authEntity.setActive(true);
         authEntity = authRepository.save(authEntity);
 
-        List<AuthorizedRanges> authorizedRangesList = registerAuthRanges(visitorAuthRequest.getAuthRangeRequest(), authEntity, visitorDTO);
+        List<AuthorizedRanges> authorizedRangesList =
+                registerAuthRanges(visitorAuthRequest.getAuthRangeRequest(), authEntity, visitorDTO);
 
         return buildAuthDTO(authEntity, authorizedRangesList);
     }
@@ -217,7 +217,8 @@ public class AuthService implements IAuthService {
      */
     private AuthDTO updateAuthorization(AuthDTO existingAuth, VisitorDTO visitorDTO, VisitorAuthRequest visitorAuthRequest) {
         List<AuthorizedRanges> newAuthorizedRanges =
-                registerAuthRanges(visitorAuthRequest.getAuthRangeRequest(), modelMapper.map(existingAuth, AuthEntity.class), visitorDTO);
+                registerAuthRanges(visitorAuthRequest.getAuthRangeRequest(),
+                        modelMapper.map(existingAuth, AuthEntity.class), visitorDTO);
 
         existingAuth.getAuthRanges().addAll(newAuthorizedRanges.stream()
                 .map(auth -> modelMapper.map(auth, AuthRangeDTO.class))

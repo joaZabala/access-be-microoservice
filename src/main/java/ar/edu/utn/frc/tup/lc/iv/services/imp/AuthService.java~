@@ -253,7 +253,6 @@ public class AuthService implements IAuthService {
     }
 
 
-
     /**
      * Build AuthDTO to show in the response
      * @param authEntity auth entity
