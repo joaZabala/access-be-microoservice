@@ -1,11 +1,11 @@
 package ar.edu.utn.frc.tup.lc.iv.controllers;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
-import ar.edu.utn.frc.tup.lc.iv.services.IAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import ar.edu.utn.frc.tup.lc.iv.services.imp.AuthService;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthDTO;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class AuthController {
      * Service for managing authorized persons.
      */
     @Autowired
-    private IAuthService authService;
+    private AuthService authService;
 
     /**
      *  Retrieve authorizations for authorized persons by document number.

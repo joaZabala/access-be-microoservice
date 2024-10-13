@@ -2,7 +2,7 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import java.util.List;
 
-import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.AuthRangeRequest;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.AuthRangeDto;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.RegisterAuthorizationRangesDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
@@ -27,6 +27,7 @@ import java.time.LocalTime;
 
 import java.util.ArrayList;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -120,7 +121,18 @@ public class AuthService implements IAuthService {
     public AuthDTO authorizeVisitor(VisitorAuthRequest visitorAuthRequest) {
 
         visitorAuthRequest.getVisitorRequest().setActive(true);
-        VisitorDTO visitorDTO = visitorService.saveOrUpdateVisitor(visitorAuthRequest.getVisitorRequest());
+
+        VisitorDTO visitorDTO;
+
+        // si ya existe el visitante en la base de datos ( verificando por docNumber)
+         VisitorDTO visitorDTOAlreadyExist =
+                 visitorService.getVisitorByDocNumber(visitorAuthRequest.getVisitorRequest().getDocNumber());
+
+        if(visitorDTOAlreadyExist != null){
+            visitorDTO = visitorDTOAlreadyExist;
+        }else{
+            visitorDTO = visitorService.saveOrUpdateVisitor(visitorAuthRequest.getVisitorRequest());
+        }
 
         Optional<AuthDTO> existingAuthOpt = findExistingAuthorization(visitorAuthRequest);
 
@@ -194,7 +206,7 @@ public class AuthService implements IAuthService {
      * @param visitorAuthRequest request
      * @return new authorization
      */
-    private AuthDTO createNewAuthorization(VisitorDTO visitorDTO, VisitorAuthRequest visitorAuthRequest) {
+    protected AuthDTO createNewAuthorization(VisitorDTO visitorDTO, VisitorAuthRequest visitorAuthRequest) {
 
         AuthEntity authEntity = new AuthEntity();
         authEntity.setVisitor(modelMapper.map(visitorDTO, VisitorEntity.class));
@@ -205,7 +217,18 @@ public class AuthService implements IAuthService {
         List<AuthorizedRanges> authorizedRangesList =
                 registerAuthRanges(visitorAuthRequest.getAuthRangeRequest(), authEntity, visitorDTO);
 
-        return buildAuthDTO(authEntity, authorizedRangesList);
+        AuthDTO authDTO = new AuthDTO();
+        authDTO.setAuthId(authEntity.getAuthId());
+        authDTO.setVisitorType(authEntity.getVisitorType());
+        authDTO.setVisitor(modelMapper.map(authEntity.getVisitor() , VisitorDTO.class));
+        authDTO.setActive(authEntity.isActive());
+
+        authDTO.setAuthRanges(authorizedRangesList.stream()
+                .filter(Objects::nonNull)
+                .map(auth -> modelMapper.map(auth, AuthRangeDTO.class))
+                .collect(Collectors.toList()));
+
+        return authDTO;
     }
 
     /**
@@ -216,15 +239,27 @@ public class AuthService implements IAuthService {
      * @return updated authorization
      */
     private AuthDTO updateAuthorization(AuthDTO existingAuth, VisitorDTO visitorDTO, VisitorAuthRequest visitorAuthRequest) {
-        List<AuthorizedRanges> newAuthorizedRanges =
-                registerAuthRanges(visitorAuthRequest.getAuthRangeRequest(),
-                        modelMapper.map(existingAuth, AuthEntity.class), visitorDTO);
 
-        existingAuth.getAuthRanges().addAll(newAuthorizedRanges.stream()
-                .map(auth -> modelMapper.map(auth, AuthRangeDTO.class))
-                .collect(Collectors.toList()));
+        // Registra los nuevos rangos de autorización
+        List<AuthorizedRanges> newAuthorizedRanges = registerAuthRanges(visitorAuthRequest.getAuthRangeRequest()
+                , modelMapper.map(existingAuth, AuthEntity.class), visitorDTO);
 
-        return existingAuth;  // Devuelve la autorización actualizada
+        for (AuthorizedRanges range : newAuthorizedRanges) {
+            AuthRangeDTO authRangeDTO = new AuthRangeDTO();
+
+            authRangeDTO.setAuthRangeId(range.getAuthRangeId());
+            authRangeDTO.setActive(range.isActive());
+            authRangeDTO.setDays(range.getDays());
+            authRangeDTO.setDateFrom(range.getDateFrom());
+            authRangeDTO.setDateTo(range.getDateTo());
+            authRangeDTO.setHourFrom(range.getHourFrom());
+            authRangeDTO.setHourTo(range.getHourTo());
+            authRangeDTO.setPlotId(range.getPlotId());
+
+            existingAuth.getAuthRanges().add(authRangeDTO);
+        }
+
+        return existingAuth; // Devuelve la autorización actualizada
     }
 
     /**
@@ -234,11 +269,12 @@ public class AuthService implements IAuthService {
      * @param visitorDTO visitor
      * @return list of authorized ranges
      */
-    private List<AuthorizedRanges> registerAuthRanges(List<AuthRangeRequest> authRangeRequests,
+    protected List<AuthorizedRanges> registerAuthRanges(List<AuthRangeDto> authRangeRequests,
                                                       AuthEntity authEntity, VisitorDTO visitorDTO) {
+
         List<AuthorizedRanges> authorizedRangesList = new ArrayList<>();
 
-        for (AuthRangeRequest authRangeRequest : authRangeRequests) {
+        for (AuthRangeDto authRangeRequest : authRangeRequests) {
             RegisterAuthorizationRangesDTO registerAuthorizationRangesDTO =
                     modelMapper.map(authRangeRequest, RegisterAuthorizationRangesDTO.class);
 
@@ -255,18 +291,18 @@ public class AuthService implements IAuthService {
     }
 
 
-    /**
-     * Build AuthDTO to show in the response
-     * @param authEntity auth entity
-     * @param authorizedRangesList list of authorized ranges
-     * @return AuthDTO
-     */
-    private AuthDTO buildAuthDTO(AuthEntity authEntity, List<AuthorizedRanges> authorizedRangesList) {
-        AuthDTO authDTO = modelMapper.map(authEntity, AuthDTO.class);
-        authDTO.setAuthRanges(authorizedRangesList.stream()
-                .map(auth -> modelMapper.map(auth, AuthRangeDTO.class))
-                .collect(Collectors.toList()));
-        return authDTO;
-    }
+//    /**
+//     * Build AuthDTO to show in the response
+//     * @param authEntity auth entity
+//     * @param authorizedRangesList list of authorized ranges
+//     * @return AuthDTO
+//     */
+//    private AuthDTO buildAuthDTO(AuthEntity authEntity, List<AuthorizedRanges> authorizedRangesList) {
+//        AuthDTO authDTO = modelMapper.map(authEntity, AuthDTO.class);
+//        authDTO.setAuthRanges(authorizedRangesList.stream()
+//                .map(auth -> modelMapper.map(auth, AuthRangeDTO.class))
+//                .collect(Collectors.toList()));
+//        return authDTO;
+//    }
 
 }

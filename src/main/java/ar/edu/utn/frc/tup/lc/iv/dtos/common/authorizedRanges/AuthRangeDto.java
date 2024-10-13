@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthRangeRequest {
+public class AuthRangeDto {
     /**
      * Date from to form the authorized range.
      */

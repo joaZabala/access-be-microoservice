@@ -102,7 +102,7 @@ public class VisitorService implements IVisitorService {
         VisitorEntity visitorEntity = visitorRepository.findByDocNumber(docNumber);
 
         if (Objects.isNull(visitorEntity)) {
-            throw new EntityNotFoundException("No existe el visitante con el numero de documento " + docNumber);
+            return null;
         } else {
             return modelMapper.map(visitorEntity, VisitorDTO.class);
         }

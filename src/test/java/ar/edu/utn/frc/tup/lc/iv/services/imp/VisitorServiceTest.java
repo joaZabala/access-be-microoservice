@@ -132,11 +132,7 @@ class VisitorServiceTest {
     void getBydocNumberNoExistTest() {
         when(visitorRepository.findByDocNumber(40252203L)).thenReturn(null);
 
-       EntityNotFoundException exception=
-               assertThrows(EntityNotFoundException.class,
-                       () -> visitorService.getVisitorByDocNumber(40252203L));
-
-       assertEquals("No existe el visitante con el numero de documento 40252203", exception.getMessage());
+       assertNull(visitorService.getVisitorByDocNumber(40252203L));
     }
 
     @Test

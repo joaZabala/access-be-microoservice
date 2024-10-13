@@ -67,7 +67,7 @@ public class AuthorizedRangesService implements IAuthorizedRangesService {
 
         AuthRangeEntity authRangeEntity = modelMapper.map(authorizedRangeDTO, AuthRangeEntity.class);
         authRangeEntity.setActive(true);
-
+        
         if (authorizedRangeDTO.getAuthEntityId() != null && authorizedRangeDTO.getAuthEntityId() != 0L) {
             Optional<AuthEntity> authEntity = authRepository.findById(authorizedRangeDTO.getAuthEntityId());
             authEntity.ifPresent(authRangeEntity::setAuthId);

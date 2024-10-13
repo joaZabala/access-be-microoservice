@@ -15,5 +15,5 @@ public class VisitorAuthRequest {
 
     private VisitorType visitorType;
     private VisitorRequest visitorRequest;
-    private List<AuthRangeRequest> authRangeRequest;
+    private List<AuthRangeDto> authRangeRequest;
 }
