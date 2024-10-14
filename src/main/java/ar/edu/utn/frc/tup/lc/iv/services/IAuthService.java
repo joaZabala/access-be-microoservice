@@ -13,6 +13,13 @@ import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
 public interface IAuthService {
 
     /**
+     * Retrieves a list of all authorized persons.
+     * @return A list of {@link AuthDTO} representing
+     * all authorized persons.
+     */
+    List<AuthDTO> getAllAuths();
+
+    /**
      * Retrieves a list of individual authorizations
      * by document number.
      * @param docNumber document number.

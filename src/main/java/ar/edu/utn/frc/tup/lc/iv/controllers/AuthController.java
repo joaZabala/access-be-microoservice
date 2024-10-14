@@ -29,7 +29,11 @@ public class AuthController {
      * @return list of authorizations.
      */
     @GetMapping
-    public List<AuthDTO> getAuth(@RequestParam Long docNumber) {
+    public List<AuthDTO> getAuth(@RequestParam(required = false) Long docNumber) {
+
+        if(docNumber == null) {
+            return authService.getAllAuths();
+        }
         return authService.getAuthsByDocNumber(docNumber); 
     }
 

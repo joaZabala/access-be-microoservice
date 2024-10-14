@@ -19,7 +19,6 @@ public interface AuthRepository extends JpaRepository<AuthEntity, Long> {
 
 
     //find by doc number
-//    @Query("SELECT a FROM AuthEntity a WHERE a.visitor.visitorId = :visitorId")
     List<AuthEntity> findByVisitor(VisitorEntity visitor);
 
 }

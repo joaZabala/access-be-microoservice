@@ -82,10 +82,11 @@ public class AuthService implements IAuthService {
         List<AuthDTO> authDTOs = new ArrayList<>();
 
         for (AuthEntity authEntity : authEntities) {
+            // Obtener el visitante asociado
             VisitorEntity visitorEntity = authEntity.getVisitor();
 
-            if (visitorEntity != null && visitorEntity.isActive()) {
-
+            // Comprobar si el visitante está activo
+            if (visitorEntity != null && visitorEntity.isActive()) { // Verifica que el visitante no sea nulo y que esté activo
                 AuthDTO authDTO = modelMapper.map(authEntity, AuthDTO.class);
                 VisitorDTO visitorDTO = modelMapper.map(visitorEntity, VisitorDTO.class);
 
