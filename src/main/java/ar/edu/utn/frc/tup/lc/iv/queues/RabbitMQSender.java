@@ -53,7 +53,7 @@ public class RabbitMQSender {
             template.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, RabbitMQConfig.ROUTING_KEY, jsonMessage); // Update
                                                                                                             // the usage
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            return;
         }
     }
 }

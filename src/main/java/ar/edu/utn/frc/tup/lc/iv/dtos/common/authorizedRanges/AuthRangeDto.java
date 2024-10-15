@@ -13,24 +13,45 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+/**
+ * Data Transfer Object for creating or updating an authorized range.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthRangeDto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Format for dates as "dd-MM-yyyy".
+     */
+    private static final String DATE_FORMAT = "dd-MM-yyyy";
+
+    /**
+     * Format for time as "HH:mm:ss".
+     */
+    private static final String TIME_FORMAT = "HH:mm:ss";
+
+    /**
+     * Represents the string data type.
+     */
+    private static final String STRING_TYPE = "string";
+
     /**
      * Date from to form the authorized range.
      */
     @JsonProperty("date_from")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    @Schema(type = "string", pattern = "dd-MM-yyyy", example = "01-01-2022", description = "The start date of the authorized range.")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
+    @Schema(type = STRING_TYPE, pattern = DATE_FORMAT, example = "01-01-2022", description = "The start date of the authorized range.")
     private LocalDate dateFrom;
 
     /**
      * Date until to form the authorized range.
      */
     @JsonProperty("date_to")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy") // Corrected the pattern to dd-MM-yyyy
-    @Schema(type = "string", pattern = "dd-MM-yyyy", example = "02-01-2022", description = "The end date of the authorized range.")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
+    @Schema(type = STRING_TYPE, pattern = DATE_FORMAT, example = "02-01-2022", description = "The end date of the authorized range.")
     private LocalDate dateTo;
 
     /**
@@ -38,8 +59,8 @@ public class AuthRangeDto implements Serializable {
      * Defines the hour from which access is allowed.
      */
     @JsonProperty("hour_from")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-    @Schema(type = "string", pattern = "HH:mm:ss", example = "08:00:00", description = "The start time of the authorized range.")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TIME_FORMAT)
+    @Schema(type = STRING_TYPE, pattern = TIME_FORMAT, example = "08:00:00", description = "The start time of the authorized range.")
     private LocalTime hourFrom;
 
     /**
@@ -47,8 +68,8 @@ public class AuthRangeDto implements Serializable {
      * Defines the hour until which access is allowed.
      */
     @JsonProperty("hour_to")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-    @Schema(type = "string", pattern = "HH:mm:ss", example = "17:00:00", description = "The end time of the authorized range.")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TIME_FORMAT)
+    @Schema(type = STRING_TYPE, pattern = TIME_FORMAT, example = "17:00:00", description = "The end time of the authorized range.")
     private LocalTime hourTo;
 
     /**

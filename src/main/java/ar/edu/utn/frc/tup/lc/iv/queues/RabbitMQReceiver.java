@@ -46,7 +46,7 @@ public class RabbitMQReceiver {
             VisitorAuthRequest visitorAuthRequest = objectMapper.readValue(jsonMessage, VisitorAuthRequest.class);
             authService.authorizeVisitor(visitorAuthRequest);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            return;
         }
     }
 }

@@ -20,6 +20,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @AllArgsConstructor
 public class VisitorAuthRequest implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Visitor type.
      */

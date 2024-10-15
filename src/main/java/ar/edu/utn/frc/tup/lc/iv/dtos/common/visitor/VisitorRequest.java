@@ -18,6 +18,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Data
 public class VisitorRequest implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     /**
      * First name of the authorized person. Maximum of 50 characters.
      */

@@ -160,9 +160,9 @@ public class AuthService implements IAuthService {
 
         VisitorDTO visitorDTO;
 
-        //verifica si ya existe el visitante en la base de datos ( verificando por docNumber)
-        VisitorDTO visitorDTOAlreadyExist =
-                visitorService.getVisitorByDocNumber(visitorAuthRequest.getVisitorRequest().getDocNumber());
+        // verifica si ya existe el visitante en la base de datos
+        VisitorDTO visitorDTOAlreadyExist = visitorService
+                .getVisitorByDocNumber(visitorAuthRequest.getVisitorRequest().getDocNumber());
 
         if (visitorDTOAlreadyExist != null) {
             visitorDTO = visitorDTOAlreadyExist;
@@ -187,10 +187,8 @@ public class AuthService implements IAuthService {
      * @param docNumber document number.
      * @return list of valid authorizations.
      */
-
     @Override
     public List<AuthDTO> getValidAuthsByDocNumber(Long docNumber) {
-
         List<AuthDTO> dtos = getAuthsByDocNumber(docNumber);
         List<AuthDTO> validAuths = new ArrayList<>();
 
@@ -198,20 +196,9 @@ public class AuthService implements IAuthService {
         LocalTime currentTime = LocalTime.now();
 
         for (AuthDTO authDTO : dtos) {
-            List<AuthRangeDTO> validAuthRanges = new ArrayList<>();
-
             if (authDTO.isActive()) {
-                for (AuthRangeDTO authRangeDTO : authDTO.getAuthRanges()) {
-                    if (authRangeDTO.isActive()
-                            && (authRangeDTO.getDateFrom() == null || !currentDate.isBefore(authRangeDTO.getDateFrom()))
-                            && (authRangeDTO.getDateTo() == null || !currentDate.isAfter(authRangeDTO.getDateTo()))
-                            && (authRangeDTO.getHourFrom() == null || !currentTime.isBefore(authRangeDTO.getHourFrom()))
-                            && (authRangeDTO.getHourTo() == null || !currentTime.isAfter(authRangeDTO.getHourTo()))) {
-
-                        validAuthRanges.add(authRangeDTO);
-                    }
-                }
-
+                List<AuthRangeDTO> validAuthRanges = getValidAuthRanges(authDTO.getAuthRanges(), currentDate,
+                        currentTime);
                 if (!validAuthRanges.isEmpty()) {
                     authDTO.setAuthRanges(validAuthRanges);
                     validAuths.add(authDTO);
@@ -220,6 +207,43 @@ public class AuthService implements IAuthService {
         }
 
         return validAuths;
+    }
+
+    /**
+     * Retrieves a list of valid authorization ranges.
+     *
+     * @param authRanges  list of authorization ranges.
+     * @param currentDate current date.
+     * @param currentTime current time.
+     * @return list of valid authorization ranges.
+     */
+    private List<AuthRangeDTO> getValidAuthRanges(List<AuthRangeDTO> authRanges, LocalDate currentDate,
+            LocalTime currentTime) {
+        List<AuthRangeDTO> validAuthRanges = new ArrayList<>();
+
+        for (AuthRangeDTO authRangeDTO : authRanges) {
+            if (isValidAuthRange(authRangeDTO, currentDate, currentTime)) {
+                validAuthRanges.add(authRangeDTO);
+            }
+        }
+
+        return validAuthRanges;
+    }
+
+    /**
+     * Checks if the given authorization range is valid.
+     *
+     * @param authRangeDTO the authorization range to check.
+     * @param currentDate  current date.
+     * @param currentTime  current time.
+     * @return true if the authorization range is valid; false otherwise.
+     */
+    private boolean isValidAuthRange(AuthRangeDTO authRangeDTO, LocalDate currentDate, LocalTime currentTime) {
+        return authRangeDTO.isActive()
+                && (authRangeDTO.getDateFrom() == null || !currentDate.isBefore(authRangeDTO.getDateFrom()))
+                && (authRangeDTO.getDateTo() == null || !currentDate.isAfter(authRangeDTO.getDateTo()))
+                && (authRangeDTO.getHourFrom() == null || !currentTime.isBefore(authRangeDTO.getHourFrom()))
+                && (authRangeDTO.getHourTo() == null || !currentTime.isAfter(authRangeDTO.getHourTo()));
     }
 
     /**
@@ -252,8 +276,8 @@ public class AuthService implements IAuthService {
         authEntity.setActive(true);
         authEntity = authRepository.save(authEntity);
 
-        List<AuthorizedRanges> authorizedRangesList =
-                registerAuthRanges(visitorAuthRequest.getAuthRangeRequest(), authEntity, visitorDTO);
+        List<AuthorizedRanges> authorizedRangesList = registerAuthRanges(visitorAuthRequest.getAuthRangeRequest(),
+                authEntity, visitorDTO);
 
         AuthDTO authDTO = new AuthDTO();
         authDTO.setAuthId(authEntity.getAuthId());
@@ -277,7 +301,8 @@ public class AuthService implements IAuthService {
      * @param visitorAuthRequest request
      * @return updated authorization
      */
-    private AuthDTO updateAuthorization(AuthDTO existingAuth, VisitorDTO visitorDTO, VisitorAuthRequest visitorAuthRequest) {
+    private AuthDTO updateAuthorization(AuthDTO existingAuth, VisitorDTO visitorDTO,
+            VisitorAuthRequest visitorAuthRequest) {
 
         // Registra los nuevos rangos de autorización
         List<AuthorizedRanges> newAuthorizedRanges = registerAuthRanges(visitorAuthRequest.getAuthRangeRequest(),
@@ -310,20 +335,20 @@ public class AuthService implements IAuthService {
      * @return list of authorized ranges
      */
     protected List<AuthorizedRanges> registerAuthRanges(List<AuthRangeDto> authRangeRequests,
-                                                        AuthEntity authEntity, VisitorDTO visitorDTO) {
+            AuthEntity authEntity, VisitorDTO visitorDTO) {
 
         List<AuthorizedRanges> authorizedRangesList = new ArrayList<>();
 
         for (AuthRangeDto authRangeRequest : authRangeRequests) {
-            RegisterAuthorizationRangesDTO registerAuthorizationRangesDTO =
-                    modelMapper.map(authRangeRequest, RegisterAuthorizationRangesDTO.class);
+            RegisterAuthorizationRangesDTO registerAuthorizationRangesDTO = modelMapper.map(authRangeRequest,
+                    RegisterAuthorizationRangesDTO.class);
 
             registerAuthorizationRangesDTO.setAuthEntityId(authEntity.getAuthId());
             registerAuthorizationRangesDTO.setVisitorId(visitorDTO.getVisitorId());
 
             // Registro cada rango de autorización
-            AuthorizedRanges authorizedRanges =
-                    authorizedRangesService.registerAuthorizedRange(registerAuthorizationRangesDTO);
+            AuthorizedRanges authorizedRanges = authorizedRangesService
+                    .registerAuthorizedRange(registerAuthorizationRangesDTO);
             authorizedRangesList.add(authorizedRanges);
         }
 

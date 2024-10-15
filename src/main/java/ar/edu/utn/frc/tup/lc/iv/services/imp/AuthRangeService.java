@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import ar.edu.utn.frc.tup.lc.iv.services.IAuthRangeService;
 
+/**
+ * Service for AuthRange.
+*/
 @Service
 public class AuthRangeService implements IAuthRangeService {
 

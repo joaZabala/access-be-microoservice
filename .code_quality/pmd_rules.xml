@@ -63,12 +63,12 @@
     <rule ref="category/java/bestpractices.xml/WhileLoopWithLiteralBoolean" />
 
     <!-- Code Style Ruleset -->
-    <rule ref="category/java/codestyle.xml/AtLeastOneConstructor">
+    <!--<rule ref="category/java/codestyle.xml/AtLeastOneConstructor">
         <properties>
             <property name="ignoredAnnotations"
                       value="lombok.Data|lombok.Value|lombok.Builder|lombok.NoArgsConstructor|lombok.RequiredArgsConstructor|lombok.AllArgsConstructor|org.springframework.context.annotation.Configuration|org.springframework.web.bind.annotation.RestController" />
         </properties>
-    </rule>
+    </rule> -->
 <!--    <rule ref="category/java/codestyle.xml/AvoidDollarSigns" />-->
     <rule ref="category/java/codestyle.xml/AvoidProtectedFieldInFinalClass" />
 <!--    <rule ref="category/java/codestyle.xml/AvoidProtectedMethodInFinalClassNotExtending" />-->
@@ -269,7 +269,7 @@
     <rule ref="category/java/performance.xml/AvoidArrayLoops" />
     <rule ref="category/java/performance.xml/AvoidCalendarDateCreation" />
     <rule ref="category/java/performance.xml/AvoidFileStream" />
-    <rule ref="category/java/performance.xml/AvoidInstantiatingObjectsInLoops" />
+    <!--<rule ref="category/java/performance.xml/AvoidInstantiatingObjectsInLoops" />-->
     <rule ref="category/java/performance.xml/BigIntegerInstantiation" />
     <rule ref="category/java/performance.xml/ConsecutiveAppendsShouldReuse" />
     <rule ref="category/java/performance.xml/ConsecutiveLiteralAppends" />

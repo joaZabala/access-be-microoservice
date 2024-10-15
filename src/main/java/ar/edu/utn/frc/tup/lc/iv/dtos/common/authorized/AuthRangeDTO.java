@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable; // Import Serializable
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -24,6 +24,21 @@ public class AuthRangeDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * Format for dates as "dd-MM-yyyy".
+     */
+    private static final String DATE_FORMAT = "dd-MM-yyyy";
+
+    /**
+     * Format for time as "HH:mm:ss".
+     */
+    private static final String TIME_FORMAT = "HH:mm:ss";
+
+    /**
+     * Represents the string data type.
+     */
+    private static final String STRING_TYPE = "string";
+
+    /**
      * Id of the authorized range.
      */
     @JsonProperty("auth_range_id")
@@ -33,31 +48,31 @@ public class AuthRangeDTO implements Serializable {
      * Date from to form the authorized range.
      */
     @JsonProperty("date_from")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyy")
-    @Schema(type = "string", pattern = "dd-MM-yyy", example = "01-01-2022", description = "The start date of the authorized range.")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
+    @Schema(type = STRING_TYPE, pattern = DATE_FORMAT, example = "01-01-2022", description = "The start date of the authorized range.")
     private LocalDate dateFrom;
 
     /**
      * Date until to form the authorized range.
      */
     @JsonProperty("date_to")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyy")
-    @Schema(type = "string", pattern = "dd-MM-yyy", example = "02-01-2024", description = "The end date of the authorized range.")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
+    @Schema(type = STRING_TYPE, pattern = DATE_FORMAT, example = "02-01-2024", description = "The end date of the authorized range.")
     private LocalDate dateTo;
 
     /**
      * Hour from to form the authorized range.
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-    @Schema(type = "string", pattern = "HH:mm:ss", example = "08:00", description = "The start time of the authorized range.")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TIME_FORMAT)
+    @Schema(type = STRING_TYPE, pattern = TIME_FORMAT, example = "08:00", description = "The start time of the authorized range.")
     @JsonProperty("hour_from")
     private LocalTime hourFrom;
 
     /**
      * Hour until to form the authorized range.
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-    @Schema(type = "string", pattern = "HH:mm:ss", example = "17:00", description = "The end time of the authorized range.")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TIME_FORMAT)
+    @Schema(type = STRING_TYPE, pattern = TIME_FORMAT, example = "17:00", description = "The end time of the authorized range.")
     @JsonProperty("hour_to")
     private LocalTime hourTo;
 
