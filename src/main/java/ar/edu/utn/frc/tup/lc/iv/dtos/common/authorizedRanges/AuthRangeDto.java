@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,19 +17,29 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthRangeDto {
+public class AuthRangeDto implements Serializable {
     /**
      * Date from to form the authorized range.
      */
     @JsonProperty("date_from")
+<<<<<<< Updated upstream
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyy")
     @Schema(type = "string", pattern = "dd-MM-yyy", example = "01-01-2022", description = "The start date of the authorized range.")
+=======
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @Schema(type = "string", pattern = "dd-MM-yyyy", example = "01-01-2022" , description = "The start date of the authorized range.")
+>>>>>>> Stashed changes
     private LocalDate dateFrom;
     /**
      * Date until to form the authorized range.
      */
     @JsonProperty("date_to")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyy")
+<<<<<<< Updated upstream
     @Schema(type = "string", pattern = "dd-MM-yyy", example = "02-01-2022", description = "The end date of the authorized range.")
+=======
+    @Schema(type = "string", pattern = "dd-MM-yyyy", example = "02-01-2022" , description = "The end date of the authorized range.")
+>>>>>>> Stashed changes
     private LocalDate dateTo;
     /**
      * Starting time for the authorized range on each day.

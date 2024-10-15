@@ -14,26 +14,7 @@ services:
     networks:
       service-net-app:
 
-  accesses:
-    container_name: accesses-container
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/accesses
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=password
-      - TZ=America/Argentina/Buenos_Aires
-      - SPRING_RABBITMQ_HOST=rabbitmq  # Adding RabbitMQ host for Spring Boot
-      - SPRING_RABBITMQ_PORT=5672      # Default RabbitMQ port
-      - SPRING_RABBITMQ_USERNAME=user  # RabbitMQ username
-      - SPRING_RABBITMQ_PASSWORD=password  # RabbitMQ password
-    ports:
-      - "8080:8080"
-    networks:
-      service-net-app:
-    restart: on-failure
+
 
   rabbitmq:
     container_name: rabbitmq
