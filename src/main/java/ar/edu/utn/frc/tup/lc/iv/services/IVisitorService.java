@@ -46,5 +46,10 @@ public interface IVisitorService {
      */
     VisitorDTO deleteVisitor(Long docNumber);
 
+    /**
+     * Get visitor by id.
+     * @param id unique identifier of the visitor
+     * @return visitorDto with the given id
+     */
     VisitorDTO getVisitorById(Long id);
 }

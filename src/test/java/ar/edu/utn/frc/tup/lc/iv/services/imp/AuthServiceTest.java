@@ -11,6 +11,7 @@ import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthorizedRanges;
+import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRangeRepository;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
@@ -118,7 +119,7 @@ class AuthServiceTest {
     void authorizeVisitorTest(){
 
         VisitorRequest visitorRequest =
-                new VisitorRequest("Joaquin","Zabala",123456L,LocalDate.of(2005,3,17),true);
+                new VisitorRequest("Joaquin","Zabala", DocumentType.DNI,123456L,LocalDate.of(2005,3,17),true);
 
         VisitorDTO visitorDTO = modelMapper.map(visitorRequest, VisitorDTO.class);
         visitorDTO.setVisitorId(1L);
@@ -161,7 +162,7 @@ class AuthServiceTest {
     void authorizeVisitorWhenAuthorizationExists() throws Exception {
         // Crear la solicitud de visitante
         VisitorRequest visitorRequest =
-                new VisitorRequest("Joaquin", "Zabala", 123456L,
+                new VisitorRequest("Joaquin", "Zabala", DocumentType.DNI, 123456L,
                         LocalDate.of(2005, 3, 17), true);
 
         VisitorDTO visitorDTO = modelMapper.map(visitorRequest, VisitorDTO.class);

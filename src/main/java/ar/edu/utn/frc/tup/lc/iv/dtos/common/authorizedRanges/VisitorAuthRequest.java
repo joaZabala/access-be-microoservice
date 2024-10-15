@@ -8,12 +8,28 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Data Transfer Object for registering authorized ranges.
+ * This DTO is used to encapsulate the data required for
+ * creating or updating an authorized range.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class VisitorAuthRequest {
 
+    /**
+     * Visitor type.
+     */
     private VisitorType visitorType;
+
+    /**
+     * Visitor request.
+     */
     private VisitorRequest visitorRequest;
+
+    /**
+     * Authorized range request.
+     */
     private List<AuthRangeDto> authRangeRequest;
 }

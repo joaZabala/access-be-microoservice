@@ -16,19 +16,19 @@ import ar.edu.utn.frc.tup.lc.iv.services.IAuthRangeService;
 public class AuthRangeService implements IAuthRangeService {
 
     /**
-     * Repository for AuthRange
+     * Repository for AuthRange.
      */
     @Autowired
     private AuthRangeRepository authRangeRepository;
 
     /**
-     * Mapper for AuthRange
+     * Mapper for AuthRange.
      */
     @Autowired
     private ModelMapper modelMapper;
 
     /**
-     * Get all AuthRanges
+     * Get all AuthRanges.
      * @return List<AuthRangeDTO>
      */
     @Override

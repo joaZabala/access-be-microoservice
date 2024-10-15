@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
@@ -87,6 +86,7 @@ public class VisitorService implements IVisitorService {
         visitorEntity.setDocNumber(visitorRequest.getDocNumber());
         visitorEntity.setBirthDate(visitorRequest.getBirthDate());
         visitorEntity.setActive(visitorRequest.isActive());
+        visitorEntity.setDocumentType(visitorRequest.getDocumentType());
         visitorEntity.setLastUpdatedDate(LocalDateTime.now());
         return modelMapper.map(visitorRepository.save(visitorEntity), VisitorDTO.class);
     }

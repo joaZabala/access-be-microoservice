@@ -16,5 +16,4 @@ public interface IAuthRangeService {
      * @return the list of authorized ranges
      */
     List<AuthRangeDTO> getAuthRanges();
-    
 }

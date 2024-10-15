@@ -1,7 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.models;
 
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
-import ar.edu.utn.frc.tup.lc.iv.entities.AuthorizedRangesEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;

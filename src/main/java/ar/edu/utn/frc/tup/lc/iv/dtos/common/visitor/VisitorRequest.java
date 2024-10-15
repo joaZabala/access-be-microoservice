@@ -1,5 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor;
 
+import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,6 +28,12 @@ public class VisitorRequest {
      */
     @JsonProperty("last_name")
     private String lastName;
+
+    /**
+     * Document type of the authorized person.
+     */
+    @JsonProperty("doc_type")
+    private DocumentType documentType;
 
     /**
      * Document number of the authorized person.

@@ -21,14 +21,14 @@ public class AuthRangeDto {
      */
     @JsonProperty("date_from")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyy")
-    @Schema(type = "string", pattern = "dd-MM-yyy", example = "01-01-2022" , description = "The start date of the authorized range.")
+    @Schema(type = "string", pattern = "dd-MM-yyy", example = "01-01-2022", description = "The start date of the authorized range.")
     private LocalDate dateFrom;
     /**
      * Date until to form the authorized range.
      */
     @JsonProperty("date_to")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyy")
-    @Schema(type = "string", pattern = "dd-MM-yyy", example = "02-01-2022" , description = "The end date of the authorized range.")
+    @Schema(type = "string", pattern = "dd-MM-yyy", example = "02-01-2022", description = "The end date of the authorized range.")
     private LocalDate dateTo;
     /**
      * Starting time for the authorized range on each day.
@@ -36,15 +36,15 @@ public class AuthRangeDto {
      */
     @JsonProperty("hour_from")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-    @Schema(type = "string", pattern = "HH:mm:ss", example = "08:00:00" , description = "The start time of the authorized range.")
+    @Schema(type = "string", pattern = "HH:mm:ss", example = "08:00:00", description = "The start time of the authorized range.")
     private LocalTime hourFrom;
     /**
-     * Ending time for the authorized range on each day.
+     * Ending time for the authorized range on each day
      * Defines the hour until which access is allowed.
      */
     @JsonProperty("hour_to")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-    @Schema(type = "string", pattern = "HH:mm:ss", example = "17:00:00" , description = "The end time of the authorized range.")
+    @Schema(type = "string", pattern = "HH:mm:ss", example = "17:00:00", description = "The end time of the authorized range.")
     private LocalTime hourTo;
     /**
      * Days of the week when access is allowed (e.g., Monday, Tuesday,...).

@@ -6,6 +6,7 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.AuthRangeDto;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
+import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.services.IAuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -102,7 +103,7 @@ class AuthControllerTest {
         //REQUEST
         VisitorAuthRequest visitorAuthRequest = new VisitorAuthRequest();
         visitorAuthRequest.setVisitorType(VisitorType.OWNER);
-        visitorAuthRequest.setVisitorRequest(new VisitorRequest("Joaquin","Zabala",123456L,LocalDate.of(2005,3,17),true));
+        visitorAuthRequest.setVisitorRequest(new VisitorRequest("Joaquin","Zabala", DocumentType.DNI,123456L,LocalDate.of(2005,3,17),true));
 
         AuthRangeDto authRange= new AuthRangeDto();
         authRange.setDateFrom(LocalDate.of(2024, 1, 1));

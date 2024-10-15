@@ -32,37 +32,37 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- *  Service implementation for handling operations
- *  related to Authorized entities.
+ * Service implementation for handling operations
+ * related to Authorized entities.
  */
 @Service
 public class AuthService implements IAuthService {
 
     /**
-     * repository of authorizations
+     * repository of authorizations.
      */
     @Autowired
     private AuthRepository authRepository;
 
     /**
-     * repository of authorization ranges
+     * repository of authorization ranges.
      */
     @Autowired
     private AuthRangeRepository authRangeRepository;
 
     /**
-     * repository of visitors
+     * repository of visitors.
      */
     @Autowired
     private VisitorRepository visitorRepository;
 
     /**
-     * service of visitor
+     * service of visitor.
      */
     @Autowired
     private VisitorService visitorService;
     /**
-     * authorized ranges service
+     * authorized ranges service.
      */
     @Autowired
     private AuthorizedRangesService authorizedRangesService;
@@ -73,6 +73,11 @@ public class AuthService implements IAuthService {
     @Autowired
     private ModelMapper modelMapper;
 
+    /**
+     * Get all authorizations.
+     *
+     * @return List<AuthDTO>
+     */
     @Override
     public List<AuthDTO> getAllAuths() {
 
@@ -107,7 +112,7 @@ public class AuthService implements IAuthService {
     /**
      * Retrieves a list of individual authorizations
      * by document number.
-     * 
+     *
      * @param docNumber document number.
      * @return list of authorized persons.
      */
@@ -155,13 +160,13 @@ public class AuthService implements IAuthService {
 
         VisitorDTO visitorDTO;
 
-        // si ya existe el visitante en la base de datos ( verificando por docNumber)
-         VisitorDTO visitorDTOAlreadyExist =
-                 visitorService.getVisitorByDocNumber(visitorAuthRequest.getVisitorRequest().getDocNumber());
+        //verifica si ya existe el visitante en la base de datos ( verificando por docNumber)
+        VisitorDTO visitorDTOAlreadyExist =
+                visitorService.getVisitorByDocNumber(visitorAuthRequest.getVisitorRequest().getDocNumber());
 
-        if(visitorDTOAlreadyExist != null){
+        if (visitorDTOAlreadyExist != null) {
             visitorDTO = visitorDTOAlreadyExist;
-        }else{
+        } else {
             visitorDTO = visitorService.saveOrUpdateVisitor(visitorAuthRequest.getVisitorRequest());
         }
 
@@ -178,7 +183,7 @@ public class AuthService implements IAuthService {
     /**
      * Retrieves a list of valid authorizations
      * by document number.
-     * 
+     *
      * @param docNumber document number.
      * @return list of valid authorizations.
      */
@@ -206,7 +211,7 @@ public class AuthService implements IAuthService {
                         validAuthRanges.add(authRangeDTO);
                     }
                 }
-                
+
                 if (!validAuthRanges.isEmpty()) {
                     authDTO.setAuthRanges(validAuthRanges);
                     validAuths.add(authDTO);
@@ -218,8 +223,9 @@ public class AuthService implements IAuthService {
     }
 
     /**
-     *  Retrieves an authorization if exists
-     *  with the same visitorType.
+     * Retrieves an authorization if exists
+     * with the same visitorType.
+     *
      * @param visitorAuthRequest request
      * @return optional authorization
      */
@@ -232,8 +238,9 @@ public class AuthService implements IAuthService {
     }
 
     /**
-     *  Create a new authorization
-     * @param visitorDTO visitor
+     * Create a new authorization.
+     *
+     * @param visitorDTO         visitor
      * @param visitorAuthRequest request
      * @return new authorization
      */
@@ -251,7 +258,7 @@ public class AuthService implements IAuthService {
         AuthDTO authDTO = new AuthDTO();
         authDTO.setAuthId(authEntity.getAuthId());
         authDTO.setVisitorType(authEntity.getVisitorType());
-        authDTO.setVisitor(modelMapper.map(authEntity.getVisitor() , VisitorDTO.class));
+        authDTO.setVisitor(modelMapper.map(authEntity.getVisitor(), VisitorDTO.class));
         authDTO.setActive(authEntity.isActive());
 
         authDTO.setAuthRanges(authorizedRangesList.stream()
@@ -263,17 +270,18 @@ public class AuthService implements IAuthService {
     }
 
     /**
-     * update authorization list with new authorized ranges,
-     * @param existingAuth existing authorization
-     * @param visitorDTO visitor
+     * update authorization list with new authorized ranges.
+     *
+     * @param existingAuth       existing authorization
+     * @param visitorDTO         visitor
      * @param visitorAuthRequest request
      * @return updated authorization
      */
     private AuthDTO updateAuthorization(AuthDTO existingAuth, VisitorDTO visitorDTO, VisitorAuthRequest visitorAuthRequest) {
 
         // Registra los nuevos rangos de autorización
-        List<AuthorizedRanges> newAuthorizedRanges = registerAuthRanges(visitorAuthRequest.getAuthRangeRequest()
-                , modelMapper.map(existingAuth, AuthEntity.class), visitorDTO);
+        List<AuthorizedRanges> newAuthorizedRanges = registerAuthRanges(visitorAuthRequest.getAuthRangeRequest(),
+                modelMapper.map(existingAuth, AuthEntity.class), visitorDTO);
 
         for (AuthorizedRanges range : newAuthorizedRanges) {
             AuthRangeDTO authRangeDTO = new AuthRangeDTO();
@@ -295,13 +303,14 @@ public class AuthService implements IAuthService {
 
     /**
      * register authorized ranges.
+     *
      * @param authRangeRequests list of authorized ranges
-     * @param authEntity auth
-     * @param visitorDTO visitor
+     * @param authEntity        auth
+     * @param visitorDTO        visitor
      * @return list of authorized ranges
      */
     protected List<AuthorizedRanges> registerAuthRanges(List<AuthRangeDto> authRangeRequests,
-                                                      AuthEntity authEntity, VisitorDTO visitorDTO) {
+                                                        AuthEntity authEntity, VisitorDTO visitorDTO) {
 
         List<AuthorizedRanges> authorizedRangesList = new ArrayList<>();
 
@@ -320,20 +329,4 @@ public class AuthService implements IAuthService {
 
         return authorizedRangesList;
     }
-
-
-//    /**
-//     * Build AuthDTO to show in the response
-//     * @param authEntity auth entity
-//     * @param authorizedRangesList list of authorized ranges
-//     * @return AuthDTO
-//     */
-//    private AuthDTO buildAuthDTO(AuthEntity authEntity, List<AuthorizedRanges> authorizedRangesList) {
-//        AuthDTO authDTO = modelMapper.map(authEntity, AuthDTO.class);
-//        authDTO.setAuthRanges(authorizedRangesList.stream()
-//                .map(auth -> modelMapper.map(auth, AuthRangeDTO.class))
-//                .collect(Collectors.toList()));
-//        return authDTO;
-//    }
-
 }

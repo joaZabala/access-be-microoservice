@@ -9,18 +9,39 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ *  DTO for the Authorized entity
+ *  that represents an authorized person.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class AuthDTO {
+    /**
+     * ID of the authorized person.
+     */
     @JsonProperty("auth_id")
     private Long authId;
+    /**
+     * DTO of the authorized person.
+     */
     @JsonProperty("visitor")
     private VisitorDTO visitor;
+
+    /**
+     * Type of the authorized person.
+     */
     @JsonProperty("visitor_type")
     private VisitorType visitorType;
+    /**
+     * List of authorized ranges.
+     */
     @JsonProperty("auth_ranges")
     private List<AuthRangeDTO> authRanges;
+
+    /**
+     * Status of the authorized person.
+     */
     @JsonProperty("is_active")
     private boolean isActive;
 
