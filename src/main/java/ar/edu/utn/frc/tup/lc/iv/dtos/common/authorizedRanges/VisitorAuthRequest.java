@@ -9,29 +9,21 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.List;
 
-<<<<<<< Updated upstream
 /**
  * Data Transfer Object for registering authorized ranges.
  * This DTO is used to encapsulate the data required for
  * creating or updating an authorized range.
  */
-=======
 import com.fasterxml.jackson.annotation.JsonFormat;
-
->>>>>>> Stashed changes
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VisitorAuthRequest {
 public class VisitorAuthRequest implements Serializable {
 
-<<<<<<< Updated upstream
     /**
      * Visitor type.
      */
-=======
     @JsonFormat(shape = JsonFormat.Shape.STRING)
->>>>>>> Stashed changes
     private VisitorType visitorType;
 
     /**
