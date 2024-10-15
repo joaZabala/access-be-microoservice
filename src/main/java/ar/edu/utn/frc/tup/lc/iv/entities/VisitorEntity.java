@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
