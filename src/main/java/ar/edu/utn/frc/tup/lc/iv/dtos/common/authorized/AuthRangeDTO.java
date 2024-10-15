@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable; // Import Serializable
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -13,13 +14,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * Data Transfer Object for creating
- * or updating an authorized range.
+ * Data Transfer Object for creating or updating an authorized range.
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthRangeDTO {
+public class AuthRangeDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Id of the authorized range.
@@ -40,7 +42,7 @@ public class AuthRangeDTO {
      */
     @JsonProperty("date_to")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyy")
-    @Schema(type = "string", pattern = "dd-MM-yyy", example = "02-01-2024", description = "The start date of the authorized range.")
+    @Schema(type = "string", pattern = "dd-MM-yyy", example = "02-01-2024", description = "The end date of the authorized range.")
     private LocalDate dateTo;
 
     /**

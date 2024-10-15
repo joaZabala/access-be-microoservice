@@ -2,9 +2,7 @@ package ar.edu.utn.frc.tup.lc.iv.repositories;
 
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
-import ar.edu.utn.frc.tup.lc.iv.entities.AuthorizedRangesEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

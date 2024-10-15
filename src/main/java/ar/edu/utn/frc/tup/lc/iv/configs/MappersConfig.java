@@ -16,7 +16,7 @@ public class MappersConfig {
 
     /**
      * The ModelMapper bean by default.
-     * 
+     *
      * @return the ModelMapper by default.
      */
     @Bean
@@ -26,7 +26,7 @@ public class MappersConfig {
 
     /**
      * The ModelMapper bean to merge objects.
-     * 
+     *
      * @return the ModelMapper to use in updates.
      */
     @Bean("mergerMapper")
@@ -39,7 +39,7 @@ public class MappersConfig {
 
     /**
      * The ObjectMapper bean.
-     * 
+     *
      * @return the ObjectMapper with JavaTimeModule included.
      */
     @Bean
