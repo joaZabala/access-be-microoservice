@@ -1,5 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.entities;
 
+import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -23,7 +26,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "Visitors")
+@Table(name = "visitors")
 public class VisitorEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Authorized.
@@ -42,6 +45,13 @@ public class VisitorEntity extends AuditBaseEntity {
      */
     @Column(name = "lastname", length = LAST_NAME_MAX_LENGTH)
     private String lastName;
+
+    /**
+     * Document Type of the authorized person.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "doc_type")
+    private DocumentType documentType;
     /**
      * Document Number of the authorized person.
      */
@@ -59,11 +69,6 @@ public class VisitorEntity extends AuditBaseEntity {
      */
     @Column(name = "is_active")
     private boolean isActive;
-    /**
-     * Identifier of the owner who authorizes an operation.
-     */
-    @Column(name = "owner_id")
-    private Long ownerId;
 
     /**
      * Constant for the maximum length of the 'name' field.

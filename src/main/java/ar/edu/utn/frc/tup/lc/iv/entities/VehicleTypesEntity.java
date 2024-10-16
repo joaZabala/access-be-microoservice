@@ -21,7 +21,7 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Vehicle_Types")
+@Table(name = "vehicle_types")
 @Getter
 @Setter
 public class VehicleTypesEntity extends AuditBaseEntity {

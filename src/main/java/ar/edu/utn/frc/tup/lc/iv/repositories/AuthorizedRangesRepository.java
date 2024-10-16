@@ -1,6 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.repositories;
 
-import ar.edu.utn.frc.tup.lc.iv.entities.AuthorizedRangesEntity;
+import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +13,7 @@ import java.time.LocalTime;
  * Repository of AuthorizedRanges.
  */
 @Service
-public interface AuthorizedRangesRepository extends JpaRepository<AuthorizedRangesEntity, Long> {
+public interface AuthorizedRangesRepository extends JpaRepository<AuthRangeEntity, Long> {
     /**
      * Checks if the visitor has a valid invitation.
      * @param startDate      The date to check for access validity.
@@ -24,14 +24,14 @@ public interface AuthorizedRangesRepository extends JpaRepository<AuthorizedRang
      */
 
     @Query("SELECT CASE WHEN COUNT(ac) > 0 THEN true ELSE false END "
-            + "FROM AuthorizedRangesEntity ac "
-            + "LEFT JOIN ac.visitorId v "
+            + "FROM AuthRangeEntity ac "
+            + "LEFT JOIN ac.authId v "
             + "WHERE ac.isActive = true "
             + "AND (ac.dateFrom IS NULL OR ac.dateFrom <= :startDate) "
             + "AND (ac.dateTo IS NULL OR ac.dateTo >= :startDate) "
             + "AND (ac.hourFrom IS NULL OR ac.hourFrom <= :startHour) "
             + "AND (ac.hourTo IS NULL OR ac.hourTo >= :startHour) "
-            + "AND v.docNumber = :documentNumber "
+            + "AND v.visitor.docNumber = :documentNumber "
             + "AND (ac.days IS NULL OR ac.days LIKE CONCAT('%', :day, '%'))")
     boolean hasInvitation(
             @Param("startDate") LocalDate startDate,

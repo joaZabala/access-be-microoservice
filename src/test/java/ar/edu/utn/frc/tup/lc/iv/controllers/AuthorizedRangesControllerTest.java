@@ -36,9 +36,8 @@ class AuthorizedRangesControllerTest {
     @Test
     void registerAuthorizedRange() throws Exception {
         RegisterAuthorizationRangesDTO rangeDto = new RegisterAuthorizationRangesDTO();
-        rangeDto.setAuthTypeId(1L);
         rangeDto.setVisitorId(1L);
-        rangeDto.setExternalId(123L);
+        //rangeDto.setExternalId(123L);
         rangeDto.setDateFrom(LocalDate.of(2024, 10, 1));
         rangeDto.setDateTo(LocalDate.of(2024, 10, 31));
         rangeDto.setHourFrom(LocalTime.of(8, 0));
@@ -50,9 +49,7 @@ class AuthorizedRangesControllerTest {
 
         AuthorizedRanges authorizedRanges = new AuthorizedRanges(
                 1L,
-                rangeDto.getAuthTypeId(),
                 rangeDto.getVisitorId(),
-                rangeDto.getExternalId(),
                 rangeDto.getDateFrom(),
                 rangeDto.getDateTo(),
                 rangeDto.getHourFrom(),
@@ -70,9 +67,7 @@ class AuthorizedRangesControllerTest {
                 .content(objectMapper.writeValueAsString(rangeDto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.authRangeId").value(1L))
-                .andExpect(jsonPath("$.authType").value(1L))
                 .andExpect(jsonPath("$.visitorId").value(1L))
-                .andExpect(jsonPath("$.externalId").value(123L))
                 .andExpect(jsonPath("$.dateFrom").value("01-10-2024"))
                 .andExpect(jsonPath("$.dateTo").value("31-10-2024"))
                 .andExpect(jsonPath("$.hourFrom").value("08:00:00"))

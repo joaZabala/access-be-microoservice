@@ -1,7 +1,7 @@
 package ar.edu.utn.frc.tup.lc.iv.controllers;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
-import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequestDto;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.services.IVisitorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.util.List;
  * and update authorized persons.
  */
 @RestController
-@RequestMapping("/visitor")
+@RequestMapping("/visitors")
 public class VisitorController {
 
     /**
@@ -52,7 +52,7 @@ public class VisitorController {
      * @return The VisitorDto object representing the authorized
      * person with the specified ID.
      */
-    @GetMapping("/{docNumber}")
+    @GetMapping("/byDocNumber/{docNumber}")
     public ResponseEntity<VisitorDTO> getVisitorByDocNumber(@PathVariable Long docNumber) {
         return ResponseEntity.ok(visitorService.getVisitorByDocNumber(docNumber));
     }
@@ -65,19 +65,29 @@ public class VisitorController {
      * @return VisitorDto.
      */
     @PutMapping()
-    public ResponseEntity<VisitorDTO> generateVisitor(@RequestBody VisitorRequestDto visitorRequest) {
+    public ResponseEntity<VisitorDTO> generateVisitor(@RequestBody VisitorRequest visitorRequest) {
         return ResponseEntity.ok(visitorService.saveOrUpdateVisitor(visitorRequest));
     }
 
     /**
      * Deactivate visitor by docNumber.
      *
-     * @param docNumber document number of the visitor.
+     * @param visitorId The identifier of the visitor.
      * @return VisitorDTO.
      */
-    @DeleteMapping("/deactivate/{docNumber}")
-    public ResponseEntity<VisitorDTO> deleteVisitor(@PathVariable Long docNumber) {
-        return ResponseEntity.ok(visitorService.deleteVisitor(docNumber));
+    @DeleteMapping("/deactivate/{visitorId}")
+    public ResponseEntity<VisitorDTO> deleteVisitor(@PathVariable Long visitorId) {
+        return ResponseEntity.ok(visitorService.deleteVisitor(visitorId));
+    }
+
+    /**
+     * Retrieves a specific visitor by their ID.
+     * @param visitorId unique identifier of the visitor
+     * @return VisitorDTO
+     */
+    @GetMapping("/{visitorId}")
+    public ResponseEntity<VisitorDTO> getVisitorById(@PathVariable Long visitorId) {
+        return ResponseEntity.ok(visitorService.getVisitorById(visitorId));
     }
 
 }

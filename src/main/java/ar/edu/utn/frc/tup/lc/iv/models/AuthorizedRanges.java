@@ -1,6 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.models;
 
-import ar.edu.utn.frc.tup.lc.iv.entities.AuthorizedRangesEntity;
+import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,17 +26,13 @@ public class AuthorizedRanges extends AuditBase {
      */
     private Long authRangeId;
     /**
-     * Unique Authorized type identifier.
-     */
-    private Long authType;
-    /**
      * Unique Authorized identifier.
      */
     private Long visitorId;
-    /**
-     * External ID to identify Suppliers, Employees, Owners and Cohabitants.
-     */
-    private Long externalId;
+//    /**
+//     * External ID to identify Suppliers, Employees, Owners and Cohabitants.
+//     */
+//    private Long externalId;
     /**
      * Date from to form the authorized range.
      */
@@ -82,13 +78,11 @@ public class AuthorizedRanges extends AuditBase {
      *
      * @param authorizedRangesEntity the AuthorizedRangesEntity object
      */
-    public AuthorizedRanges(AuthorizedRangesEntity authorizedRangesEntity) {
+    public AuthorizedRanges(AuthRangeEntity authorizedRangesEntity) {
         this.authRangeId = authorizedRangesEntity.getAuthRangeId();
-        this.authType = authorizedRangesEntity.getAuthType() != null
-                ? authorizedRangesEntity.getAuthType().getAuthTypeId() : null;
-        this.visitorId = authorizedRangesEntity.getVisitorId() != null
-                ? authorizedRangesEntity.getVisitorId().getVisitorId() : null;
-        this.externalId = authorizedRangesEntity.getExternalId();
+//        this.visitorId = authorizedRangesEntity.getVisitorId() != null
+//                ? authorizedRangesEntity.getVisitorId().getVisitorId() : null;
+//        this.externalId = authorizedRangesEntity.getExternalId();
         this.dateFrom = authorizedRangesEntity.getDateFrom();
         this.dateTo = authorizedRangesEntity.getDateTo();
         this.hourFrom = authorizedRangesEntity.getHourFrom();

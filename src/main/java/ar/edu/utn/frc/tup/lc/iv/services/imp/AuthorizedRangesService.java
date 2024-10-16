@@ -1,19 +1,22 @@
 package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
+
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.RegisterAuthorizationRangesDTO;
-import ar.edu.utn.frc.tup.lc.iv.entities.AuthorizedRangesEntity;
+import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
+import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthorizedRanges;
+import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthorizedRangesRepository;
 import ar.edu.utn.frc.tup.lc.iv.services.IAuthorizedRangesService;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -42,6 +45,14 @@ public class AuthorizedRangesService implements IAuthorizedRangesService {
     private AuthorizedRangesRepository authorizedRangesRepository;
 
     /**
+     * Repository for accessing auth data.
+     */
+    @Autowired
+    private AuthRepository authRepository;
+
+
+
+    /**
      * Registers a new authorized range.
      *
      * @param authorizedRangeDTO the data transfer object containing the
@@ -54,23 +65,32 @@ public class AuthorizedRangesService implements IAuthorizedRangesService {
             throw new IllegalArgumentException("AuthorizedRangeDTO must not be null");
         }
 
-        AuthorizedRangesEntity authorizedRangeEntity = modelMapper.map(authorizedRangeDTO, AuthorizedRangesEntity.class);
-        authorizedRangeEntity.setActive(true);
+        AuthRangeEntity authRangeEntity = modelMapper.map(authorizedRangeDTO, AuthRangeEntity.class);
+        authRangeEntity.setActive(true);
+
+        if (authorizedRangeDTO.getAuthEntityId() != null && authorizedRangeDTO.getAuthEntityId() != 0L) {
+            Optional<AuthEntity> authEntity = authRepository.findById(authorizedRangeDTO.getAuthEntityId());
+            authEntity.ifPresent(authRangeEntity::setAuthId);
+
+        } else {
+            authRangeEntity.setAuthId(null);
+        }
+
         if (authorizedRangeDTO.getDayOfWeeks() != null && !authorizedRangeDTO.getDayOfWeeks().isEmpty()) {
 
             String daysString = authorizedRangeDTO.getDayOfWeeks().stream()
                     .map(DayOfWeek::name)
                     .collect(Collectors.joining("-"));
 
-            authorizedRangeEntity.setDays(daysString);
+            authRangeEntity.setDays(daysString);
 
         } else {
-            authorizedRangeEntity.setDays(null);
+            authRangeEntity.setDays(null);
         }
 
-        AuthorizedRangesEntity auhorizedRange = authorizedRangesRepository.save(authorizedRangeEntity);
+        AuthRangeEntity authorizedRange = authorizedRangesRepository.save(authRangeEntity);
 
-        return new AuthorizedRanges(auhorizedRange);
+        return new AuthorizedRanges(authorizedRange);
     }
 
     /**
@@ -90,4 +110,5 @@ public class AuthorizedRangesService implements IAuthorizedRangesService {
         return authorizedRangesRepository.hasInvitation(localDate, localTime, documentNumber,
                 day);
     }
+
 }
