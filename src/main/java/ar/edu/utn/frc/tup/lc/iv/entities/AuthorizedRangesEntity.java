@@ -29,7 +29,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "Authorized_Ranges")
+@Table(name = "authorized_ranges")
 @Getter
 @Setter
 public class AuthorizedRangesEntity extends AuditBaseEntity {
@@ -40,12 +40,6 @@ public class AuthorizedRangesEntity extends AuditBaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long authRangeId;
-    /**
-     * Unique Authorized type identifier.
-     */
-    @ManyToOne
-    @JoinColumn(name = "auth_type_id")
-    private AuthorizedTypesEntity authType;
     /**
      * Unique Authorized identifier.
      */

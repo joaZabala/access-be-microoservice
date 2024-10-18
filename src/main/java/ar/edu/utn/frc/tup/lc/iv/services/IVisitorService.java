@@ -3,7 +3,7 @@ package ar.edu.utn.frc.tup.lc.iv.services;
 import java.util.List;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
-import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequestDto;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 
 /**
  * This interface defines the contract for a service
@@ -27,7 +27,7 @@ public interface IVisitorService {
      * @return An AuthorizedDTO object representing
      * the newly created authorization.
      */
-    VisitorDTO saveOrUpdateVisitor(VisitorRequestDto authorizedRequestDto);
+    VisitorDTO saveOrUpdateVisitor(VisitorRequest authorizedRequestDto);
 
     /**
      * This method finds and returns the visitor
@@ -45,4 +45,11 @@ public interface IVisitorService {
      * @return VisitorDTO representing the deactivated visitor.
      */
     VisitorDTO deleteVisitor(Long docNumber);
+
+    /**
+     * Get visitor by id.
+     * @param id unique identifier of the visitor
+     * @return visitorDto with the given id
+     */
+    VisitorDTO getVisitorById(Long id);
 }

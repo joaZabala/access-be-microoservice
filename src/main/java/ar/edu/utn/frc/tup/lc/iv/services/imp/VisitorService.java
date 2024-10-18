@@ -3,12 +3,11 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import ar.edu.utn.frc.tup.lc.iv.clients.UserDto;
-import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
-import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequestDto;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
 import ar.edu.utn.frc.tup.lc.iv.services.IVisitorService;
@@ -19,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import lombok.NoArgsConstructor;
 
@@ -42,11 +40,6 @@ public class VisitorService implements IVisitorService {
      */
     @Autowired
     private ModelMapper modelMapper;
-    /**
-     * service of the user.
-     */
-    @Autowired
-    private UserRestClient userRestClient;
 
     /**
      * Retrieves all authorized entities from the repository and maps them to
@@ -72,20 +65,13 @@ public class VisitorService implements IVisitorService {
     /**
      * Creates or updates a visitor.
      *
-     * @param visitorRequestDto request DTO with visitor details.
+     * @param visitorRequest request DTO with visitor details.
      * @return the VisitorDTO with the authorization details.
      */
     @Override
-    public VisitorDTO saveOrUpdateVisitor(VisitorRequestDto visitorRequestDto) {
+    public VisitorDTO saveOrUpdateVisitor(VisitorRequest visitorRequest) {
         VisitorEntity existVisitorEntity =
-                visitorRepository.findByDocNumber(visitorRequestDto.getDocNumber());
-
-        ResponseEntity<UserDto> owner = userRestClient.getUserById(visitorRequestDto.getOwnerId());
-
-        if (!owner.getStatusCode().is2xxSuccessful()) {
-            throw new EntityNotFoundException("El usuario con el id " + visitorRequestDto.getOwnerId() + " no existe");
-        }
-        UserDto ownerDto = owner.getBody();
+                visitorRepository.findByDocNumber(visitorRequest.getDocNumber());
 
         VisitorEntity visitorEntity;
         if (Objects.nonNull(existVisitorEntity)) {
@@ -95,13 +81,12 @@ public class VisitorService implements IVisitorService {
             visitorEntity.setCreatedDate(LocalDateTime.now());
         }
 
-        visitorEntity.setName(visitorRequestDto.getName());
-        visitorEntity.setLastName(visitorRequestDto.getLastName());
-        visitorEntity.setDocNumber(visitorRequestDto.getDocNumber());
-        visitorEntity.setBirthDate(visitorRequestDto.getBirthDate());
-        assert ownerDto != null;
-        visitorEntity.setOwnerId(ownerDto.getId());
-        visitorEntity.setActive(visitorRequestDto.isActive());
+        visitorEntity.setName(visitorRequest.getName());
+        visitorEntity.setLastName(visitorRequest.getLastName());
+        visitorEntity.setDocNumber(visitorRequest.getDocNumber());
+        visitorEntity.setBirthDate(visitorRequest.getBirthDate());
+        visitorEntity.setActive(visitorRequest.isActive());
+        visitorEntity.setDocumentType(visitorRequest.getDocumentType());
         visitorEntity.setLastUpdatedDate(LocalDateTime.now());
         return modelMapper.map(visitorRepository.save(visitorEntity), VisitorDTO.class);
     }
@@ -117,7 +102,7 @@ public class VisitorService implements IVisitorService {
         VisitorEntity visitorEntity = visitorRepository.findByDocNumber(docNumber);
 
         if (Objects.isNull(visitorEntity)) {
-            throw new EntityNotFoundException("No existe el visitante con el numero de documento " + docNumber);
+            return null;
         } else {
             return modelMapper.map(visitorEntity, VisitorDTO.class);
         }
@@ -126,20 +111,34 @@ public class VisitorService implements IVisitorService {
     /**
      * Deactivate visitor by docNumber.
      *
-     * @param docNumber document number of the visitor.
+     * @param visitorId document number of the visitor.
      * @return VisitorDTO.
      */
     @Override
-    public VisitorDTO deleteVisitor(Long docNumber) {
-        VisitorEntity visitorEntity = visitorRepository.findByDocNumber(docNumber);
+    public VisitorDTO deleteVisitor(Long visitorId) {
+        Optional<VisitorEntity> visitorEntity = visitorRepository.findById(visitorId);
 
-        if (Objects.isNull(visitorEntity)) {
-            throw new EntityNotFoundException("No existe el visitante con el numero de documento " + docNumber);
+        if (visitorEntity.isEmpty()) {
+            throw new EntityNotFoundException("No existe el visitante con el id " + visitorId);
         }
-        visitorEntity.setActive(false);
-        visitorEntity.setLastUpdatedDate(LocalDateTime.now());
+        visitorEntity.get().setActive(false);
+        visitorEntity.get().setLastUpdatedDate(LocalDateTime.now());
 
-        return modelMapper.map(visitorRepository.save(visitorEntity), VisitorDTO.class);
+        return modelMapper.map(visitorRepository.save(visitorEntity.get()), VisitorDTO.class);
+    }
+
+    /**
+     * fetch visitor by id.
+     * @param id unique identifier of the visitor
+     * @return visitorDto with the given id
+     */
+    @Override
+    public VisitorDTO getVisitorById(Long id) {
+        Optional<VisitorEntity> visitorEntity = visitorRepository.findById(id);
+        if (visitorEntity.isEmpty()) {
+            throw new EntityNotFoundException("No existe el visitante con el id " + id);
+        }
+        return modelMapper.map(visitorEntity.get(), VisitorDTO.class);
     }
 
 }

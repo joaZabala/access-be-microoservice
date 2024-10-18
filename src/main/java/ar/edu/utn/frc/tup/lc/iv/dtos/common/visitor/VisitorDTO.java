@@ -1,5 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor;
 
+import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -21,12 +22,6 @@ public class VisitorDTO {
     @JsonProperty("visitor_id")
     private Long visitorId;
     /**
-     * Unique identifier for the authorized person.
-     */
-    @JsonProperty("owner_id")
-    private Long ownerId;
-
-    /**
      * First name of the authorized person. Maximum of 50 characters.
      */
     @JsonProperty("name")
@@ -38,6 +33,11 @@ public class VisitorDTO {
     @JsonProperty("last_name")
     private String lastName;
 
+    /**
+     * Document type of the authorized person.
+     */
+    @JsonProperty("doc_type")
+    private DocumentType documentType;
     /**
      * Document number of the authorized person.
      */

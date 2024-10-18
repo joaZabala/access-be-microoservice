@@ -3,8 +3,9 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserDto;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
-import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequestDto;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
+import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
@@ -19,9 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,8 +47,8 @@ class VisitorServiceTest {
     @Test
     void getAllVisitorsTest() {
         // Given
-        VisitorEntity visitorEntity = new VisitorEntity(1L, "juan", "Perez", 40252203L, LocalDate.now(), true, 1L);
-        VisitorEntity visitorEntity1 = new VisitorEntity(2L, "joaquin", "Perez", 40252255L, LocalDate.now(), true, 1L);
+        VisitorEntity visitorEntity = new VisitorEntity(1L, "juan", "Perez", DocumentType.DNI,40252203L, LocalDate.now(), true);
+        VisitorEntity visitorEntity1 = new VisitorEntity(2L, "joaquin", "Perez", DocumentType.DNI,40252255L, LocalDate.now(), true);
 
         List<VisitorEntity> visitorEntityList = Arrays.asList(visitorEntity, visitorEntity1);
 
@@ -71,24 +72,24 @@ class VisitorServiceTest {
     @Test
     void saverOrUpdateVisitorExistingVisitorTest() {
         //given
-        VisitorRequestDto visitorRequestDto =
-                new VisitorRequestDto("joaquin","zabala",12345678L,LocalDate.of(2005,3,17),1L,true);
+        VisitorRequest visitorRequest =
+                new VisitorRequest("joaquin","zabala", DocumentType.DNI,12345678L,LocalDate.of(2005,3,17),true);
 
         //when
-        VisitorEntity visitorEntity = new VisitorEntity(1L,"","",0L,LocalDate.now(),false,1L);
+        VisitorEntity visitorEntity = new VisitorEntity(1L, "","",DocumentType.DNI,0L,LocalDate.now(),false);
         when(visitorRepository.findByDocNumber(12345678L)).thenReturn(visitorEntity);
 
         UserDto userDto = new UserDto(1L,"Carlos Sainz");
         when(userRestClient.getUserById(1L)).thenReturn(ResponseEntity.ok(userDto));
 
-        VisitorEntity visitorEntitySave = new VisitorEntity(1L,"joaquin","zabala",12345678L,LocalDate.of(2005,3,17),true,1L);
+        VisitorEntity visitorEntitySave = new VisitorEntity(1L, "joaquin","zabala",DocumentType.DNI,12345678L,LocalDate.of(2005,3,17),true);
         when(visitorRepository.save(any(VisitorEntity.class))).thenReturn(visitorEntitySave);
 
         //then
         VisitorDTO visitorDTOExpected =
-                new VisitorDTO(1L,1L,"joaquin","zabala",12345678L,LocalDate.of(2005,3,17),true);
+                new VisitorDTO(1L,"joaquin","zabala",DocumentType.DNI,12345678L,LocalDate.of(2005,3,17), true);
 
-        VisitorDTO visitorDTOResult = visitorService.saveOrUpdateVisitor(visitorRequestDto);
+        VisitorDTO visitorDTOResult = visitorService.saveOrUpdateVisitor(visitorRequest);
 
         assertEquals(visitorDTOExpected , visitorDTOResult);
 
@@ -97,8 +98,8 @@ class VisitorServiceTest {
     @Test
     void saveOrUpdateVisitorNoExistVisitorTest() {
         //given
-        VisitorRequestDto visitorRequestDto =
-                new VisitorRequestDto("joaquin","zabala",12345678L,LocalDate.of(2005,3,17),1L,true);
+        VisitorRequest visitorRequest =
+                new VisitorRequest("joaquin","zabala", DocumentType.DNI,12345678L,LocalDate.of(2005,3,17),true);
 
         //when
         when(visitorRepository.findByDocNumber(12345678L)).thenReturn(null);
@@ -106,35 +107,22 @@ class VisitorServiceTest {
         UserDto userDto = new UserDto(1L,"Carlos Sainz");
         when(userRestClient.getUserById(1L)).thenReturn(ResponseEntity.ok(userDto));
 
-        VisitorEntity visitorEntitySave = new VisitorEntity(1L,"joaquin","zabala",12345678L,LocalDate.of(2005,3,17),true,1L);
+        VisitorEntity visitorEntitySave = new VisitorEntity(1L, "joaquin","zabala",DocumentType.DNI,12345678L,LocalDate.of(2005,3,17),true);
         when(visitorRepository.save(any(VisitorEntity.class))).thenReturn(visitorEntitySave);
 
         //then
         VisitorDTO visitorDTOExpected =
-                new VisitorDTO(1L,1L,"joaquin","zabala",12345678L,LocalDate.of(2005,3,17),true);
+                new VisitorDTO(1L, "joaquin","zabala",DocumentType.DNI,12345678L,LocalDate.of(2005,3,17),true);
 
-        VisitorDTO visitorDTOResult = visitorService.saveOrUpdateVisitor(visitorRequestDto);
+        VisitorDTO visitorDTOResult = visitorService.saveOrUpdateVisitor(visitorRequest);
 
         assertEquals(visitorDTOExpected , visitorDTOResult);
 
     }
 
     @Test
-    void saveOrUpdateVisitorNoExistOwnerTest(){
-        VisitorRequestDto visitorRequestDto =new VisitorRequestDto();
-        visitorRequestDto.setDocNumber(12345678L);
-        visitorRequestDto.setOwnerId(11L);
-
-        when(visitorRepository.findByDocNumber(12345678L)).thenReturn(null);
-        when(userRestClient.getUserById(11L)).thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-
-        assertThrows(EntityNotFoundException.class, () -> visitorService.saveOrUpdateVisitor(visitorRequestDto));
-
-    }
-
-    @Test
     void getBydocNumberTest() {
-        VisitorEntity visitorEntity = new VisitorEntity(1L, "juan", "perez", 40252203L, LocalDate.now(), true, 1L);
+        VisitorEntity visitorEntity = new VisitorEntity(1L, "juan", "perez",DocumentType.DNI, 40252203L, LocalDate.now(), true);
         when(visitorRepository.findByDocNumber(40252203L)).thenReturn(visitorEntity);
 
         VisitorDTO visitorDTO = visitorService.getVisitorByDocNumber(40252203L);
@@ -145,22 +133,47 @@ class VisitorServiceTest {
     void getBydocNumberNoExistTest() {
         when(visitorRepository.findByDocNumber(40252203L)).thenReturn(null);
 
-       EntityNotFoundException exception=
-               assertThrows(EntityNotFoundException.class,
-                       () -> visitorService.getVisitorByDocNumber(40252203L));
+       assertNull(visitorService.getVisitorByDocNumber(40252203L));
+    }
 
-       assertEquals("No existe el visitante con el numero de documento 40252203", exception.getMessage());
+    @Test
+    void getByIdTest() {
+        VisitorEntity visitorEntity =
+                new VisitorEntity(1L, "juan", "perez", DocumentType.DNI,40252203L, LocalDate.now(), true);
+        when(visitorRepository.findById(1L)).thenReturn(Optional.of(visitorEntity));
+
+        VisitorDTO visitorDTO = visitorService.getVisitorById(1L);
+
+        assertEquals(visitorEntity.getDocNumber(), visitorDTO.getDocNumber());
+        assertEquals(visitorEntity.getName(), "juan");
+    }
+
+    @Test
+    void getByIdNoExistTest() {
+        when(visitorRepository.findById(100L)).thenReturn(Optional.empty());
+
+        EntityNotFoundException exception=
+                assertThrows(EntityNotFoundException.class,
+                        () -> visitorService.getVisitorById(100L));
+
+        assertEquals("No existe el visitante con el id 100", exception.getMessage());
     }
 
     @Test
     void deleteVisitorTest() {
-        VisitorEntity visitorEntity = new VisitorEntity(1L, "juan", "perez", 40252203L, LocalDate.now(), true, 1L);
-        when(visitorRepository.findByDocNumber(40252203L)).thenReturn(visitorEntity);
 
-        VisitorEntity visitorEntitySave = new VisitorEntity(1L, "juan", "perez", 40252203L, LocalDate.now(), false, 1L);
+        VisitorEntity visitorEntity =
+                new VisitorEntity(1L, "juan", "perez", DocumentType.DNI,40252203L, LocalDate.now(), true);
+
+
+
+        when(visitorRepository.findById(1L)).thenReturn(Optional.of(visitorEntity));
+
+        VisitorEntity visitorEntitySave =
+                new VisitorEntity(1L, "juan", "perez", DocumentType.DNI,40252203L, LocalDate.now(), false);
         when(visitorRepository.save(any(VisitorEntity.class))).thenReturn(visitorEntitySave);
 
-        VisitorDTO visitorDTO = visitorService.deleteVisitor(40252203L);
+        VisitorDTO visitorDTO = visitorService.deleteVisitor(1L);
 
         assertEquals(visitorEntity.getDocNumber(), visitorDTO.getDocNumber());
         assertFalse(visitorDTO.isActive());
@@ -169,14 +182,14 @@ class VisitorServiceTest {
     @Test
     void deleteVisitorNoExistTest() {
 
-        when(visitorRepository.findByDocNumber(40252203L)).thenReturn(null);
+        when(visitorRepository.findById(1L)).thenReturn(Optional.empty());
 
         EntityNotFoundException exception =
                 Assertions.assertThrows(EntityNotFoundException.class, () -> {
-            visitorService.deleteVisitor(40252203L);
+            visitorService.deleteVisitor(1L);
         });
 
-        assertEquals("No existe el visitante con el numero de documento 40252203", exception.getMessage());
+        assertEquals("No existe el visitante con el id 1", exception.getMessage());
 
     }
 }
