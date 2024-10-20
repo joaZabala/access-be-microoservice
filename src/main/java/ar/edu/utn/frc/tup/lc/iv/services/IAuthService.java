@@ -45,4 +45,21 @@ public interface IAuthService {
      * @return list of valid authorizations.
      */
     List<AuthDTO> getValidAuthsByDocNumber(Long docNumber);
+    /**
+     * Authorize visitor with authorized ranges.
+     *
+     * @param visitorAuthRequest request.
+     * @return authorization created.
+     */
+    AuthDTO createAuthorization(VisitorAuthRequest visitorAuthRequest, Long creatorID);
+
+    /**
+     * Checks if a person with the given document number
+     * has a valid invitation.
+     * @param documentNumber The person's
+     * identification number.
+     * @return {@code true} if a
+     * valid invitation exists, {@code false} otherwise.
+     */
+    Boolean isAuthorized(Long documentNumber);
 }

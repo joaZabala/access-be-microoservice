@@ -2,12 +2,8 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import java.util.List;
 
-import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.AuthRangeDto;
-import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.RegisterAuthorizationRangesDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
-import ar.edu.utn.frc.tup.lc.iv.models.AuthorizedRanges;
-import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,11 +57,6 @@ public class AuthService implements IAuthService {
      */
     @Autowired
     private VisitorService visitorService;
-    /**
-     * authorized ranges service.
-     */
-    @Autowired
-    private AuthorizedRangesService authorizedRangesService;
 
     /**
      * ModelMapper for converting between entities and DTOs.
@@ -145,12 +136,17 @@ public class AuthService implements IAuthService {
 
     }
 
+    @Override
+    public AuthDTO authorizeVisitor(VisitorAuthRequest visitorAuthRequest) {
+        return null;
+    }
+
     /**
      * Authorize visitor with authorized ranges.
      *
      * @param visitorAuthRequest request.
      * @return authorization created.
-     */
+     *
 
     @Override
     @Transactional
@@ -179,7 +175,7 @@ public class AuthService implements IAuthService {
         // Si no existe, crea una nueva autorización
         return createNewAuthorization(visitorDTO, visitorAuthRequest);
     }
-
+*/
     /**
      * Retrieves a list of valid authorizations
      * by document number.
@@ -207,6 +203,16 @@ public class AuthService implements IAuthService {
         }
 
         return validAuths;
+    }
+
+    @Override
+    public AuthDTO createAuthorization(VisitorAuthRequest visitorAuthRequest, Long creatorID) {
+        return null;
+    }
+
+    @Override
+    public Boolean isAuthorized(Long documentNumber) {
+        return !getValidAuthsByDocNumber(documentNumber).isEmpty();
     }
 
     /**
@@ -267,7 +273,7 @@ public class AuthService implements IAuthService {
      * @param visitorDTO         visitor
      * @param visitorAuthRequest request
      * @return new authorization
-     */
+
     protected AuthDTO createNewAuthorization(VisitorDTO visitorDTO, VisitorAuthRequest visitorAuthRequest) {
 
         AuthEntity authEntity = new AuthEntity();
@@ -292,7 +298,7 @@ public class AuthService implements IAuthService {
 
         return authDTO;
     }
-
+*/
     /**
      * update authorization list with new authorized ranges.
      *
@@ -300,7 +306,7 @@ public class AuthService implements IAuthService {
      * @param visitorDTO         visitor
      * @param visitorAuthRequest request
      * @return updated authorization
-     */
+
     private AuthDTO updateAuthorization(AuthDTO existingAuth, VisitorDTO visitorDTO,
             VisitorAuthRequest visitorAuthRequest) {
 
@@ -324,7 +330,7 @@ public class AuthService implements IAuthService {
         }
 
         return existingAuth; // Devuelve la autorización actualizada
-    }
+    }*/
 
     /**
      * register authorized ranges.
@@ -333,7 +339,7 @@ public class AuthService implements IAuthService {
      * @param authEntity        auth
      * @param visitorDTO        visitor
      * @return list of authorized ranges
-     */
+
     protected List<AuthorizedRanges> registerAuthRanges(List<AuthRangeDto> authRangeRequests,
             AuthEntity authEntity, VisitorDTO visitorDTO) {
 
@@ -353,5 +359,5 @@ public class AuthService implements IAuthService {
         }
 
         return authorizedRangesList;
-    }
+    }*/
 }
