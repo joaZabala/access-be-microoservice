@@ -4,12 +4,7 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.services.IAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthDTO;
 
@@ -64,5 +59,26 @@ public class AuthController {
     @PostMapping("/authorize")
     public ResponseEntity<AuthDTO> authorizeVisitor(@RequestBody VisitorAuthRequest visitorAuthRequest) {
         return ResponseEntity.ok(authService.authorizeVisitor(visitorAuthRequest));
+    }
+
+    /**
+     * Authorize visitor with authorized ranges.
+     *
+     * @param visitorAuthRequest request.
+     * @return authorization created.
+     */
+    @PostMapping("/authorization")
+    public ResponseEntity<AuthDTO> createAuthorization(@RequestBody VisitorAuthRequest visitorAuthRequest, @RequestParam Long creatorID) {
+        return ResponseEntity.ok(authService.createAuthorization(visitorAuthRequest, creatorID));
+    }
+    /**
+     * check if the visitor have access.
+     *
+     * @param docNumber request.
+     * @return authorization created.
+     */
+    @GetMapping("/authorization/{docNumber}")
+    public ResponseEntity<Boolean> haveAutorization(@PathVariable Long docNumber) {
+        return ResponseEntity.ok(authService.isAuthorized(docNumber));
     }
 }

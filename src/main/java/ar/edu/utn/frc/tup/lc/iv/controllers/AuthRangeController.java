@@ -28,10 +28,10 @@ public class AuthRangeController {
      * Get all authorized ranges.
      *
      * @return List<AuthRangeDTO>
-     */
+     *
     @GetMapping
     public List<AuthRangeDTO> getAuthRanges() {
         return authRangeService.getAuthRanges();
     }
-
+    */
 }
