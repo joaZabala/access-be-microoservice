@@ -52,7 +52,7 @@ public class AuthService implements IAuthService {
     @Autowired
     private AuthRangeService authRangeService;
 
-
+    
     /**
      * repository of authorization ranges.
      */

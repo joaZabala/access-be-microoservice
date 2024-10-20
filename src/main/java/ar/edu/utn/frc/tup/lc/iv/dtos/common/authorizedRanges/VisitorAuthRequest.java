@@ -3,6 +3,7 @@ package ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeRequestDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,12 @@ public class VisitorAuthRequest implements Serializable {
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private VisitorType visitorType;
+
+    /**
+     * The document number of the visitor.
+     */
+    @JsonProperty("external_id")
+    private Long externalID;
 
     /**
      * Visitor request.

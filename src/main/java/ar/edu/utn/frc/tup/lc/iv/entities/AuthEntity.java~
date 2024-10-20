@@ -67,5 +67,4 @@ public class AuthEntity extends AuditBaseEntity {
 
     public AuthEntity(Long createdUser, Long lastUpdatedUser) {
         super(createdUser, lastUpdatedUser);
-    }
 }

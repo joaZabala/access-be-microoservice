@@ -2,8 +2,11 @@ package ar.edu.utn.frc.tup.lc.iv.services;
 
 import java.util.List;
 
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
+import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 
 /**
  * This interface defines the contract for a service
@@ -29,13 +32,35 @@ public interface IAuthService {
     List<AuthDTO> getAuthsByDocNumber(Long docNumber);
 
     /**
+     * Retrieves a list of individual authorizations
+     * by document number.
+     *
+     * @param visitorType document number.
+     * @return list of authorized persons.
+     */
+    List<AuthDTO> getAuthsByType(VisitorType visitorType);
+
+    /**
+     * Retrieves a list of individual authorizations
+     * by document number.
+     *
+     * @param visitorType document number.
+     * @return list of authorized persons.
+     */
+    List<AuthDTO> getAuthsByTypeAndExternalId(VisitorType visitorType, Long externalID);
+
+    /**
      * Authorize visitor with authorized ranges.
      *
      * @param visitorAuthRequest request.
      * @return authorization created.
      */
-    AuthDTO authorizeVisitor(VisitorAuthRequest visitorAuthRequest);
+    AuthDTO createAuthorization(VisitorAuthRequest visitorAuthRequest, Long creatorID);
 
+    /**
+     * Authorize visitor with authorized ranges.
+     */
+    AccessDTO authorizeVisitor(AccessDTO accessDTO, Long guardID);
 
     /**
      * Retrieves a list of valid authorizations
@@ -45,13 +70,17 @@ public interface IAuthService {
      * @return list of valid authorizations.
      */
     List<AuthDTO> getValidAuthsByDocNumber(Long docNumber);
+
     /**
-     * Authorize visitor with authorized ranges.
+     * update authorization list with new authorized ranges.
      *
-     * @param visitorAuthRequest request.
-     * @return authorization created.
+     * @param existingAuth       existing authorization
+     * @param visitorDTO         visitor
+     * @param visitorAuthRequest request
+     * @return updated authorization
      */
-    AuthDTO createAuthorization(VisitorAuthRequest visitorAuthRequest, Long creatorID);
+    AuthDTO updateAuthorization(AuthDTO existingAuth, VisitorDTO visitorDTO,
+                                VisitorAuthRequest visitorAuthRequest);
 
     /**
      * Checks if a person with the given document number

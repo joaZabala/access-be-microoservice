@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
@@ -50,16 +51,32 @@ public class VisitorService implements IVisitorService {
      * @return a list of {@link VisitorDTO} representing the authorized entities.
      */
     @Override
-    public List<VisitorDTO> getAllVisitors(int page, int size) {
+    public PaginatedResponse<VisitorDTO> getAllVisitors(int page, int size, String name, String lastName, String filter) {
         Pageable pageable = PageRequest.of(page, size,
                 Sort.by("lastName").and(Sort.by("name")));
 
         Page<VisitorEntity> visitorPage = visitorRepository.findAllByActive(true, pageable);
 
         // Convertimos el Page en una lista de VisitorDTO
-        return visitorPage.stream()
+        List<VisitorDTO> visitorDTOs = visitorPage.stream()
                 .map(entity -> modelMapper.map(entity, VisitorDTO.class))
+                .filter(visitorDTO -> {
+                    if (Objects.nonNull(name) && !visitorDTO.getName().toLowerCase().contains(name.toLowerCase())) {
+                        return false;
+                    }
+                    if (Objects.nonNull(lastName) && !visitorDTO.getLastName().toLowerCase().contains(lastName.toLowerCase())) {
+                        return false;
+                    }
+                    if (Objects.nonNull(filter) && !visitorDTO.getName().toLowerCase().contains(filter.toLowerCase())
+                            && !visitorDTO.getLastName().toLowerCase().contains(filter.toLowerCase())
+                            && !visitorDTO.getDocNumber().toString().contains(filter)) {
+                        return false;
+                    }
+                    return true;
+                })
                 .collect(Collectors.toList());
+
+        return new PaginatedResponse<>(visitorDTOs, visitorPage.getTotalElements());
     }
 
     /**
@@ -69,7 +86,7 @@ public class VisitorService implements IVisitorService {
      * @return the VisitorDTO with the authorization details.
      */
     @Override
-    public VisitorDTO saveOrUpdateVisitor(VisitorRequest visitorRequest) {
+    public VisitorDTO saveOrUpdateVisitor(VisitorRequest visitorRequest , Long visitorId) {
         VisitorEntity existVisitorEntity =
                 visitorRepository.findByDocNumber(visitorRequest.getDocNumber());
 
