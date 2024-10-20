@@ -84,8 +84,8 @@ public class RegisterAuthorizationRangesDTO {
     /**
      * Days of the week when access is allowed (e.g., Monday, Tuesday,...).
      */
-    @JsonProperty("day_of_weeks")
-    private List<DayOfWeek> dayOfWeeks;
+    @JsonProperty("days_of_week")
+    private List<DayOfWeek> daysOfWeek;
 
     /**
      * Unique identifier of the plot associated with the range.

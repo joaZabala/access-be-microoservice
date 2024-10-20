@@ -1,5 +1,8 @@
 package ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,18 +13,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-
 /**
  * Data Transfer Object for creating or updating an authorized range.
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthRangeDTO implements Serializable {
+public class AuthRangeRequestDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,12 +37,6 @@ public class AuthRangeDTO implements Serializable {
      * Represents the string data type.
      */
     private static final String STRING_TYPE = "string";
-
-    /**
-     * Id of the authorized range.
-     */
-    @JsonProperty("auth_range_id")
-    private Long authRangeId;
 
     /**
      * Date from to form the authorized range.
@@ -85,7 +77,7 @@ public class AuthRangeDTO implements Serializable {
     private List<DayOfWeek> daysOfWeek;
 
     /**
-     * ID of the plot.
+     * Id of the plot.
      */
     @JsonProperty("plot_id")
     private Long plotId;
