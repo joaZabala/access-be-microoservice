@@ -1,5 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.controllers;
 
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.services.IAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,12 +54,14 @@ public class AuthController {
     /**
      * Authorize visitor with authorized ranges.
      *
-     * @param visitorAuthRequest request.
+     * @param accessDTO request.
+     * @param creatorID creator.
      * @return authorization created.
      */
     @PostMapping("/authorize")
-    public ResponseEntity<AuthDTO> authorizeVisitor(@RequestBody VisitorAuthRequest visitorAuthRequest) {
-        return ResponseEntity.ok(authService.authorizeVisitor(visitorAuthRequest));
+    public ResponseEntity<AccessDTO> authorizeVisitor(@RequestBody AccessDTO accessDTO, @RequestParam Long creatorID) {
+        AccessDTO access = authService.authorizeVisitor(accessDTO,creatorID);
+        return access == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(access);
     }
 
     /**
