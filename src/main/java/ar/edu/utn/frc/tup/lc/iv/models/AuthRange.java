@@ -7,8 +7,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Entity class representing the authorized ranges.
@@ -20,19 +24,11 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class AuthorizedRanges extends AuditBase {
+public class AuthRange extends AuditBase {
     /**
      * Unique identifier of the Acceses.
      */
     private Long authRangeId;
-    /**
-     * Unique Authorized identifier.
-     */
-    private Long visitorId;
-//    /**
-//     * External ID to identify Suppliers, Employees, Owners and Cohabitants.
-//     */
-//    private Long externalId;
     /**
      * Date from to form the authorized range.
      */
@@ -58,7 +54,7 @@ public class AuthorizedRanges extends AuditBase {
     /**
      * Days of the week for which the authorization is valid (Monday, Wednesday).
      */
-    private String days;
+    private List<DayOfWeek> daysOfWeek;
     /**
      * Unique plot identifier.
      */
@@ -73,21 +69,22 @@ public class AuthorizedRanges extends AuditBase {
      * Indicates whether the authorization is currently active.
      */
     private boolean isActive;
+
     /**
      * Constructor that initializes AuthorizedRanges from AuthorizedRangesEntity.
      *
      * @param authorizedRangesEntity the AuthorizedRangesEntity object
      */
-    public AuthorizedRanges(AuthRangeEntity authorizedRangesEntity) {
+    public AuthRange(AuthRangeEntity authorizedRangesEntity) {
         this.authRangeId = authorizedRangesEntity.getAuthRangeId();
-//        this.visitorId = authorizedRangesEntity.getVisitorId() != null
-//                ? authorizedRangesEntity.getVisitorId().getVisitorId() : null;
-//        this.externalId = authorizedRangesEntity.getExternalId();
         this.dateFrom = authorizedRangesEntity.getDateFrom();
         this.dateTo = authorizedRangesEntity.getDateTo();
         this.hourFrom = authorizedRangesEntity.getHourFrom();
         this.hourTo = authorizedRangesEntity.getHourTo();
-        this.days = authorizedRangesEntity.getDays();
+        this.daysOfWeek = Arrays.stream(authorizedRangesEntity.getDaysOfWeek().split(","))
+                .map(String::toUpperCase)
+                .map(DayOfWeek::valueOf)
+                .collect(Collectors.toList());
         this.plotId = authorizedRangesEntity.getPlotId();
         this.comment = authorizedRangesEntity.getComment();
         this.isActive = authorizedRangesEntity.isActive();

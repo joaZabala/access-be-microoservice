@@ -1,5 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges;
 
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeRequestDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import lombok.AllArgsConstructor;
@@ -36,5 +37,5 @@ public class VisitorAuthRequest implements Serializable {
     /**
      * Authorized range request.
      */
-    private List<AuthRangeDto> authRangeRequest;
+    private List<AuthRangeRequestDTO> authRangeRequest;
 }
