@@ -3,6 +3,8 @@ package ar.edu.utn.frc.tup.lc.iv.controllers;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.services.IAccessesService;
+import ar.edu.utn.frc.tup.lc.iv.services.imp.AuthService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +30,9 @@ public class AccessController {
     @Autowired
     private IAccessesService accessesService;
 
+    @Autowired
+    private AuthService authService;
+
     /**
      * Authorize visitor with authorized ranges.
      *
@@ -35,12 +40,10 @@ public class AccessController {
      * @param creatorID creator.
      * @return authorization created.
      */
-    @PostMapping("")
+    @PostMapping("/authorize")
     public ResponseEntity<AccessDTO> authorizeVisitor(@RequestBody AccessDTO accessDTO, @RequestParam Long creatorID) {
-
-        //Post de accesos
-
-        return null;
+        AccessDTO access = authService.authorizeVisitor(accessDTO, creatorID);
+        return access == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(access);
     }
 
     /**
