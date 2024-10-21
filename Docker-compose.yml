@@ -9,6 +9,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 'password'
     volumes:
+      - ./mysql.cnf:/etc/mysql/conf.d/mysql.cnf
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - mysql-data:/var/lib/mysql
     networks:

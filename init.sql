@@ -1,3 +1,6 @@
+SET NAMES utf8mb4;
+
+
 CREATE DATABASE accesses;
 
 USE accesses;
