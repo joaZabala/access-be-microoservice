@@ -52,7 +52,7 @@ public class AuthService implements IAuthService {
     @Autowired
     private AuthRangeService authRangeService;
 
-    
+
     /**
      * repository of authorization ranges.
      */
@@ -76,6 +76,12 @@ public class AuthService implements IAuthService {
      */
     @Autowired
     private ModelMapper modelMapper;
+
+    /**
+     * service of access.
+     */
+    @Autowired
+    private AccessesService accessesService;
 
     /**
      * Get all authorizations.
@@ -113,7 +119,7 @@ public class AuthService implements IAuthService {
         return authDTOs;
     }
 
-    //todo cambiar
+    
     /**
      * Retrieves a list of individual authorizations
      * by document number.
@@ -164,7 +170,6 @@ public class AuthService implements IAuthService {
     /**
      * Retrieves a list of valid authorizations
      * by document number.
-     *
      * @param docNumber document number.
      * @return list of valid authorizations.
      */
@@ -190,6 +195,13 @@ public class AuthService implements IAuthService {
         return validAuths;
     }
 
+    /**
+     * update authorization list with new authorized ranges.
+     * @param existingAuth existing authorization
+     * @param visitorDTO visitor
+     * @param visitorAuthRequest request
+     * @return updated authorization.
+     */
     @Override
     public AuthDTO updateAuthorization(AuthDTO existingAuth, VisitorDTO visitorDTO, VisitorAuthRequest visitorAuthRequest) {
         List<AuthRange> newAuthorizedRanges = authRangeService.registerAuthRanges(visitorAuthRequest.getAuthRangeRequest(),
@@ -213,7 +225,12 @@ public class AuthService implements IAuthService {
         return existingAuth; // Devuelve la autorización actualizada
     }
 
-
+    /**
+     * Create a new authorization.
+     * @param visitorAuthRequest request.
+     * @param creatorID creator.
+     * @return new authorization.
+     */
     @Override
     @Transactional
     public AuthDTO createAuthorization(VisitorAuthRequest visitorAuthRequest, Long creatorID) {
@@ -269,6 +286,12 @@ public class AuthService implements IAuthService {
         return authDTO;
     }
 
+    /**
+     *
+     * @param accessDTO
+     * @param guardID
+     * @return
+     */
     @Override
     public AccessDTO authorizeVisitor(AccessDTO accessDTO, Long guardID) {
         List<AuthDTO> authDTOs = getValidAuthsByDocNumber(accessDTO.getDocNumber());
@@ -287,6 +310,13 @@ public class AuthService implements IAuthService {
         return accessesService.registerAccess(accessEntity);
     }
 
+    /**
+     * Checks if a person is authorized.
+     * @param documentNumber The person's
+     * identification number.
+     * @return {@code true} if a
+     * valid invitation exists, {@code false} otherwise.
+     */
     @Override
     public Boolean isAuthorized(Long documentNumber) {
         return !getValidAuthsByDocNumber(documentNumber).isEmpty();
