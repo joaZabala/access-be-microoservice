@@ -247,7 +247,14 @@ public class AuthService implements IAuthService {
             visitorDTO = visitorService.saveOrUpdateVisitor(visitorAuthRequest.getVisitorRequest(), null);
         }
 
-        return createNewAuthorization(visitorDTO, visitorAuthRequest, creatorID);
+        Optional<AuthDTO> existingAuthOpt = findExistingAuthorization(visitorAuthRequest);
+
+        // Si existe una autorización con ese visitorType, actualiza la existente
+        if (existingAuthOpt.isPresent()) {
+            return updateAuthorization(existingAuthOpt.get(), visitorDTO, visitorAuthRequest);
+        }
+        // Si no existe, crea una nueva autorización
+        return createNewAuthorization(visitorDTO, visitorAuthRequest , creatorID);
     }
 
     /**
