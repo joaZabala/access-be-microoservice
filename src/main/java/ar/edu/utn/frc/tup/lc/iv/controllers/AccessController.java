@@ -4,12 +4,16 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.services.IAccessesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
 /**
  * Controller for managing access-related operations.
  * Provides endpoints for retrieving access records
@@ -25,15 +29,31 @@ public class AccessController {
     private IAccessesService accessesService;
 
     /**
+     * Authorize visitor with authorized ranges.
+     *
+     * @param accessDTO request.
+     * @param creatorID creator.
+     * @return authorization created.
+     */
+    @PostMapping("")
+    public ResponseEntity<AccessDTO> authorizeVisitor(@RequestBody AccessDTO accessDTO, @RequestParam Long creatorID) {
+
+        //Post de accesos
+
+        return null;
+    }
+
+    /**
      * Retrieves all access records, optionally filtered by
      * visitor type and external ID.
+     * 
      * @param visitorType Type of the visitor (optional).
-     * @param externalID External identifier (optional).
+     * @param externalID  External identifier (optional).
      * @return List of AccessDTOs.
      */
     @GetMapping
     public List<AccessDTO> getAllAccess(@RequestParam(required = false) VisitorType visitorType,
-                                        @RequestParam(required = false) Long externalID) {
+            @RequestParam(required = false) Long externalID) {
         if (visitorType != null) {
             if (externalID != null) {
                 return accessesService.getAllAccessByTypeAndExternalID(visitorType, externalID);
@@ -45,6 +65,7 @@ public class AccessController {
 
     /**
      * Retrieves all access entries.
+     * 
      * @return List of AccessDTOs representing entries.
      */
     @GetMapping("/entries")
@@ -54,6 +75,7 @@ public class AccessController {
 
     /**
      * Retrieves all access exits.
+     * 
      * @return List of AccessDTOs representing exits.
      */
     @GetMapping("/exits")
@@ -63,6 +85,7 @@ public class AccessController {
 
     /**
      * Retrieves access records where exits are missing.
+     * 
      * @return List of AccessDTOs with missing exits.
      */
     @GetMapping("/missing-exits")

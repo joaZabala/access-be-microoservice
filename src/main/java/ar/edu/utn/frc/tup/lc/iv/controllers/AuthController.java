@@ -50,27 +50,13 @@ public class AuthController {
     public List<AuthDTO> getValidAuths(@RequestParam Long docNumber) {
         return authService.getValidAuthsByDocNumber(docNumber);
     }
-
-    /**
-     * Authorize visitor with authorized ranges.
-     *
-     * @param accessDTO request.
-     * @param creatorID creator.
-     * @return authorization created.
-     */
-    @PostMapping("/authorize")
-    public ResponseEntity<AccessDTO> authorizeVisitor(@RequestBody AccessDTO accessDTO, @RequestParam Long creatorID) {
-        AccessDTO access = authService.authorizeVisitor(accessDTO,creatorID);
-        return access == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(access);
-    }
-
     /**
      * Authorize visitor with authorized ranges.
      *
      * @param visitorAuthRequest request.
      * @return authorization created.
      */
-    @PostMapping("/authorization")
+    @PostMapping("/authorize")
     public ResponseEntity<AuthDTO> createAuthorization(@RequestBody VisitorAuthRequest visitorAuthRequest, @RequestParam Long creatorID) {
         return ResponseEntity.ok(authService.createAuthorization(visitorAuthRequest, creatorID));
     }
