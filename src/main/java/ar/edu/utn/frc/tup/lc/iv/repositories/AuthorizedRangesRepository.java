@@ -32,7 +32,7 @@ public interface AuthorizedRangesRepository extends JpaRepository<AuthRangeEntit
             + "AND (ac.hourFrom IS NULL OR ac.hourFrom <= :startHour) "
             + "AND (ac.hourTo IS NULL OR ac.hourTo >= :startHour) "
             + "AND v.visitor.docNumber = :documentNumber "
-            + "AND (ac.days IS NULL OR ac.days LIKE CONCAT('%', :day, '%'))")
+            + "AND (ac.daysOfWeek IS NULL OR ac.daysOfWeek LIKE CONCAT('%', :day, '%'))")
     boolean hasInvitation(
             @Param("startDate") LocalDate startDate,
             @Param("startHour") LocalTime startHour,

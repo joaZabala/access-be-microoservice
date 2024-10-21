@@ -39,7 +39,7 @@ class AuthorizedRangesRepositoryTest {
         authRangeEntity.setDateFrom(LocalDate.of(2024, 10, 1));
         authRangeEntity.setDateTo(LocalDate.of(2024, 10, 2));
         authRangeEntity.setActive(true);
-        authRangeEntity.setDays("MONDAY");
+        authRangeEntity.setDaysOfWeek("MONDAY");
         authRangeEntity.setAuthId(authEntity);
         authRangeEntity.setHourFrom(LocalTime.of(9, 0));
         authRangeEntity.setHourTo(LocalTime.of(17, 0));
