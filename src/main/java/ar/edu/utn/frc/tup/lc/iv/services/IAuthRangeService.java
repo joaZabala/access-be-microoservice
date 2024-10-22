@@ -26,6 +26,7 @@ public interface IAuthRangeService {
 
     /**
      * Retrieves all authorized ranges.
+     * @param authID id of auth
      * @return the list of an authorization
      */
     List<AuthRangeDTO> getAuthRangesByAuth(AuthEntity authID);
@@ -33,6 +34,7 @@ public interface IAuthRangeService {
 
     /**
      * Retrieves all authorized ranges.
+     * @param externalID id another microservice
      * @return the list of an authorization
      */
     List<AuthRangeDTO> getAuthRangesByAuthExternalID(Long externalID);

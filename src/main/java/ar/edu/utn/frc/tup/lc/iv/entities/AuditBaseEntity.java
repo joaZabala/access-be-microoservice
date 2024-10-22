@@ -42,7 +42,9 @@ public class AuditBaseEntity {
      */
     @Column(name = "last_updated_date")
     private LocalDateTime lastUpdatedDate;
-
+    /**
+     * constructor
+     */
     public AuditBaseEntity(Long createdUser, Long lastUpdatedUser) {
         this.createdUser = createdUser;
         this.lastUpdatedUser = lastUpdatedUser;

@@ -6,7 +6,14 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.services.IVisitorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller class for managing authorized persons.
@@ -28,6 +35,9 @@ public class VisitorController {
      *
      * @param page the page number for pagination
      * @param size the size of the page
+     * @param name name
+     * @param lastName lastname
+     * @param filter filter
      * @return a list of VisitorDTO objects
      */
     @GetMapping()
@@ -56,6 +66,7 @@ public class VisitorController {
      *
      * @param visitorRequest The DTO containing the details
      *                       to create or update Visitor.
+     * @param visitorId id of visitor
      * @return VisitorDto.
      */
     @PutMapping()
@@ -77,7 +88,6 @@ public class VisitorController {
 
     /**
      * Retrieves a specific visitor by their ID.
-     * 
      * @param visitorId unique identifier of the visitor
      * @return VisitorDTO
      */

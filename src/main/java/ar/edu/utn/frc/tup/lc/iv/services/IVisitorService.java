@@ -1,7 +1,5 @@
 package ar.edu.utn.frc.tup.lc.iv.services;
 
-import java.util.List;
-
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
@@ -16,19 +14,23 @@ public interface IVisitorService {
      * Retrieves a list of all authorized persons.
      * @param page the page number for pagination
      * @param size the size of the page
+     * @param name name
+     * @param lastName lastname
+     * @param filter filter
      * @return A list of {@link VisitorDTO} representing all authorized persons.
      */
-    PaginatedResponse<VisitorDTO> getAllVisitors(int page, int size , String name , String lastName, String filter);
+    PaginatedResponse<VisitorDTO> getAllVisitors(int page, int size, String name, String lastName, String filter);
 
     /**
      * Creates a new visitor or update based on the provided data.
      *
      * @param authorizedRequestDto Object containing the necessary data
      *                             to create a new authorization.
+     * @param visitorId
      * @return An AuthorizedDTO object representing
      * the newly created authorization.
      */
-    VisitorDTO saveOrUpdateVisitor(VisitorRequest authorizedRequestDto , Long visitorId);
+    VisitorDTO saveOrUpdateVisitor(VisitorRequest authorizedRequestDto, Long visitorId);
 
     /**
      * This method finds and returns the visitor

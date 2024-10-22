@@ -29,7 +29,7 @@ public class AccessController {
     /** Service for handling access data operations. */
     @Autowired
     private IAccessesService accessesService;
-
+    /** Service for handling auth data operations. */
     @Autowired
     private AuthService authService;
 
@@ -49,7 +49,6 @@ public class AccessController {
     /**
      * Retrieves all access records, optionally filtered by
      * visitor type and external ID.
-     * 
      * @param visitorType Type of the visitor (optional).
      * @param externalID  External identifier (optional).
      * @return List of AccessDTOs.
@@ -68,7 +67,6 @@ public class AccessController {
 
     /**
      * Retrieves all access entries.
-     * 
      * @return List of AccessDTOs representing entries.
      */
     @GetMapping("/entries")
@@ -78,7 +76,6 @@ public class AccessController {
 
     /**
      * Retrieves all access exits.
-     * 
      * @return List of AccessDTOs representing exits.
      */
     @GetMapping("/exits")
@@ -88,7 +85,6 @@ public class AccessController {
 
     /**
      * Retrieves access records where exits are missing.
-     * 
      * @return List of AccessDTOs with missing exits.
      */
     @GetMapping("/missing-exits")

@@ -86,7 +86,7 @@ public class VisitorService implements IVisitorService {
      * @return the VisitorDTO with the authorization details.
      */
     @Override
-    public VisitorDTO saveOrUpdateVisitor(VisitorRequest visitorRequest , Long visitorId) {
+    public VisitorDTO saveOrUpdateVisitor(VisitorRequest visitorRequest, Long visitorId) {
         VisitorEntity existVisitorEntity =
                 visitorRepository.findByDocNumber(visitorRequest.getDocNumber());
 
