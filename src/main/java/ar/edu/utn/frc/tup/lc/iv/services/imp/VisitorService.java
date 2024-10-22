@@ -104,7 +104,7 @@ public class VisitorService implements IVisitorService {
             visitorEntity = existVisitorEntity;
         } else {
             visitorEntity = new VisitorEntity();
-            existVisitorEntity.setCreatedUser(writerUserId);
+            visitorEntity.setCreatedUser(writerUserId);
             visitorEntity.setCreatedDate(LocalDateTime.now());
         }
 
