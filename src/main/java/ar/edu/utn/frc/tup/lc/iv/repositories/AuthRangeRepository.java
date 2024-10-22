@@ -30,6 +30,7 @@ public interface AuthRangeRepository extends JpaRepository<AuthRangeEntity, Long
      * @param externalID The external ID associated with an auth entity.
      * @return List of authorized ranges matching the external ID.
      */
+    @SuppressWarnings("PMD.MethodNamingConventions")
     List<AuthRangeEntity> findByAuthId_ExternalID(Long externalID);
 
     /**
@@ -39,5 +40,6 @@ public interface AuthRangeRepository extends JpaRepository<AuthRangeEntity, Long
      * @param plotId The plot ID associated with an auth entity.
      * @return List of authorized ranges matching the external ID and plot ID.
      */
+    @SuppressWarnings("PMD.MethodNamingConventions")
     List<AuthRangeEntity> findByAuthId_ExternalIDAndAuthId_PlotId(Long externalID, Long plotId);
 }

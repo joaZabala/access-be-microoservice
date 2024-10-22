@@ -26,8 +26,8 @@ public interface IAuthService {
      * Retrieves a list of individual authorizations
      * by document number.
      *
-     * @param docNumber document number.
-     * @return list of authorized persons.
+     * @param docNumber the document number of the authorized person.
+     * @return a list of {@link AuthDTO} representing the authorized persons.
      */
     List<AuthDTO> getAuthsByDocNumber(Long docNumber);
 
@@ -35,8 +35,8 @@ public interface IAuthService {
      * Retrieves a list of individual authorizations
      * by document number.
      *
-     * @param visitorType document number.
-     * @return list of authorized persons.
+     * @param visitorType the type of the visitor.
+     * @return a list of {@link AuthDTO} representing the authorized persons.
      */
     List<AuthDTO> getAuthsByType(VisitorType visitorType);
 
@@ -44,26 +44,28 @@ public interface IAuthService {
      * Retrieves a list of individual authorizations
      * by document number.
      *
-     * @param visitorType document number.
-     * @param externalID document number.
-     * @return list of authorized persons.
+     * @param visitorType the type of the visitor.
+     * @param externalID the external ID associated with the authorization.
+     * @param plotId the plot ID for the authorization.
+     * @return a list of {@link AuthDTO} representing the authorized persons.
      */
     List<AuthDTO> getAuthsByTypeAndExternalId(VisitorType visitorType, Long externalID, Long plotId);
 
     /**
      * Authorize visitor with authorized ranges.
      *
-     * @param visitorAuthRequest request.
-     * @param creatorID creator.
-     * @return authorization created.
+     * @param visitorAuthRequest the request containing visitor authorization details.
+     * @param creatorID the ID of the creator of the authorization.
+     * @return the created {@link AuthDTO} authorization.
      */
     AuthDTO createAuthorization(VisitorAuthRequest visitorAuthRequest, Long creatorID);
 
     /**
      * Authorize visitor with authorized ranges.
-     * @param accessDTO access
-     * @param guardID guard
-     * @return authorization
+     *
+     * @param accessDTO the access details for the visitor.
+     * @param guardID the ID of the guard authorizing the access.
+     * @return the created {@link AccessDTO} authorization.
      */
     AccessDTO authorizeVisitor(AccessDTO accessDTO, Long guardID);
 
@@ -71,18 +73,18 @@ public interface IAuthService {
      * Retrieves a list of valid authorizations
      * by document number.
      *
-     * @param docNumber document number.
-     * @return list of valid authorizations.
+     * @param docNumber the document number of the authorized person.
+     * @return a list of valid {@link AuthDTO} authorizations.
      */
     List<AuthDTO> getValidAuthsByDocNumber(Long docNumber);
 
     /**
      * update authorization list with new authorized ranges.
      *
-     * @param existingAuth       existing authorization
-     * @param visitorDTO         visitor
-     * @param visitorAuthRequest request
-     * @return updated authorization
+     * @param existingAuth the existing {@link AuthDTO} authorization to update.
+     * @param visitorDTO the {@link VisitorDTO} of the visitor.
+     * @param visitorAuthRequest the request containing new authorization details.
+     * @return the updated {@link AuthDTO} authorization.
      */
     AuthDTO updateAuthorization(AuthDTO existingAuth, VisitorDTO visitorDTO,
                                 VisitorAuthRequest visitorAuthRequest);
