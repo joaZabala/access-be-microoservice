@@ -48,7 +48,7 @@ public interface IAuthService {
      * @param externalID document number.
      * @return list of authorized persons.
      */
-    List<AuthDTO> getAuthsByTypeAndExternalId(VisitorType visitorType, Long externalID ,  Long plotId);
+    List<AuthDTO> getAuthsByTypeAndExternalId(VisitorType visitorType, Long externalID, Long plotId);
 
     /**
      * Authorize visitor with authorized ranges.

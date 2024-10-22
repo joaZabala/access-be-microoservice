@@ -99,10 +99,23 @@ public class AccessEntity extends AuditBaseEntity {
 
     /**
      * Constructor.
+     *
+     * @param createdUser         The ID of the user who created the access.
+     * @param lastUpdatedUser     The ID of the user who last updated the access.
+     * @param auth                The authorized range associated.
+     * @param action              The action type.
+     * @param actionDate          The date and time of the entry/exit to the neighborhood.
+     * @param vehicleType         The unique vehicle type identifier.
+     * @param vehicleReg          The vehicle registration.
+     * @param vehicleDescription   The vehicle description.
+     * @param plotId              The identifier of the plot related to access.
+     * @param supplierEmployeeId   The identifier of the supplier employee.
+     * @param comments            Any observations on access.
      */
+    @SuppressWarnings("PMD.ConstructorWithTooManyParameters")
     public AccessEntity(Long createdUser, Long lastUpdatedUser, AuthEntity auth, ActionTypes action, LocalDateTime actionDate,
                         VehicleTypes vehicleType, String vehicleReg, String vehicleDescription, Long plotId,
-                        Long supplierEmployeeId, String comments) { // NOPMD
+                        Long supplierEmployeeId, String comments) {
         super(createdUser, lastUpdatedUser);
         this.auth = auth;
         this.action = action;
