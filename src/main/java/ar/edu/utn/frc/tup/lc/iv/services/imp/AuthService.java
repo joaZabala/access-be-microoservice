@@ -131,25 +131,14 @@ public class AuthService implements IAuthService {
     public List<AuthDTO> getAuthsByDocNumber(Long docNumber) {
 
         VisitorEntity visitorEntity = visitorRepository.findByDocNumber(docNumber);
-
         List<AuthEntity> authEntities = authRepository.findByVisitor(visitorEntity);
-
         List<AuthDTO> authDTOs = new ArrayList<>();
 
         for (AuthEntity authEntity : authEntities) {
-
             AuthDTO authDTO = modelMapper.map(authEntity, AuthDTO.class);
-
-            List<AuthRangeEntity> authRangeEntities = authRangeRepository.findByAuthId(authEntity);
-
-            List<AuthRangeDTO> authRangeDTOs = authRangeEntities.stream()
-                    .map(authRangeEntity -> modelMapper.map(authRangeEntity, AuthRangeDTO.class))
-                    .collect(Collectors.toList());
-
+            List<AuthRangeDTO> authRangeDTOs = authRangeService.getAuthRangesByAuth(authEntity);
             authDTO.setAuthRanges(authRangeDTOs);
-
             authDTOs.add(authDTO);
-
         }
 
         return authDTOs;
@@ -164,7 +153,17 @@ public class AuthService implements IAuthService {
      */
     @Override
     public List<AuthDTO> getAuthsByType(VisitorType visitorType) {
-        return null;
+        List<AuthEntity> authEntities = authRepository.findByVisitorType(visitorType);
+        List<AuthDTO> authDTOs = new ArrayList<>();
+
+        for (AuthEntity authEntity : authEntities) {
+            AuthDTO authDTO = modelMapper.map(authEntity, AuthDTO.class);
+            List<AuthRangeDTO> authRangeDTOs = authRangeService.getAuthRangesByAuth(authEntity);
+            authDTO.setAuthRanges(authRangeDTOs);
+            authDTOs.add(authDTO);
+        }
+
+        return authDTOs;
     }
 
     /**
@@ -197,7 +196,7 @@ public class AuthService implements IAuthService {
 
         for (AuthDTO authDTO : dtos) {
             if (authDTO.isActive()) {
-                List<AuthRangeDTO> validAuthRanges = getValidAuthRanges(authDTO.getAuthRanges(), currentDate,
+                List<AuthRangeDTO> validAuthRanges = authRangeService.getValidAuthRanges(authDTO.getAuthRanges(), currentDate,
                         currentTime);
                 if (!validAuthRanges.isEmpty()) {
                     authDTO.setAuthRanges(validAuthRanges);
@@ -293,6 +292,7 @@ public class AuthService implements IAuthService {
         authDTO.setVisitorType(authEntity.getVisitorType());
         authDTO.setVisitor(modelMapper.map(authEntity.getVisitor(), VisitorDTO.class));
         authDTO.setActive(authEntity.isActive());
+        authDTO.setExternalID(authEntity.getExternalID());
 
 
         if (visitorAuthRequest.getVisitorType() == VisitorType.PROVIDER) {
@@ -346,27 +346,6 @@ public class AuthService implements IAuthService {
     }
 
     /**
-     * Retrieves a list of valid authorization ranges.
-     *
-     * @param authRanges  list of authorization ranges.
-     * @param currentDate current date.
-     * @param currentTime current time.
-     * @return list of valid authorization ranges.
-     */
-    private List<AuthRangeDTO> getValidAuthRanges(List<AuthRangeDTO> authRanges, LocalDate currentDate,
-                                                  LocalTime currentTime) {
-        List<AuthRangeDTO> validAuthRanges = new ArrayList<>();
-
-        for (AuthRangeDTO authRangeDTO : authRanges) {
-            if (isValidAuthRange(authRangeDTO, currentDate, currentTime)) {
-                validAuthRanges.add(authRangeDTO);
-            }
-        }
-
-        return validAuthRanges;
-    }
-
-    /**
      * Checks if the given authorization range is valid.
      *
      * @param authRangeDTO the authorization range to check.
@@ -397,5 +376,13 @@ public class AuthService implements IAuthService {
                 .findFirst();
     }
 
+    /**
+     * Retrieves a list of authorized ranges.
+     * @param providerID provider.
+     * @return list of authorized ranges.
+     */
+    private List<AuthRangeDTO> getAuthorizedRangesList(Long providerID){
+        return authRangeService.getAuthRangesByAuth(authRepository.findByVisitorTypeAndExternalID(VisitorType.PROVIDER_ORGANIZATION, providerID).get(0));
+    }
 
 }

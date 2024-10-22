@@ -28,6 +28,7 @@ public class VisitorAuthRequest implements Serializable {
      * Visitor type.
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonProperty("visitor_type")
     private VisitorType visitorType;
 
     /**
@@ -39,10 +40,12 @@ public class VisitorAuthRequest implements Serializable {
     /**
      * Visitor request.
      */
+    @JsonProperty("visitor_request")
     private VisitorRequest visitorRequest;
 
     /**
      * Authorized range request.
      */
+    @JsonProperty("auth_range_request")
     private List<AuthRangeRequestDTO> authRangeRequest;
 }

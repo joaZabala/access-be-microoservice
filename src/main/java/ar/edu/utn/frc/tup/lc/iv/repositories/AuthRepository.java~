@@ -37,7 +37,7 @@ public interface AuthRepository extends JpaRepository<AuthEntity, Long> {
      * @param externalID external id
      * @return auth list
      */
-    List<AuthEntity> findByVisitorTypeAndExternalID(VisitorType visitor, Long externalID);
+    List<AuthEntity> findByVisitorAndExternalID(VisitorEntity visitor, Long externalID);
 
 }
 

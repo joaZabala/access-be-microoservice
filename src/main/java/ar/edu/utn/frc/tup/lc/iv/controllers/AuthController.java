@@ -61,7 +61,7 @@ public class AuthController {
      * @param creatorID request.
      * @return authorization created.
      */
-    @PostMapping("/authorize")
+    @PostMapping("/authorization")
     public ResponseEntity<AuthDTO> createAuthorization(@RequestBody VisitorAuthRequest visitorAuthRequest, @RequestParam Long creatorID) {
         return ResponseEntity.ok(authService.createAuthorization(visitorAuthRequest, creatorID));
     }

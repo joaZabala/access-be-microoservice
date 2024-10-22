@@ -23,4 +23,11 @@ public interface AuthRangeRepository extends JpaRepository<AuthRangeEntity, Long
      */
     List<AuthRangeEntity> findByAuthId(AuthEntity authEntity);
 
+    /**
+     *  find by auth id and external id.
+     * @param externalID external id.
+     * @return auth range list.
+     */
+    List<AuthRangeEntity> findByAuthId_ExternalID(Long externalID);
+
 }

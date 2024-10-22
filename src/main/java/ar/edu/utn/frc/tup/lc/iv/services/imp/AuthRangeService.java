@@ -82,7 +82,12 @@ public class AuthRangeService implements IAuthRangeService {
      */
     @Override
     public List<AuthRangeDTO> getAuthRangesByAuthExternalID(Long externalID) {
-        return List.of();
+        return authRangeRepository.findByAuthId_ExternalID(externalID).stream()
+                .map(authRangeEntity -> {
+                    AuthRangeDTO authRangeDTO = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
+                    authRangeDTO.setDaysOfWeek(convertDaysOfWeek(authRangeEntity.getDaysOfWeek()));
+                    return authRangeDTO;
+                }).collect(Collectors.toList());
     }
 
     /**
@@ -131,9 +136,7 @@ public class AuthRangeService implements IAuthRangeService {
                 && (authRangeDTO.getDateTo() == null || !currentDate.isAfter(authRangeDTO.getDateTo()))
                 && (authRangeDTO.getHourFrom() == null || !currentTime.isBefore(authRangeDTO.getHourFrom()))
                 && (authRangeDTO.getHourTo() == null || !currentTime.isAfter(authRangeDTO.getHourTo()))
-                && authRangeDTO.getDaysOfWeek().isEmpty()
-                || authRangeDTO.getDaysOfWeek()
-                .contains(currentDate.getDayOfWeek());
+                && authRangeDTO.getDaysOfWeek().contains(currentDate.getDayOfWeek());
     }
 
     /**
