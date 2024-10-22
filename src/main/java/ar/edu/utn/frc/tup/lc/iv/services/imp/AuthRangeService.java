@@ -76,6 +76,22 @@ public class AuthRangeService implements IAuthRangeService {
     }
 
     /**
+     * get auth ranges by auth external id and plot.
+     * @param authID id of auth
+     * @return list of auth ranges.
+     */
+    @Override
+    public List<AuthRangeDTO> getAuthRangesByAuthExternalIdAndPlot(AuthEntity authID) {
+        return authRangeRepository.findByAuthId_ExternalIDAndAuthId_PlotId(authID.getExternalID(), authID.getPlotId())
+                .stream()
+                .map(authRangeEntity -> {
+                    AuthRangeDTO authRangeDTO = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
+                    authRangeDTO.setDaysOfWeek(convertDaysOfWeek(authRangeEntity.getDaysOfWeek()));
+                    return authRangeDTO;
+                }).collect(Collectors.toList());
+    }
+
+    /**
      * Get auth ranges by auth external id.
      * @param externalID id another microservice
      * @return list of auth ranges.

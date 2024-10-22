@@ -74,7 +74,7 @@ class VisitorServiceTest {
     void saverOrUpdateVisitorExistingVisitorTest() {
         //given
         VisitorRequest visitorRequest =
-                new VisitorRequest("joaquin","zabala", DocumentType.DNI,12345678L,LocalDate.of(2005,3,17));
+                new VisitorRequest("joaquin","zabala", DocumentType.DNI,12345678L,LocalDate.of(2005,3,17),true);
 
         //when
         VisitorEntity visitorEntity = new VisitorEntity(1L, "","",DocumentType.DNI,0L,LocalDate.now(),false);
@@ -100,7 +100,7 @@ class VisitorServiceTest {
     void saveOrUpdateVisitorNoExistVisitorTest() {
         //given
         VisitorRequest visitorRequest =
-                new VisitorRequest("joaquin","zabala", DocumentType.DNI,12345678L,LocalDate.of(2005,3,17));
+                new VisitorRequest("joaquin","zabala", DocumentType.DNI,12345678L,LocalDate.of(2005,3,17),true);
 
         //when
         when(visitorRepository.findByDocNumber(12345678L)).thenReturn(null);

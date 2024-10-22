@@ -175,8 +175,10 @@ public class AuthService implements IAuthService {
      * @return list of authorized persons.
      */
     @Override
-    public List<AuthDTO> getAuthsByTypeAndExternalId(VisitorType visitorType, Long externalID) {
-        return null;
+    public List<AuthDTO> getAuthsByTypeAndExternalId(VisitorType visitorType, Long externalID, Long plotId) {
+
+        return authRepository.findByVisitorTypeAndExternalIDAndPlotId(visitorType, externalID, plotId).stream()
+                .map(authEntity -> modelMapper.map(authEntity, AuthDTO.class)).collect(Collectors.toList());
     }
 
 
@@ -231,8 +233,8 @@ public class AuthService implements IAuthService {
             authRangeDTO.setDateFrom(range.getDateFrom());
             authRangeDTO.setDateTo(range.getDateTo());
             authRangeDTO.setHourFrom(range.getHourFrom());
+            authRangeDTO.setComment(range.getComment());
             authRangeDTO.setHourTo(range.getHourTo());
-            authRangeDTO.setPlotId(range.getPlotId());
 
             existingAuth.getAuthRanges().add(authRangeDTO);
         }
@@ -250,11 +252,13 @@ public class AuthService implements IAuthService {
     @Override
     @Transactional
     public AuthDTO createAuthorization(VisitorAuthRequest visitorAuthRequest, Long creatorID) {
-        visitorAuthRequest.getVisitorRequest().setActive(true);
+
         VisitorDTO visitorDTO;
 
         // verifica si ya existe el visitante en la base de datos
-        VisitorDTO visitorDTOAlreadyExist = visitorService.getVisitorByDocNumber(visitorAuthRequest.getVisitorRequest().getDocNumber());
+        VisitorDTO visitorDTOAlreadyExist =
+                visitorService.getVisitorByDocNumber(visitorAuthRequest.getVisitorRequest().getDocNumber());
+
 
         if (visitorDTOAlreadyExist != null) {
             visitorDTO = visitorDTOAlreadyExist;
@@ -285,6 +289,7 @@ public class AuthService implements IAuthService {
         authEntity.setVisitor(modelMapper.map(visitorDTO, VisitorEntity.class));
         authEntity.setVisitorType(visitorAuthRequest.getVisitorType());
         authEntity.setActive(true);
+        authEntity.setPlotId(visitorAuthRequest.getPlotId());
         authEntity.setExternalID(visitorAuthRequest.getExternalID());
         authEntity = authRepository.save(authEntity);
 
@@ -293,15 +298,19 @@ public class AuthService implements IAuthService {
         authDTO.setVisitorType(authEntity.getVisitorType());
         authDTO.setVisitor(modelMapper.map(authEntity.getVisitor(), VisitorDTO.class));
         authDTO.setActive(authEntity.isActive());
+        authDTO.setPlotId(authEntity.getPlotId());
         authDTO.setExternalID(authEntity.getExternalID());
 
 
         if (visitorAuthRequest.getVisitorType() == VisitorType.PROVIDER) {
-            List<AuthRangeDTO> authRangeDTOs = authRangeService.getAuthRangesByAuthExternalID(visitorAuthRequest.getExternalID());
-            List<AuthRangeRequestDTO> authRangeRequestDTOs =
-                    authRangeDTOs.stream().map(authRangeDTO -> modelMapper.map(authRangeDTO, AuthRangeRequestDTO.class)).collect(Collectors.toList());
+            // Verifica si el proveedor ya tiene autorizaciones en el plot
+            List<AuthRangeDTO> authRangeDTOs = authRangeService.getAuthRangesByAuthExternalIdAndPlot(authEntity);
 
-           List<AuthRange> authorizedRangesList =  authRangeService.registerAuthRanges(authRangeRequestDTOs, authEntity, visitorDTO);
+            List<AuthRangeRequestDTO> authRangeRequestDTOs = authRangeDTOs.stream()
+                    .map(authRangeDTO -> modelMapper.map(authRangeDTO, AuthRangeRequestDTO.class)).collect(Collectors.toList());
+
+            List<AuthRange> authorizedRangesList =
+                    authRangeService.registerAuthRanges(authRangeRequestDTOs, authEntity, visitorDTO);
             authDTO.setAuthRanges(authorizedRangesList.stream()
                     .filter(Objects::nonNull)
                     .map(auth -> modelMapper.map(auth, AuthRangeDTO.class))
@@ -318,6 +327,7 @@ public class AuthService implements IAuthService {
 
         return authDTO;
     }
+
 
     /**
      * @param accessDTO
@@ -336,7 +346,7 @@ public class AuthService implements IAuthService {
 
         AccessEntity accessEntity = new AccessEntity(
                 guardID, guardID, authEntity, accessDTO.getAction(), LocalDateTime.now(), accessDTO.getVehicleType(),
-                accessDTO.getVehicleReg(), accessDTO.getVehicleDescription(), authDTOs.get(0).getAuthRanges().get(0).getPlotId(),
+                accessDTO.getVehicleReg(), accessDTO.getVehicleDescription(), authEntity.getPlotId(),
                 authDTOs.get(0).getExternalID(), accessDTO.getComments());
 
         return accessesService.registerAccess(accessEntity);
@@ -379,20 +389,25 @@ public class AuthService implements IAuthService {
      * @return optional authorization
      */
     private Optional<AuthDTO> findExistingAuthorization(VisitorAuthRequest visitorAuthRequest) {
-        // Buscar autorizaciones por documento y filtrar por visitorType
+        // Buscar autorizaciones por documento y filtrar por visitorType y plotId
         List<AuthDTO> auths = getAuthsByDocNumber(visitorAuthRequest.getVisitorRequest().getDocNumber());
+//        List<AuthDTO> auths = getAuthsByTypeAndExternalId(visitorAuthRequest.getVisitorType() , visitorAuthRequest.getExternalID()
+//                , visitorAuthRequest.getPlotId());
         return auths.stream()
-                .filter(auth -> auth.getVisitorType() == visitorAuthRequest.getVisitorType())
+                .filter(auth -> auth.getVisitorType() == visitorAuthRequest.getVisitorType()
+                        && Objects.equals(auth.getPlotId(), visitorAuthRequest.getPlotId()))
                 .findFirst();
     }
 
     /**
      * Retrieves a list of authorized ranges.
+     *
      * @param providerID provider.
      * @return list of authorized ranges.
      */
-    private List<AuthRangeDTO> getAuthorizedRangesList(Long providerID){
-        return authRangeService.getAuthRangesByAuth(authRepository.findByVisitorTypeAndExternalID(VisitorType.PROVIDER_ORGANIZATION, providerID).get(0));
-    }
+//    private List<AuthRangeDTO> getAuthorizedRangesList(Long providerID) {
+//        return authRangeService.getAuthRangesByAuth(
+//                authRepository.findByVisitorTypeAndExternalID(VisitorType.PROVIDER_ORGANIZATION, providerID).get(0));
+//    }
 
 }

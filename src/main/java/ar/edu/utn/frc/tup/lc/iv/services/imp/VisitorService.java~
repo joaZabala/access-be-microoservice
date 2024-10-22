@@ -87,14 +87,8 @@ public class VisitorService implements IVisitorService {
      */
     @Override
     public VisitorDTO saveOrUpdateVisitor(VisitorRequest visitorRequest, Long visitorId) {
-        // VisitorEntity existVisitorEntity =
-        // visitorRepository.findByDocNumber(visitorRequest.getDocNumber());
-
-        VisitorEntity existVisitorEntity = new VisitorEntity();
-
-        if (visitorId != null) {
-            existVisitorEntity = visitorRepository.findById(visitorId).orElse(null);
-        }
+        VisitorEntity existVisitorEntity =
+                visitorRepository.findByDocNumber(visitorRequest.getDocNumber());
 
         VisitorEntity visitorEntity;
         if (Objects.nonNull(existVisitorEntity)) {

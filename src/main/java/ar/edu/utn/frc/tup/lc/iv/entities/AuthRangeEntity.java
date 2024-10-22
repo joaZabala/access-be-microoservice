@@ -71,11 +71,12 @@ public class AuthRangeEntity extends AuditBaseEntity {
      */
     @Column(name = "days")
     private String daysOfWeek;
-    /**
-     * Unique identifier of the plot associated with the range.
-     */
-    @Column(name = "plot_id")
-    private Long plotId;
+
+//    /**
+//     * Unique identifier of the plot associated with the range.
+//     */
+//    @Column(name = "plot_id")
+//    private Long plotId;
     /**
      * Additional comments.
      */

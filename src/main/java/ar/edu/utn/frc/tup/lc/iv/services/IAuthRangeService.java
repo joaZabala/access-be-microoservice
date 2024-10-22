@@ -31,6 +31,13 @@ public interface IAuthRangeService {
      */
     List<AuthRangeDTO> getAuthRangesByAuth(AuthEntity authID);
 
+    /**
+     * Retrieves all authorized ranges.
+     * @param authID id of auth
+     * @return the list of an authorization
+     */
+    List<AuthRangeDTO> getAuthRangesByAuthExternalIdAndPlot(AuthEntity authID);
+
 
     /**
      * Retrieves all authorized ranges.

@@ -43,7 +43,7 @@ class AuthorizedRangesRepositoryTest {
         authRangeEntity.setAuthId(authEntity);
         authRangeEntity.setHourFrom(LocalTime.of(9, 0));
         authRangeEntity.setHourTo(LocalTime.of(17, 0));
-        authRangeEntity.setPlotId(1L);
+//        authRangeEntity.setPlotId(1L);
 
         testEntityManager.persist(authRangeEntity);
         testEntityManager.flush();

@@ -1,8 +1,8 @@
 package ar.edu.utn.frc.tup.lc.iv.repositories;
 
-import ar.edu.utn.frc.tup.lc.iv.entities.AuthorizedRangesEntity;
+import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
+import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +30,22 @@ class AuthorizedRangesRepositoryTest {
         visitorEntity.setDocNumber(12345678L);
         visitorEntity = testEntityManager.merge(visitorEntity);
 
-        AuthorizedRangesEntity authorizedRangesEntity = new AuthorizedRangesEntity();
-        authorizedRangesEntity.setDateFrom(LocalDate.of(2024, 10, 1));
-        authorizedRangesEntity.setDateTo(LocalDate.of(2024, 10, 2));
-        authorizedRangesEntity.setActive(true);
-        authorizedRangesEntity.setDays("MONDAY");
-        authorizedRangesEntity.setVisitorId(visitorEntity);
-        authorizedRangesEntity.setHourFrom(LocalTime.of(9, 0));
-        authorizedRangesEntity.setHourTo(LocalTime.of(17, 0));
-        authorizedRangesEntity.setPlotId(1L);
+        AuthEntity authEntity = new AuthEntity();
+        authEntity.setVisitor(visitorEntity);
+        authEntity.setActive(true);
+        authEntity = testEntityManager.merge(authEntity);
 
-        testEntityManager.persist(authorizedRangesEntity);
+        AuthRangeEntity authRangeEntity = new AuthRangeEntity();
+        authRangeEntity.setDateFrom(LocalDate.of(2024, 10, 1));
+        authRangeEntity.setDateTo(LocalDate.of(2024, 10, 2));
+        authRangeEntity.setActive(true);
+        authRangeEntity.setDaysOfWeek("MONDAY");
+        authRangeEntity.setAuthId(authEntity);
+        authRangeEntity.setHourFrom(LocalTime.of(9, 0));
+        authRangeEntity.setHourTo(LocalTime.of(17, 0));
+        authRangeEntity.setPlotId(1L);
+
+        testEntityManager.persist(authRangeEntity);
         testEntityManager.flush();
     }
 

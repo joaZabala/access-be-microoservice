@@ -1,8 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.entities;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -17,8 +15,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-
-import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 /**
  * Entity class representing the authorized ranges.
@@ -31,40 +29,61 @@ import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "auths")
+@Table(name = "auth_ranges")
 @Getter
 @Setter
-public class AuthEntity extends AuditBaseEntity {
+public class AuthRangeEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Acceses.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long authId;
+    private Long authRangeId;
     /**
      * Unique Authorized identifier.
      */
     @ManyToOne
-    @JoinColumn(name = "visitor_id")
-    private VisitorEntity visitor;
+    @JoinColumn(name = "auth_id")
+    private AuthEntity authId;
     /**
-     * Type of visitor.
+     * Date from to form the authorized range.
      */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "visitor_type")
-    private VisitorType visitorType;
+    @Column(name = "date_from")
+    private LocalDate dateFrom;
     /**
-     * External Id.
+     * Date until to form the authorized range.
      */
-    @Column(name = "external_id")
-    private Long externalID;
+    @Column(name = "date_to")
+    private LocalDate dateTo;
+    /**
+     * The start time of the authorized range.
+     */
+    @Column(name = "hour_from")
+    private LocalTime hourFrom;
+    /**
+     * The end time of the authorized range.
+     */
+    @Column(name = "hour_to")
+    private LocalTime hourTo;
+    /**
+     * Days of the week when access is allowed (Monday, Tuesday,...).
+     */
+    @Column(name = "days")
+    private String daysOfWeek;
+    /**
+     * Unique identifier of the plot associated with the range.
+     */
+    @Column(name = "plot_id")
+    private Long plotId;
+    /**
+     * Additional comments.
+     */
+    @Column(name = "comment")
+    private String comment;
     /**
      * Status indicating if the range is active.
      */
     @Column(name = "is_active")
     private boolean isActive;
-
-    public AuthEntity(Long createdUser, Long lastUpdatedUser) {
-        super(createdUser, lastUpdatedUser);
 }
