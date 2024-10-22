@@ -41,6 +41,12 @@ public class AuthDTO {
     private Long externalID;
 
     /**
+     * ID of the plot.
+     */
+    @JsonProperty("plot_id")
+    private Long plotId;
+
+    /**
      * List of authorized ranges.
      */
     @JsonProperty("auth_ranges")

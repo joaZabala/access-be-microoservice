@@ -22,7 +22,8 @@ CREATE TABLE visitors (
 CREATE TABLE auths (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     visitor_id BIGINT,
-    visitor_type ENUM('OWNER', 'WORKER', 'VISITOR', 'EMPLOYEE', 'PROVIDER', 'COHABITANT', 'EMERGENCY') NOT NULL ,
+    visitor_type ENUM('OWNER', 'WORKER', 'VISITOR', 'EMPLOYEE', 'PROVIDER', 'PROVIDER_ORGANIZATION', 'COHABITANT', 'EMERGENCY') NOT NULL ,
+    plot_id BIGINT,
     is_active BOOLEAN NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -38,7 +39,6 @@ CREATE TABLE auth_ranges (
     hour_from TIME NOT NULL,
     hour_to TIME NOT NULL,
     days VARCHAR(50) NOT NULL,
-    plot_id BIGINT,
     comment VARCHAR(255),
     is_active BOOLEAN NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -55,12 +55,12 @@ INSERT INTO visitors (name, lastname, doc_number, birth_date, is_active) VALUES
 ('Pedro', 'Martínez', 56789012, '1978-12-30', TRUE);
 
 -- Insertar datos en Auths
-INSERT INTO auths (visitor_id, visitor_type, is_active) VALUES
-(1, 'OWNER', TRUE),
-(2 ,'WORKER', TRUE),
-(3, 'VISITOR', TRUE),
-(4, 'EMPLOYEE', FALSE),
-(5, 'PROVIDER', TRUE),
+INSERT INTO auths (visitor_id, visitor_type, plot_id, is_active) VALUES
+(1, 'OWNER', 1,TRUE),
+(2 ,'WORKER',2 ,TRUE),
+(3, 'VISITOR',3 ,TRUE),
+(4, 'EMPLOYEE',4, FALSE),
+(5, 'PROVIDER', 5,TRUE),
 
 -- Insertar datos en Auth_Ranges
 INSERT INTO auth_ranges (auth_id, date_from, date_to, hour_from, hour_to, days, plot_id, comment, is_active) VALUES

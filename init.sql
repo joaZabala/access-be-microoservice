@@ -23,6 +23,7 @@ CREATE TABLE auths (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     visitor_id BIGINT,
     visitor_type ENUM('OWNER', 'WORKER', 'VISITOR', 'EMPLOYEE', 'PROVIDER', 'PROVIDER_ORGANIZATION', 'COHABITANT', 'EMERGENCY') NOT NULL ,
+    plot_id BIGINT,
     is_active BOOLEAN NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -38,7 +39,6 @@ CREATE TABLE auth_ranges (
     hour_from TIME NOT NULL,
     hour_to TIME NOT NULL,
     days VARCHAR(50) NOT NULL,
-    plot_id BIGINT,
     comment VARCHAR(255),
     is_active BOOLEAN NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -55,18 +55,18 @@ INSERT INTO visitors (name, lastname, doc_number, birth_date, is_active) VALUES
 ('Pedro', 'Martínez', 56789012, '1978-12-30', TRUE);
 
 -- Insertar datos en Auths
-INSERT INTO auths (visitor_id, visitor_type, is_active) VALUES
-(1, 'OWNER', TRUE),
-(2 ,'WORKER', TRUE),
-(3, 'VISITOR', TRUE),
-(4, 'EMPLOYEE', FALSE),
-(5, 'PROVIDER', TRUE),
+INSERT INTO auths (visitor_id, visitor_type, plot_id, is_active) VALUES
+(1, 'OWNER', 1,TRUE),
+(2 ,'WORKER',2 ,TRUE),
+(3, 'VISITOR',3 ,TRUE),
+(4, 'EMPLOYEE',4, FALSE),
+(5, 'PROVIDER', 5,TRUE),
 
 -- Insertar datos en Auth_Ranges
-INSERT INTO auth_ranges (auth_id, date_from, date_to, hour_from, hour_to, days, plot_id, comment, is_active) VALUES
-(1, '2024-10-01', '2024-12-31', '08:00:00', '18:00:00', 'Mon,Tue,Wed,Thu,Fri', 101, 'Autorización para oficinas', TRUE),
-(1, '2024-10-01', '2024-12-31', '05:00:00', '12:00:00', 'Mon,Tue,Wed,Thu,Fri', 101, 'Autorización para para', TRUE),
-(2, '2024-09-15', '2024-10-15', '09:00:00', '17:00:00', 'Mon,Wed,Fri', 102, 'Visita regular', TRUE),
-(3, '2024-10-01', '2024-11-30', '07:00:00', '15:00:00', 'Tue,Thu', 103, 'Acceso restringido', FALSE),
-(4, '2024-10-05', '2024-10-20', '06:00:00', '14:00:00', 'Mon,Tue', 104, 'Entrega de suministros', TRUE),
-(5, '2024-10-01', '2024-12-31', '08:30:00', '16:30:00', 'Mon,Tue,Wed,Thu,Fri', 105, 'Autorización temporal', TRUE);
+INSERT INTO auth_ranges (auth_id, date_from, date_to, hour_from, hour_to, days, comment, is_active) VALUES
+(1, '2024-10-01', '2024-12-31', '08:00:00', '18:00:00', 'Mon,Tue,Wed,Thu,Fri', 'Autorización para oficinas', TRUE),
+(1, '2024-10-01', '2024-12-31', '05:00:00', '12:00:00', 'Mon,Tue,Wed,Thu,Fri', 'Autorización para para', TRUE),
+(2, '2024-09-15', '2024-10-15', '09:00:00', '17:00:00', 'Mon,Wed,Fri', 'Visita regular', TRUE),
+(3, '2024-10-01', '2024-11-30', '07:00:00', '15:00:00', 'Tue,Thu', 'Acceso restringido', FALSE),
+(4, '2024-10-05', '2024-10-20', '06:00:00', '14:00:00', 'Mon,Tue', 'Entrega de suministros', TRUE),
+(5, '2024-10-01', '2024-12-31', '08:30:00', '16:30:00', 'Mon,Tue,Wed,Thu,Fri', 'Autorización temporal', TRUE);
