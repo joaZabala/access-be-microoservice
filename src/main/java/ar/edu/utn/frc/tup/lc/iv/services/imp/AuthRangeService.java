@@ -17,6 +17,7 @@ import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRangeRepository;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -210,6 +211,7 @@ public class AuthRangeService implements IAuthRangeService {
             authRangeEntity.setDaysOfWeek(null);
         }
         authRangeEntity.setCreatedUser(writerUserId);
+        authRangeEntity.setCreatedDate(LocalDateTime.now());
         AuthRangeEntity authorizedRange = authRangeRepository.save(authRangeEntity);
 
         return new AuthRange(authorizedRange);

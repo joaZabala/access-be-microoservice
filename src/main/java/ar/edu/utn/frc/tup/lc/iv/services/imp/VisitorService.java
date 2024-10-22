@@ -92,7 +92,7 @@ public class VisitorService implements IVisitorService {
         // visitorRepository.findByDocNumber(visitorRequest.getDocNumber());
         Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
 
-        VisitorEntity existVisitorEntity = new VisitorEntity();
+        VisitorEntity existVisitorEntity = null;
 
         if (visitorId != null) {
             existVisitorEntity = visitorRepository.findById(visitorId).orElse(null);
@@ -101,6 +101,7 @@ public class VisitorService implements IVisitorService {
         VisitorEntity visitorEntity;
         if (Objects.nonNull(existVisitorEntity)) {
             existVisitorEntity.setLastUpdatedUser(writerUserId);
+            existVisitorEntity.setLastUpdatedDate(LocalDateTime.now());
             visitorEntity = existVisitorEntity;
         } else {
             visitorEntity = new VisitorEntity();
@@ -114,7 +115,6 @@ public class VisitorService implements IVisitorService {
         visitorEntity.setBirthDate(visitorRequest.getBirthDate());
         visitorEntity.setActive(true);
         visitorEntity.setDocumentType(visitorRequest.getDocumentType());
-        visitorEntity.setLastUpdatedDate(LocalDateTime.now());
         return modelMapper.map(visitorRepository.save(visitorEntity), VisitorDTO.class);
     }
 

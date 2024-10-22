@@ -295,6 +295,7 @@ public class AuthService implements IAuthService {
         authEntity.setPlotId(visitorAuthRequest.getPlotId());
         authEntity.setExternalID(visitorAuthRequest.getExternalID());
         authEntity.setCreatedUser(writerUserId);
+        authEntity.setCreatedDate(LocalDateTime.now());
         authEntity = authRepository.save(authEntity);
 
         AuthDTO authDTO = new AuthDTO();

@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -117,6 +118,7 @@ public class AccessesService implements IAccessesService {
         Long userId = UserHeaderInterceptor.getCurrentUserId();
 
         accessEntity.setCreatedUser(userId);
+        accessEntity.setCreatedDate(LocalDateTime.now());
         return modelMapper.map(accessesRepository.save(accessEntity), AccessDTO.class);
     }
 
