@@ -20,4 +20,5 @@ public enum VisitorType {
     COHABITANT,
     /** enum for emergency. */
     EMERGENCY
+
 }

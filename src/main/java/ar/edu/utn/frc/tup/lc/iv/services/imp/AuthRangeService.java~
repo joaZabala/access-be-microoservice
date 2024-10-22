@@ -75,11 +75,6 @@ public class AuthRangeService implements IAuthRangeService {
                 }).collect(Collectors.toList());
     }
 
-    /**
-     * Get auth ranges by auth external id.
-     * @param externalID id another microservice
-     * @return list of auth ranges.
-     */
     @Override
     public List<AuthRangeDTO> getAuthRangesByAuthExternalID(Long externalID) {
         return List.of();

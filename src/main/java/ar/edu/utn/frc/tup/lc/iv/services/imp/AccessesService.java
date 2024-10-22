@@ -20,16 +20,21 @@ import java.util.stream.Collectors;
 @Service
 public class AccessesService implements IAccessesService {
 
-    /** Repository for managing access entities. */
+    /**
+     * Repository for managing access entities.
+     */
     @Autowired
     private AccessesRepository accessesRepository;
 
-    /** ModelMapper for converting between AccessEntity and AccessDTO. */
+    /**
+     * ModelMapper for converting between AccessEntity and AccessDTO.
+     */
     @Autowired
     private ModelMapper modelMapper;
 
     /**
      * Retrieves all access records from the repository.
+     *
      * @return List of AccessDTO representing all access records.
      */
     @Override
@@ -41,6 +46,7 @@ public class AccessesService implements IAccessesService {
 
     /**
      * Retrieves all entries (access actions of type ENTRY).
+     *
      * @return List of AccessDTO representing entry records.
      */
     @Override
@@ -52,6 +58,7 @@ public class AccessesService implements IAccessesService {
 
     /**
      * Retrieves all exits (access actions of type EXIT).
+     *
      * @return List of AccessDTO representing exit records.
      */
     @Override
@@ -63,6 +70,7 @@ public class AccessesService implements IAccessesService {
 
     /**
      * Retrieves access records filtered by visitor type.
+     *
      * @param visitorType The type of the visitor.
      * @return List of AccessDTO for the specified visitor type.
      */
@@ -75,8 +83,9 @@ public class AccessesService implements IAccessesService {
 
     /**
      * Retrieves access records filtered by visitor type and external ID.
+     *
      * @param visitorType The type of the visitor.
-     * @param externalId External identifier associated with the access.
+     * @param externalId  External identifier associated with the access.
      * @return List of AccessDTO for the specified visitor type and external ID.
      */
     @Override
@@ -88,6 +97,7 @@ public class AccessesService implements IAccessesService {
 
     /**
      * Retrieves access records where exits are missing.
+     *
      * @return List of AccessDTO representing records with missing exits.
      */
     @Override
@@ -97,6 +107,7 @@ public class AccessesService implements IAccessesService {
 
     /**
      * Registers a new access entry in the repository.
+     *
      * @param accessEntity The access entity to be registered.
      * @return AccessDTO representing the registered access.
      */
@@ -104,4 +115,5 @@ public class AccessesService implements IAccessesService {
     public AccessDTO registerAccess(AccessEntity accessEntity) {
         return modelMapper.map(accessesRepository.save(accessEntity), AccessDTO.class);
     }
+
 }

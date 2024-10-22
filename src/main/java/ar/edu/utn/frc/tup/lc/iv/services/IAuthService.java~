@@ -45,7 +45,6 @@ public interface IAuthService {
      * by document number.
      *
      * @param visitorType document number.
-     * @param externalID document number.
      * @return list of authorized persons.
      */
     List<AuthDTO> getAuthsByTypeAndExternalId(VisitorType visitorType, Long externalID);
@@ -54,16 +53,12 @@ public interface IAuthService {
      * Authorize visitor with authorized ranges.
      *
      * @param visitorAuthRequest request.
-     * @param creatorID creator.
      * @return authorization created.
      */
     AuthDTO createAuthorization(VisitorAuthRequest visitorAuthRequest, Long creatorID);
 
     /**
      * Authorize visitor with authorized ranges.
-     * @param accessDTO access
-     * @param guardID guard
-     * @return authorization
      */
     AccessDTO authorizeVisitor(AccessDTO accessDTO, Long guardID);
 

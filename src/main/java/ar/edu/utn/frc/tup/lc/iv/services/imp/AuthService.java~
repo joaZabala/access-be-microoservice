@@ -254,7 +254,8 @@ public class AuthService implements IAuthService {
         VisitorDTO visitorDTO;
 
         // verifica si ya existe el visitante en la base de datos
-        VisitorDTO visitorDTOAlreadyExist = visitorService.getVisitorByDocNumber(visitorAuthRequest.getVisitorRequest().getDocNumber());
+        VisitorDTO visitorDTOAlreadyExist = visitorService
+                .getVisitorByDocNumber(visitorAuthRequest.getVisitorRequest().getDocNumber());
 
         if (visitorDTOAlreadyExist != null) {
             visitorDTO = visitorDTOAlreadyExist;

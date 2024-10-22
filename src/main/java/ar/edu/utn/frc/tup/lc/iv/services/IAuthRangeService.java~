@@ -44,8 +44,6 @@ public interface IAuthRangeService {
      *
      * @param authRangeRequests the data transfer object containing the
      *  details of the authorized range to register.
-     * @param authEntity the authorized entity.
-     * @param visitorDTO the visitor.
      *  @return AuthorizedRanges
      */
     List<AuthRange> registerAuthRanges(List<AuthRangeRequestDTO> authRangeRequests,
