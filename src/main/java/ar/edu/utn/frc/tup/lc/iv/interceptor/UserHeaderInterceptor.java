@@ -28,7 +28,6 @@ public class UserHeaderInterceptor implements HandlerInterceptor {
      * Paths that are exempt from the 'x-user-id' validation.
      */
     private static final List<String> EXEMPT_PATHS = Arrays.asList(
-            "/visitors"
     );
     /**
      * Validates the 'x-user-id' header for POST and PUT requests.
