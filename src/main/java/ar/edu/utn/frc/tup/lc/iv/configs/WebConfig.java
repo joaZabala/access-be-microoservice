@@ -29,7 +29,13 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
-
+    /**
+     * Configures custom request interceptors.
+     * This method adds the {@code userHeaderInterceptor}
+     * to intercept all incoming requests.
+     * @param registry the InterceptorRegistry
+     * to register the interceptor.
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(userHeaderInterceptor).addPathPatterns("/**");
