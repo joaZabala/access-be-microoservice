@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeRequestDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
@@ -296,7 +297,16 @@ public class AuthService implements IAuthService {
 
 
         if (visitorAuthRequest.getVisitorType() == VisitorType.PROVIDER) {
-            authDTO.setAuthRanges(authRangeService.getAuthRangesByAuthExternalID(visitorAuthRequest.getExternalID()));
+            List<AuthRangeDTO> authRangeDTOs = authRangeService.getAuthRangesByAuthExternalID(visitorAuthRequest.getExternalID());
+            List<AuthRangeRequestDTO> authRangeRequestDTOs =
+                    authRangeDTOs.stream().map(authRangeDTO -> modelMapper.map(authRangeDTO, AuthRangeRequestDTO.class)).collect(Collectors.toList());
+
+           List<AuthRange> authorizedRangesList =  authRangeService.registerAuthRanges(authRangeRequestDTOs, authEntity, visitorDTO);
+            authDTO.setAuthRanges(authorizedRangesList.stream()
+                    .filter(Objects::nonNull)
+                    .map(auth -> modelMapper.map(auth, AuthRangeDTO.class))
+                    .collect(Collectors.toList()));
+
         } else {
             List<AuthRange> authorizedRangesList = authRangeService.registerAuthRanges(visitorAuthRequest.getAuthRangeRequest(),
                     authEntity, visitorDTO);
