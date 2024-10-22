@@ -59,7 +59,7 @@ INSERT INTO auths (visitor_id, visitor_type, is_active) VALUES
 (1, 'OWNER', TRUE),
 (2, 'VISITOR', TRUE),
 (3, 'EMPLOYEE', FALSE),
-(4, 'SUPPLIER', TRUE),
+(4, 'PROVIDER', TRUE),
 (5, 'EMPLOYEE', TRUE);
 
 -- Insertar datos en Auth_Ranges
