@@ -51,5 +51,4 @@ public class VisitorRequest implements Serializable {
     @Schema(type = "string", pattern = "dd-MM-yyyy", example = "18-09-2024")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
-
 }

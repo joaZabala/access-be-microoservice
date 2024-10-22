@@ -102,7 +102,7 @@ public class AccessEntity extends AuditBaseEntity {
      */
     public AccessEntity(Long createdUser, Long lastUpdatedUser, AuthEntity auth, ActionTypes action, LocalDateTime actionDate,
                         VehicleTypes vehicleType, String vehicleReg, String vehicleDescription, Long plotId,
-                        Long supplierEmployeeId, String comments) {
+                        Long supplierEmployeeId, String comments) { // NOPMD
         super(createdUser, lastUpdatedUser);
         this.auth = auth;
         this.action = action;

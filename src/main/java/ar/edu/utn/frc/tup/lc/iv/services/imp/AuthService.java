@@ -399,12 +399,7 @@ public class AuthService implements IAuthService {
                 .findFirst();
     }
 
-    /**
-     * Retrieves a list of authorized ranges.
-     *
-     * @param providerID provider.
-     * @return list of authorized ranges.
-     */
+//    Le quite el comentario del javadoc porque sino lo seguia tomando pmd.
 //    private List<AuthRangeDTO> getAuthorizedRangesList(Long providerID) {
 //        return authRangeService.getAuthRangesByAuth(
 //                authRepository.findByVisitorTypeAndExternalID(VisitorType.PROVIDER_ORGANIZATION, providerID).get(0));

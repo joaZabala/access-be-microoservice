@@ -60,4 +60,27 @@ public class QRServiceTest {
         assertEquals("No se encontró un visitante con el número de documento proporcionado.", exception.getMessage());
     }
 
+    @Test
+    public void testGenerateQrForVisitor_QRCodeGenerationFailure() throws IOException, WriterException {
+        when(visitorRepository.findByDocNumber(anyLong())).thenReturn(visitor);
+        Mockito.doThrow(new WriterException("Error al generar el QR")).when(qrService).generateQrForVisitor(anyLong());
+
+        Exception exception = assertThrows(IOException.class, () -> {
+            qrService.generateQrForVisitor(12345678L);
+        });
+
+        assertEquals("Error generating QR code.", exception.getMessage());
+    }
+
+    @Test
+    public void testGenerateQrForVisitor_IncompleteVisitorData() throws IOException {
+        visitor.setName(null); // El visitante no tiene nombre
+        when(visitorRepository.findByDocNumber(anyLong())).thenReturn(visitor);
+
+        byte[] qrCode = qrService.generateQrForVisitor(12345678L);
+
+        assertNotNull(qrCode);
+        assertTrue(qrCode.length > 0);
+    }
+
 }

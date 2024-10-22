@@ -17,27 +17,28 @@ public interface AuthRepository extends JpaRepository<AuthEntity, Long> {
 
 
     /**
-     * find Authorization by visitor.
-     * @param visitor visitor
-     * @return auth list
+     * Finds authorization records for a specific visitor.
+     *
+     * @param visitor The visitor entity to search for.
+     * @return A list of authorization records associated with the given visitor.
      */
-    //find by doc number
     List<AuthEntity> findByVisitor(VisitorEntity visitor);
 
     /**
-     * find Authorization by visitor type.
-     * @param visitorType visitor type
-     * @return auth list
+     * Finds authorization records by the type of visitor.
+     *
+     * @param visitorType The type of visitor (e.g., Resident, Guest).
+     * @return A list of authorization records associated with the given visitor type.
      */
     List<AuthEntity> findByVisitorType(VisitorType visitorType);
 
     /**
-     * find Authorization by visitor and external id.
-     * @param visitor visitor
-     * @param externalID external id
-     * @return auth list
+     * Finds authorization records for a specific visitor, external ID, and plot ID.
+     *
+     * @param visitorType The type of visitor (e.g., Resident, Guest).
+     * @param externalID  The external ID associated with the authorization.
+     * @param plotId      The plot ID where the authorization applies.
+     * @return A list of authorization records matching the given visitor type, external ID, and plot ID.
      */
-    List<AuthEntity> findByVisitorTypeAndExternalIDAndPlotId(VisitorType visitor, Long externalID ,Long plotId);
-
+    List<AuthEntity> findByVisitorTypeAndExternalIDAndPlotId(VisitorType visitorType, Long externalID, Long plotId);
 }
-

@@ -14,12 +14,14 @@ import java.time.LocalTime;
  */
 @Service
 public interface AuthorizedRangesRepository extends JpaRepository<AuthRangeEntity, Long> {
+
     /**
      * Checks if the visitor has a valid invitation.
-     * @param startDate      The date to check for access validity.
-     * @param startHour      The time to check for access validity.
+     *
+     * @param startDate The date to check for access validity.
+     * @param startHour The time to check for access validity.
      * @param documentNumber The visitor's document number.
-     * @param day            The day to check for access validity
+     * @param day The day to check for access validity.
      * @return true if the visitor has a valid invitation; false otherwise.
      */
 

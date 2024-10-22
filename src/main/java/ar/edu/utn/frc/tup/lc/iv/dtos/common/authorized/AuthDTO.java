@@ -57,5 +57,4 @@ public class AuthDTO {
      */
     @JsonProperty("is_active")
     private boolean isActive;
-
 }
