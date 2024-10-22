@@ -8,6 +8,7 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeRequestDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
+import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthRange;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import jakarta.transaction.Transactional;
@@ -285,12 +286,15 @@ public class AuthService implements IAuthService {
      * @return new authorization
      */
     protected AuthDTO createNewAuthorization(VisitorDTO visitorDTO, VisitorAuthRequest visitorAuthRequest, Long creatorID) {
+        Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
+
         AuthEntity authEntity = new AuthEntity(creatorID, creatorID);
         authEntity.setVisitor(modelMapper.map(visitorDTO, VisitorEntity.class));
         authEntity.setVisitorType(visitorAuthRequest.getVisitorType());
         authEntity.setActive(true);
         authEntity.setPlotId(visitorAuthRequest.getPlotId());
         authEntity.setExternalID(visitorAuthRequest.getExternalID());
+        authEntity.setCreatedUser(writerUserId);
         authEntity = authRepository.save(authEntity);
 
         AuthDTO authDTO = new AuthDTO();

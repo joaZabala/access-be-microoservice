@@ -2,6 +2,7 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
+import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AccessesRepository;
@@ -113,6 +114,9 @@ public class AccessesService implements IAccessesService {
      */
     @Override
     public AccessDTO registerAccess(AccessEntity accessEntity) {
+        Long userId = UserHeaderInterceptor.getCurrentUserId();
+
+        accessEntity.setCreatedUser(userId);
         return modelMapper.map(accessesRepository.save(accessEntity), AccessDTO.class);
     }
 
