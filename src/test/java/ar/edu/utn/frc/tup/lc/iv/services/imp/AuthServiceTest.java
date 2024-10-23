@@ -1,96 +1,96 @@
-//package ar.edu.utn.frc.tup.lc.iv.services.imp;
-//
-//import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthDTO;
-//import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeDTO;
-//import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.AuthRangeDto;
-//import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.RegisterAuthorizationRangesDTO;
-//import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
-//import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
-//import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
-//import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
-//import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
-//import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
-//import ar.edu.utn.frc.tup.lc.iv.models.AuthRange;
-//import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
-//import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
-//import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRangeRepository;
-//import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
-//import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.MockitoAnnotations;
-//import org.modelmapper.ModelMapper;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.boot.test.mock.mockito.MockBean;
-//import org.springframework.boot.test.mock.mockito.SpyBean;
-//
-//import java.lang.reflect.InvocationTargetException;
-//import java.lang.reflect.Method;
-//import java.time.DayOfWeek;
-//import java.time.LocalDate;
-//import java.time.LocalTime;
-//import java.util.ArrayList;
-//import java.util.Collections;
-//import java.util.List;
-//import java.util.Optional;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.Mockito.*;
-//
-//@SpringBootTest
-//class AuthServiceTest {
-//
-//    @MockBean
-//    private VisitorService visitorService;
-//
-//    @MockBean
-//    private AuthRepository authRepository;
-//
-//    @MockBean
-//    private AuthRangeRepository authRangeRepository;
-//
-//    @MockBean
-//    private VisitorRepository visitorRepository;
-//
-//    @MockBean
-//    private AuthorizedRangesService authorizedRangesService;
-//
-//    @SpyBean
-//    private AuthService authService;
-//
-//
-//    @Autowired
-//    ModelMapper modelMapper;
-//    private VisitorEntity visitorEntity;
-//    private AuthEntity authEntity;
-//
-//    private AuthRangeEntity authRangeEntity;
-//
-//    private List<AuthEntity> authEntities;
-//
-//    @BeforeEach
-//    public void setUp() {
-//        MockitoAnnotations.openMocks(this);
-//
-//        visitorEntity = new VisitorEntity();
-//        visitorEntity.setDocNumber(123456L);
-//
-//        authEntity = new AuthEntity();
-//        authEntity.setAuthId(1L);
-//        authEntity.setVisitor(visitorEntity);
-//
-//        authRangeEntity = new AuthRangeEntity();
-//        authRangeEntity.setAuthRangeId(1L);
-//        authRangeEntity.setAuthId(authEntity);
-//
-//        authEntities = new ArrayList<>();
-//        authEntities.add(authEntity);
-//
-//    }
-//    @Test
-//    void getAuthsByDocNumberTest(){
+package ar.edu.utn.frc.tup.lc.iv.services.imp;
+
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.AuthRangeDto;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.RegisterAuthorizationRangesDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
+import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
+import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
+import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
+import ar.edu.utn.frc.tup.lc.iv.models.AuthRange;
+import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
+import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
+import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRangeRepository;
+import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
+import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+@SpringBootTest
+class AuthServiceTest {
+
+    @MockBean
+    private VisitorService visitorService;
+
+    @MockBean
+    private AuthRepository authRepository;
+
+    @MockBean
+    private AuthRangeRepository authRangeRepository;
+
+    @MockBean
+    private VisitorRepository visitorRepository;
+
+    @MockBean
+    private AuthRangeService authRangeService;
+
+    @SpyBean
+    private AuthService authService;
+
+
+    @Autowired
+    ModelMapper modelMapper;
+    private VisitorEntity visitorEntity;
+    private AuthEntity authEntity;
+
+    private AuthRangeEntity authRangeEntity;
+
+    private List<AuthEntity> authEntities;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+
+        visitorEntity = new VisitorEntity();
+        visitorEntity.setDocNumber(123456L);
+
+        authEntity = new AuthEntity();
+        authEntity.setAuthId(1L);
+        authEntity.setVisitor(visitorEntity);
+
+        authRangeEntity = new AuthRangeEntity();
+        authRangeEntity.setAuthRangeId(1L);
+        authRangeEntity.setAuthId(authEntity);
+
+        authEntities = new ArrayList<>();
+        authEntities.add(authEntity);
+
+    }
+    @Test
+    void getAuthsByDocNumberTest(){
 //        Long docNumber = 123456L;
 //
 //        // Mocking the repository calls
@@ -113,11 +113,11 @@
 //        verify(visitorRepository).findByDocNumber(docNumber);
 //        verify(authRepository).findByVisitor(visitorEntity);
 //        verify(authRangeRepository).findByAuthId(authEntity);
-//    }
-//
-//    @Test
-//    void authorizeVisitorTest(){
-//
+    }
+
+    @Test
+    void authorizeVisitorTest(){
+
 //        VisitorRequest visitorRequest =
 //                new VisitorRequest("Joaquin","Zabala", DocumentType.DNI,123456L,LocalDate.of(2005,3,17),true);
 //
@@ -155,12 +155,12 @@
 //        assertNotNull(result);
 //        assertEquals(result.getVisitor() , visitorDTO);
 //        assertEquals(result.getAuthRanges().get(0).getDateFrom(), authRangeRequest.getDateFrom());
-//
-//    }
-//
-//    @Test
-//    void authorizeVisitorWhenAuthorizationExists() throws Exception {
-//        // Crear la solicitud de visitante
+
+    }
+
+    @Test
+    void authorizeVisitorWhenAuthorizationExists() throws Exception {
+        // Crear la solicitud de visitante
 //        VisitorRequest visitorRequest =
 //                new VisitorRequest("Joaquin", "Zabala", DocumentType.DNI, 123456L,
 //                        LocalDate.of(2005, 3, 17), true);
@@ -224,9 +224,9 @@
 //        assertNotNull(result);
 //        assertEquals(result.getVisitor() , visitorDTO);
 //        assertEquals(result.getAuthRanges().size(), 2);
-//    }
-//    @Test
-//    void getValidAuthsByDocNumber(){
+    }
+    @Test
+    void getValidAuthsByDocNumber(){
 //        AuthDTO authDTO = new AuthDTO();
 //        authDTO.setActive(true);
 //        authDTO.setVisitorType(VisitorType.OWNER);
@@ -246,39 +246,39 @@
 //
 //        when(authService.getAuthsByDocNumber(1L)).thenReturn(Collections.singletonList(authDTO));
 //        List<AuthDTO> result = authService.getValidAuthsByDocNumber(1L);
-//
-//        //assertEquals(result.size(), 1);
-//    }
-//    @Test
-//    public void findExistingAuthorizationTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-//        VisitorAuthRequest visitorAuthRequest = new VisitorAuthRequest();
-//        visitorAuthRequest.setVisitorType(VisitorType.OWNER);
-//
-//        VisitorRequest visitorRequest = new VisitorRequest();
-//        visitorRequest.setDocNumber(1L);
-//        visitorAuthRequest.setVisitorRequest(visitorRequest);
-//
-//        List<AuthDTO> authDTOList = new ArrayList<>();
-//        AuthDTO authDTO = new AuthDTO();
-//        authDTO.setVisitorType(VisitorType.OWNER);
-//        authDTO.setAuthRanges(new ArrayList<>());
-//        authDTO.setVisitor(new VisitorDTO());
-//        authDTOList.add(authDTO);
-//
-//        when(authService.getAuthsByDocNumber(1L)).thenReturn(authDTOList);
-//
-//        Method method = AuthService.class.getDeclaredMethod("findExistingAuthorization", VisitorAuthRequest.class);
-//        method.setAccessible(true);
-//        Optional<AuthDTO> result = (Optional<AuthDTO>) method.invoke(authService, visitorAuthRequest);
-//
-//        // Verificar los resultados
-//        assertTrue(result.isPresent());
-//        assertEquals(authDTO, result.get());
-//    }
-//
-//    @Test
-//    void testCreateNewAuthorization() throws NoSuchMethodException {
-//
+
+        //assertEquals(result.size(), 1);
+    }
+    @Test
+    public void findExistingAuthorizationTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        VisitorAuthRequest visitorAuthRequest = new VisitorAuthRequest();
+        visitorAuthRequest.setVisitorType(VisitorType.OWNER);
+
+        VisitorRequest visitorRequest = new VisitorRequest();
+        visitorRequest.setDocNumber(1L);
+        visitorAuthRequest.setVisitorRequest(visitorRequest);
+
+        List<AuthDTO> authDTOList = new ArrayList<>();
+        AuthDTO authDTO = new AuthDTO();
+        authDTO.setVisitorType(VisitorType.OWNER);
+        authDTO.setAuthRanges(new ArrayList<>());
+        authDTO.setVisitor(new VisitorDTO());
+        authDTOList.add(authDTO);
+
+        when(authService.getAuthsByDocNumber(1L)).thenReturn(authDTOList);
+
+        Method method = AuthService.class.getDeclaredMethod("findExistingAuthorization", VisitorAuthRequest.class);
+        method.setAccessible(true);
+        Optional<AuthDTO> result = (Optional<AuthDTO>) method.invoke(authService, visitorAuthRequest);
+
+        // Verificar los resultados
+        assertTrue(result.isPresent());
+        assertEquals(authDTO, result.get());
+    }
+
+    @Test
+    void testCreateNewAuthorization() throws NoSuchMethodException {
+
 //        VisitorDTO visitorDTO = new VisitorDTO();
 //        visitorDTO.setLastName("Pipino");
 //        visitorDTO.setDocNumber(123456L);
@@ -317,18 +317,16 @@
 //        assertNotNull(result);
 //        assertEquals(result.getVisitorType() , VisitorType.OWNER);
 //        assertEquals(result.getVisitor() , visitorDTO);
-//    }
-//   @Test
-//    void updateAuthorizationTest(){
-//
-//        AuthDTO authDTO = new AuthDTO();
-//        authDTO.setAuthId(1L);
-//        authDTO.setVisitorType(VisitorType.OWNER);
-//        authDTO.setVisitor(new VisitorDTO());
-//        authDTO.setAuthRanges(new ArrayList<>());
-//
-//
-//   }
-//}
-//
-//
+    }
+   @Test
+    void updateAuthorizationTest(){
+
+        AuthDTO authDTO = new AuthDTO();
+        authDTO.setAuthId(1L);
+        authDTO.setVisitorType(VisitorType.OWNER);
+        authDTO.setVisitor(new VisitorDTO());
+        authDTO.setAuthRanges(new ArrayList<>());
+
+
+   }
+}
