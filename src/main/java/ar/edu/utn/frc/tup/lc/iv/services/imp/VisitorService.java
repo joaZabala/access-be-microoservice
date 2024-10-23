@@ -46,34 +46,28 @@ public class VisitorService implements IVisitorService {
      * Retrieves all authorized entities from the repository and maps them to
      * a list of {@link VisitorDTO}.
      *
-     * @param page the number of the page to retrieve.
-     * @param size the number of records per page.
+     * @param page   the number of the page to retrieve.
+     * @param size   the number of records per page.
+     * @param filter filter.
      * @return a list of {@link VisitorDTO} representing the authorized entities.
      */
     @Override
-    public PaginatedResponse<VisitorDTO> getAllVisitors(int page, int size, String name, String lastName, String filter) {
-        Pageable pageable = PageRequest.of(page, size,
-                Sort.by("lastName").and(Sort.by("name")));
+    public PaginatedResponse<VisitorDTO> getAllVisitors(int page, int size, String filter) {
+        Pageable pageable =
+                PageRequest.of(page, size, Sort.by("lastName").and(Sort.by("name")));
 
-        Page<VisitorEntity> visitorPage = visitorRepository.findAllByActive(true, pageable);
+        Page<VisitorEntity> visitorPage;
+
+        if (Objects.nonNull(filter)) {
+            visitorPage = visitorRepository.findByFilter(filter, pageable);
+        } else {
+            // Si no hay filtros, devuelve todos los visitantes activos
+            visitorPage = visitorRepository.findAllByActive(true, pageable);
+        }
 
         // Convertimos el Page en una lista de VisitorDTO
         List<VisitorDTO> visitorDTOs = visitorPage.stream()
                 .map(entity -> modelMapper.map(entity, VisitorDTO.class))
-                .filter(visitorDTO -> {
-                    if (Objects.nonNull(name) && !visitorDTO.getName().toLowerCase().contains(name.toLowerCase())) {
-                        return false;
-                    }
-                    if (Objects.nonNull(lastName) && !visitorDTO.getLastName().toLowerCase().contains(lastName.toLowerCase())) {
-                        return false;
-                    }
-                    if (Objects.nonNull(filter) && !visitorDTO.getName().toLowerCase().contains(filter.toLowerCase())
-                            && !visitorDTO.getLastName().toLowerCase().contains(filter.toLowerCase())
-                            && !visitorDTO.getDocNumber().toString().contains(filter)) {
-                        return false;
-                    }
-                    return true;
-                })
                 .collect(Collectors.toList());
 
         return new PaginatedResponse<>(visitorDTOs, visitorPage.getTotalElements());
@@ -90,10 +84,15 @@ public class VisitorService implements IVisitorService {
         // VisitorEntity existVisitorEntity =
         // visitorRepository.findByDocNumber(visitorRequest.getDocNumber());
 
-        VisitorEntity existVisitorEntity = new VisitorEntity();
-
+        VisitorEntity existVisitorEntity = null;
         if (visitorId != null) {
-            existVisitorEntity = visitorRepository.findById(visitorId).orElse(null);
+            Optional<VisitorEntity> visitorEntity = visitorRepository.findById(visitorId);
+
+            if(visitorEntity.isEmpty()) {
+                throw new EntityNotFoundException("No existe el visitante con el id " + visitorId);
+            }
+
+            existVisitorEntity = visitorEntity.get();
         }
 
         VisitorEntity visitorEntity;
@@ -106,10 +105,10 @@ public class VisitorService implements IVisitorService {
 
         visitorEntity.setName(visitorRequest.getName());
         visitorEntity.setLastName(visitorRequest.getLastName());
+        visitorEntity.setDocumentType(visitorRequest.getDocumentType());
         visitorEntity.setDocNumber(visitorRequest.getDocNumber());
         visitorEntity.setBirthDate(visitorRequest.getBirthDate());
         visitorEntity.setActive(true);
-        visitorEntity.setDocumentType(visitorRequest.getDocumentType());
         visitorEntity.setLastUpdatedDate(LocalDateTime.now());
         return modelMapper.map(visitorRepository.save(visitorEntity), VisitorDTO.class);
     }
@@ -152,6 +151,7 @@ public class VisitorService implements IVisitorService {
 
     /**
      * fetch visitor by id.
+     *
      * @param id unique identifier of the visitor
      * @return visitorDto with the given id
      */
