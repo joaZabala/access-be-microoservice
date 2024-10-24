@@ -34,7 +34,7 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
      * @param docNumber the document number of the visitor to search for.
      * @return a list of AccessEntity associated with the visitor's document number.
      */
-    List<AccessEntity> findByAuth_Visitor_docNumber(Long docNumber);
+    List<AccessEntity> findByAuthVisitordocNumber(Long docNumber);
     /**
      * Searches for AccessEntity by either the visitor's name or last name.
      *
