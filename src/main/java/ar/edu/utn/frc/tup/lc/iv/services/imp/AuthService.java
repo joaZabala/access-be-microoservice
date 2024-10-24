@@ -330,31 +330,40 @@ public class AuthService implements IAuthService {
 
 
     /**
-     * @param accessDTO
-     * @param guardID
-     * @return
+     * Authorize visitor.
+     * @param accessDTO accessDto.
+     * @param guardID guardId.
+     * @return AccessDto
      */
     @Override
     public AccessDTO authorizeVisitor(AccessDTO accessDTO, Long guardID) {
         List<AuthDTO> authDTOs = getValidAuthsByDocNumber(accessDTO.getDocNumber());
 
-        if (authDTOs.size() < 1) {
+        if (authDTOs.isEmpty()) {
             return null;
         }
 
-        AuthEntity authEntity = authRepository.getReferenceById(authDTOs.get(0).getAuthId());
+        AuthEntity authEntity = authRepository.findById(authDTOs.get(0).getAuthId()).get();
 
-        AccessEntity accessEntity = new AccessEntity(
-                guardID, guardID, authEntity, accessDTO.getAction(), LocalDateTime.now(), accessDTO.getVehicleType(),
-                accessDTO.getVehicleReg(), accessDTO.getVehicleDescription(), authEntity.getPlotId(),
-                authDTOs.get(0).getExternalID(), accessDTO.getComments());
+        AccessEntity accessEntity = AccessEntity.builder()
+                .createdUser(guardID)
+                .lastUpdatedUser(guardID)
+                .auth(authEntity)
+                .action(accessDTO.getAction())
+                .actionDate(LocalDateTime.now())
+                .vehicleType(accessDTO.getVehicleType())
+                .vehicleReg(accessDTO.getVehicleReg())
+                .vehicleDescription(accessDTO.getVehicleDescription())
+                .plotId(authEntity.getPlotId())
+                .supplierEmployeeId(authDTOs.get(0).getExternalID())
+                .comments(accessDTO.getComments())
+                .build();
 
         return accessesService.registerAccess(accessEntity);
     }
 
     /**
      * Checks if a person is authorized.
-     *
      * @param documentNumber The person's
      *                       identification number.
      * @return {@code true} if a
@@ -366,43 +375,25 @@ public class AuthService implements IAuthService {
     }
 
     /**
-     * Checks if the given authorization range is valid.
-     *
-     * @param authRangeDTO the authorization range to check.
-     * @param currentDate  current date.
-     * @param currentTime  current time.
-     * @return true if the authorization range is valid; false otherwise.
-     */
-    private boolean isValidAuthRange(AuthRangeDTO authRangeDTO, LocalDate currentDate, LocalTime currentTime) {
-        return authRangeDTO.isActive()
-                && (authRangeDTO.getDateFrom() == null || !currentDate.isBefore(authRangeDTO.getDateFrom()))
-                && (authRangeDTO.getDateTo() == null || !currentDate.isAfter(authRangeDTO.getDateTo()))
-                && (authRangeDTO.getHourFrom() == null || !currentTime.isBefore(authRangeDTO.getHourFrom()))
-                && (authRangeDTO.getHourTo() == null || !currentTime.isAfter(authRangeDTO.getHourTo()));
-    }
-
-    /**
      * Retrieves an authorization if exists
      * with the same visitorType.
-     *
      * @param visitorAuthRequest request
      * @return optional authorization
      */
     private Optional<AuthDTO> findExistingAuthorization(VisitorAuthRequest visitorAuthRequest) {
         // Buscar autorizaciones por documento y filtrar por visitorType y plotId
         List<AuthDTO> auths = getAuthsByDocNumber(visitorAuthRequest.getVisitorRequest().getDocNumber());
-//        List<AuthDTO> auths = getAuthsByTypeAndExternalId(visitorAuthRequest.getVisitorType() , visitorAuthRequest.getExternalID()
+
+        //        List<AuthDTO> auths =
+//        getAuthsByTypeAndExternalId(visitorAuthRequest.getVisitorType()
+//        , visitorAuthRequest.getExternalID()
 //                , visitorAuthRequest.getPlotId());
+
         return auths.stream()
                 .filter(auth -> auth.getVisitorType() == visitorAuthRequest.getVisitorType()
                         && Objects.equals(auth.getPlotId(), visitorAuthRequest.getPlotId()))
                 .findFirst();
     }
 
-//    Le quite el comentario del javadoc porque sino lo seguia tomando pmd.
-//    private List<AuthRangeDTO> getAuthorizedRangesList(Long providerID) {
-//        return authRangeService.getAuthRangesByAuth(
-//                authRepository.findByVisitorTypeAndExternalID(VisitorType.PROVIDER_ORGANIZATION, providerID).get(0));
-//    }
 
 }

@@ -19,6 +19,7 @@ import lombok.Setter;
 
 
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
+import lombok.experimental.SuperBuilder;
 
 /**
  * Entity class representing the authorized ranges.
@@ -27,6 +28,7 @@ import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
  * to the authorized type the person.
  */
 @Data
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)

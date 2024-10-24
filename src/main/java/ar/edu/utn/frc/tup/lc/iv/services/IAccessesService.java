@@ -14,7 +14,8 @@ public interface IAccessesService {
 
     /**
      * Retrieves all access records.
-     * @return A list of {@link AccessDTO} representing all access records.
+     * @return A list of {@link AccessDTO} representing
+     * all access records.
      */
     List<AccessDTO> getAllAccess();
 
@@ -47,12 +48,8 @@ public interface IAccessesService {
      */
     List<AccessDTO> getAllAccessByTypeAndExternalID(VisitorType visitorType, Long externalId);
 
-    /**
-     * Retrieves access records where exits are missing.
-     * @return A list of {@link AccessDTO} representing access records
-     * with missing exits.
-     */
-    List<AccessDTO> getMissingExits();
+
+    //    List<AccessDTO> getMissingExits();
 
     /**
      * Registers a new access entry in the system.

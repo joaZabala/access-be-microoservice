@@ -110,7 +110,7 @@ public class AccessesService implements IAccessesService {
      */
     @Override
     public AccessDTO registerAccess(AccessEntity accessEntity) {
-
+        
         AccessEntity savedAccess = accessesRepository.save(accessEntity);
 
         AccessDTO accessDTO = modelMapper.map(savedAccess, AccessDTO.class);

@@ -56,12 +56,6 @@ public class AccessDTO {
     private VehicleTypes vehicleType;
 
     /**
-     * A description of the car used by the visitor.
-     */
-    @JsonProperty("car_description")
-    private String carDescription;
-
-    /**
      * The registration number of the vehicle used by the visitor.
      */
     @JsonProperty("vehicle_reg")

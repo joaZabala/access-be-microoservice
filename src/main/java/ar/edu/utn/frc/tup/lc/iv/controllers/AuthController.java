@@ -72,7 +72,7 @@ public class AuthController {
      * @return authorization created.
      */
     @GetMapping("/authorization/{docNumber}")
-    public ResponseEntity<Boolean> haveAutorization(@PathVariable Long docNumber) {
+    public ResponseEntity<Boolean> checkAuthorization(@PathVariable Long docNumber) {
         return ResponseEntity.ok(authService.isAuthorized(docNumber));
     }
 }

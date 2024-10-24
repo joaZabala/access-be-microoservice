@@ -83,12 +83,12 @@ public class AccessController {
         return accessesService.getAllExits();
     }
 
-    /**
-     * Retrieves access records where exits are missing.
-     * @return List of AccessDTOs with missing exits.
-     */
-    @GetMapping("/missing-exits")
-    public List<AccessDTO> getMissingExits() {
-        return accessesService.getMissingExits();
-    }
+
+    //TODO Implement missing exits.
+
+//    @GetMapping("/missing-exits")
+//    public List<AccessDTO> getMissingExits() {
+//        return accessesService.getMissingExits();
+//    }
+
 }

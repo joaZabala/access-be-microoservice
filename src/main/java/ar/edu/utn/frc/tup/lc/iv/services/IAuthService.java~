@@ -79,9 +79,9 @@ public interface IAuthService {
 
     /**
      * Update authorization list with new authorized ranges.
-     * @param existingAuth the existing {@link AuthDTO} authorization.
-     * @param visitorDTO the {@link VisitorDTO} of the visitor.
-     * @param visitorAuthRequest new authorization details.
+     * @param existingAuth        the existing {@link AuthDTO} authorization.
+     * @param visitorDTO          the {@link VisitorDTO} of the visitor.
+     * @param visitorAuthRequest  the request containing new authorization details.
      * @return the updated {@link AuthDTO} authorization.
      */
 
