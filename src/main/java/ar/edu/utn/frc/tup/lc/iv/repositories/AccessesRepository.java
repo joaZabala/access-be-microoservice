@@ -49,13 +49,13 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
      * @param visitorType the type of visitor to search for.
      * @return a list of AccessEntity that match the specified visitor type.
      */
-    List<AccessEntity> findByAuth_VisitorType(VisitorType visitorType);
+    List<AccessEntity> findByAuthVisitorType(VisitorType visitorType);
     /**
      * Finds a list of AccessEntity by the visitor's type and the external ID.
      * @param visitorType the type of visitor to search for.
      * @param externalID the external ID associated with the authorization.
      * @return a list of AccessEntity that match the specified visitor type and external ID.
      */
-    List<AccessEntity> findByAuth_VisitorTypeAndAuth_ExternalID(VisitorType visitorType, Long externalID);
+    List<AccessEntity> findByAuthVisitorTypeAndAuthExternalID(VisitorType visitorType, Long externalID);
 }
 

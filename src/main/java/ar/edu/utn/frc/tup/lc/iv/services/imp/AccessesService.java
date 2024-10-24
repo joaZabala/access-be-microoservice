@@ -76,7 +76,7 @@ public class AccessesService implements IAccessesService {
      */
     @Override
     public List<AccessDTO> getAllAccessByType(VisitorType visitorType) {
-        return accessesRepository.findByAuth_VisitorType(visitorType).stream()
+        return accessesRepository.findByAuthVisitorType(visitorType).stream()
                 .map(accessEntity -> modelMapper.map(accessEntity, AccessDTO.class))
                 .collect(Collectors.toList());
     }
@@ -90,7 +90,7 @@ public class AccessesService implements IAccessesService {
      */
     @Override
     public List<AccessDTO> getAllAccessByTypeAndExternalID(VisitorType visitorType, Long externalId) {
-        return accessesRepository.findByAuth_VisitorTypeAndAuth_ExternalID(visitorType, externalId).stream()
+        return accessesRepository.findByAuthVisitorTypeAndAuthExternalID(visitorType, externalId).stream()
                 .map(accessEntity -> modelMapper.map(accessEntity, AccessDTO.class))
                 .collect(Collectors.toList());
     }

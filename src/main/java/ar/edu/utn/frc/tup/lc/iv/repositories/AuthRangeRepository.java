@@ -31,7 +31,7 @@ public interface AuthRangeRepository extends JpaRepository<AuthRangeEntity, Long
      * @return List of authorized ranges matching the external ID.
      */
     // PMD ignore MethodNamingConventions
-    List<AuthRangeEntity> findByAuthId_ExternalID(Long externalID);
+    List<AuthRangeEntity> findByAuthIdExternalID(Long externalID);
 
     /**
      * Finds the list of authorized ranges for a given external ID and plot ID.
@@ -41,5 +41,5 @@ public interface AuthRangeRepository extends JpaRepository<AuthRangeEntity, Long
      * @return List of authorized ranges matching the external ID and plot ID.
      */
     // PMD ignore MethodNamingConventions
-    List<AuthRangeEntity> findByAuthId_ExternalIDAndAuthId_PlotId(Long externalID, Long plotId);
+    List<AuthRangeEntity> findByAuthIdExternalIDAndAuthIdPlotId(Long externalID, Long plotId);
 }

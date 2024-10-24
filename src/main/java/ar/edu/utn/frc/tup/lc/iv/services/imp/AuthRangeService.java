@@ -82,7 +82,7 @@ public class AuthRangeService implements IAuthRangeService {
      */
     @Override
     public List<AuthRangeDTO> getAuthRangesByAuthExternalIdAndPlot(AuthEntity authID) {
-        return authRangeRepository.findByAuthId_ExternalIDAndAuthId_PlotId(authID.getExternalID(), authID.getPlotId())
+        return authRangeRepository.findByAuthIdExternalIDAndAuthIdPlotId(authID.getExternalID(), authID.getPlotId())
                 .stream()
                 .map(authRangeEntity -> {
                     AuthRangeDTO authRangeDTO = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
@@ -98,7 +98,7 @@ public class AuthRangeService implements IAuthRangeService {
      */
     @Override
     public List<AuthRangeDTO> getAuthRangesByAuthExternalID(Long externalID) {
-        return authRangeRepository.findByAuthId_ExternalID(externalID).stream()
+        return authRangeRepository.findByAuthIdExternalID(externalID).stream()
                 .map(authRangeEntity -> {
                     AuthRangeDTO authRangeDTO = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
                     authRangeDTO.setDaysOfWeek(convertDaysOfWeek(authRangeEntity.getDaysOfWeek()));
