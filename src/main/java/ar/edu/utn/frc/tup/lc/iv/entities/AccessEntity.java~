@@ -1,23 +1,29 @@
 package ar.edu.utn.frc.tup.lc.iv.entities;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.GenerationType;
+import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
+import ar.edu.utn.frc.tup.lc.iv.models.VehicleTypes;
 import jakarta.persistence.Column;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+
 /**
  * Entity class representing the accesses to the neighborhood.
  * Each access record captures details about the entry and exit
@@ -26,14 +32,14 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Data
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "accesses")
 @Getter
 @Setter
-//public class AccessesEntity extends AuditBaseEntity {
-public class AccessesEntity extends AuditBaseEntity {
+public class AccessEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Accesses.
      */
@@ -48,21 +54,22 @@ public class AccessesEntity extends AuditBaseEntity {
     @JoinColumn(name = "auth_id")
     private AuthEntity auth;
     /**
-     * Date and time of entry to the neighborhood.
+     * Action type.
      */
-    @Column(name = "entry_date")
-    private LocalDateTime entryDate;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "action")
+    private ActionTypes action;
     /**
-     * Date and time of departure to the neighborhood.
+     * Date and time of the entry/exit to the neighborhood.
      */
-    @Column(name = "exit_date")
-    private LocalDateTime exitDate;
+    @Column(name = "action_date")
+    private LocalDateTime actionDate;
     /**
      * Unique vehicle type identifier.
      */
-    @ManyToOne
-    @JoinColumn(name = "vehicle_type_id")
-    private VehicleTypesEntity vehicleType;
+    @Enumerated(EnumType.STRING)
+    @JoinColumn(name = "vehicle_type")
+    private VehicleTypes vehicleType;
     /**
      * Vehicle registration.
      */

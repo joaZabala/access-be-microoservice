@@ -43,8 +43,8 @@ public class VisitorService implements IVisitorService {
     private ModelMapper modelMapper;
 
     /**
-     * Retrieves authorized entities and
-     * maps them to a list of {@link VisitorDTO}.
+     * Retrieves authorized entities a
+     * nd maps them to a list of {@link VisitorDTO}.
      * @param page   the page number to retrieve.
      * @param size   the number of records per page.
      * @param filter filter.

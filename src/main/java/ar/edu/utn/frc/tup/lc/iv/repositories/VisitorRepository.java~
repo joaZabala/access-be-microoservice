@@ -32,10 +32,11 @@ public interface VisitorRepository extends JpaRepository<VisitorEntity, Long> {
 
     /**
      * fetch by filter.
-     * @param filter the filter.
-     * @param pageable pageable.
-     * @return VisitorEntity list.
+     * @param filter
+     * @param pageable
+     * @return
      */
+    // Filtro general
     @Query("SELECT v FROM VisitorEntity v WHERE v.isActive = true AND ("
             + "LOWER(v.name) LIKE LOWER(CONCAT('%', :filter, '%')) OR "
             + "LOWER(v.lastName) LIKE LOWER(CONCAT('%', :filter, '%')) OR "

@@ -68,7 +68,6 @@ public class UserRestClient {
         }
     }
 
-
     /**
      * fetches all users details.
      *

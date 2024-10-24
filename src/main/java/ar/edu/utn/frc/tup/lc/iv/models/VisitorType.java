@@ -12,6 +12,13 @@ public enum VisitorType {
     VISITOR,
     /** enum for employee. */
     EMPLOYEE,
-    /** enum for supplier. */
-    SUPPLIER
+    /** enum for provider. */
+    PROVIDER,
+    /** enum for provider organization. */
+    PROVIDER_ORGANIZATION,
+    /** enum for cohabitant. */
+    COHABITANT,
+    /** enum for emergency. */
+    EMERGENCY
+
 }

@@ -19,6 +19,7 @@ import lombok.Setter;
 
 
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
+import lombok.experimental.SuperBuilder;
 
 /**
  * Entity class representing the authorized ranges.
@@ -27,6 +28,7 @@ import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
  * to the authorized type the person.
  */
 @Data
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -55,8 +57,29 @@ public class AuthEntity extends AuditBaseEntity {
     @Column(name = "visitor_type")
     private VisitorType visitorType;
     /**
+     * External Id.
+     */
+    @Column(name = "external_id")
+    private Long externalID;
+    /**
      * Status indicating if the range is active.
      */
     @Column(name = "is_active")
     private boolean isActive;
+
+    /**
+     * Unique identifier of the plot associated with the range.
+     */
+    @Column(name = "plot_id")
+    private Long plotId;
+
+    /**
+     * Constructor.
+     * @param createdUser id of the user who created the record.
+     * @param lastUpdatedUser id of the user who last updated
+     *                        the record.
+     */
+    public AuthEntity(Long createdUser, Long lastUpdatedUser) {
+        super(createdUser, lastUpdatedUser);
+    }
 }
