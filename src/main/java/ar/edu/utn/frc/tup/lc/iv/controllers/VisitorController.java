@@ -35,18 +35,14 @@ public class VisitorController {
      *
      * @param page the page number for pagination
      * @param size the size of the page
-     * @param name name
-     * @param lastName lastname
      * @param filter filter
      * @return a list of VisitorDTO objects
      */
     @GetMapping()
     public PaginatedResponse<VisitorDTO> getAllVisitors(@RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue = "10") int size,
-                                                        @RequestParam(required = false) String name,
-                                                        @RequestParam(required = false) String lastName,
                                                         @RequestParam(required = false) String filter) {
-        return visitorService.getAllVisitors(page, size, name, lastName, filter);
+        return visitorService.getAllVisitors(page, size, filter);
     }
 
     /**

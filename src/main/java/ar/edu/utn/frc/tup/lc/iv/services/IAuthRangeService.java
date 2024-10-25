@@ -38,7 +38,6 @@ public interface IAuthRangeService {
      */
     List<AuthRangeDTO> getAuthRangesByAuthExternalIdAndPlot(AuthEntity authID);
 
-
     /**
      * Retrieves all authorized ranges.
      * @param externalID id another microservice
@@ -48,13 +47,12 @@ public interface IAuthRangeService {
 
     /**
      * Registers a new authorized range.
-     *
-     * @param authRangeRequests the data transfer object containing the
-     *  details of the authorized range to register.
+     * @param authRangeRequests DTO with details of the authorized range.
      * @param authEntity the authorized entity.
      * @param visitorDTO the visitor.
-     *  @return AuthorizedRanges
+     * @return AuthorizedRanges
      */
+
     List<AuthRange> registerAuthRanges(List<AuthRangeRequestDTO> authRangeRequests,
                                        AuthEntity authEntity, VisitorDTO visitorDTO);
 

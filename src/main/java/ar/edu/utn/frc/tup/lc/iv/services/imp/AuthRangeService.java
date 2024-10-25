@@ -84,7 +84,7 @@ public class AuthRangeService implements IAuthRangeService {
      */
     @Override
     public List<AuthRangeDTO> getAuthRangesByAuthExternalIdAndPlot(AuthEntity authID) {
-        return authRangeRepository.findByAuthId_ExternalIDAndAuthId_PlotId(authID.getExternalID(), authID.getPlotId())
+        return authRangeRepository.findByAuthIdExternalIDAndAuthIdPlotId(authID.getExternalID(), authID.getPlotId())
                 .stream()
                 .map(authRangeEntity -> {
                     AuthRangeDTO authRangeDTO = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
@@ -100,7 +100,7 @@ public class AuthRangeService implements IAuthRangeService {
      */
     @Override
     public List<AuthRangeDTO> getAuthRangesByAuthExternalID(Long externalID) {
-        return authRangeRepository.findByAuthId_ExternalID(externalID).stream()
+        return authRangeRepository.findByAuthIdExternalID(externalID).stream()
                 .map(authRangeEntity -> {
                     AuthRangeDTO authRangeDTO = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
                     authRangeDTO.setDaysOfWeek(convertDaysOfWeek(authRangeEntity.getDaysOfWeek()));
@@ -110,13 +110,12 @@ public class AuthRangeService implements IAuthRangeService {
 
     /**
      * Register authorization ranges.
-     *
-     * @param authRangeRequests the data transfer object containing the
-     *                          details of the authorized range to register.
+     * @param authRangeRequests details of the authorized range.
      * @param authEntity        the authorized entity.
      * @param visitorDTO        the visitor.
-     * @return the list of authorized ranges.
+     * @return list of authorized ranges.
      */
+
     @Override
     public List<AuthRange> registerAuthRanges(List<AuthRangeRequestDTO> authRangeRequests,
                                               AuthEntity authEntity, VisitorDTO visitorDTO) {
@@ -140,11 +139,10 @@ public class AuthRangeService implements IAuthRangeService {
 
     /**
      * Check if the authorization range is valid.
-     *
      * @param authRangeDTO the authorization range to check.
      * @param currentDate  current date.
      * @param currentTime  current time.
-     * @return true if the authorization range is valid;
+     * @return true if the authorization range is valid
      * false otherwise.
      */
     @Override

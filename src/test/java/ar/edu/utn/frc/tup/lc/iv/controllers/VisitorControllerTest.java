@@ -67,7 +67,7 @@ class VisitorControllerTest {
         VisitorDTO visitor2 = new VisitorDTO(2L, "Mary", "Jane", DocumentType.CUIT,87654321L, LocalDate.of(1985, 5, 20), false);
 
         PaginatedResponse<VisitorDTO> paginatedResponse = new PaginatedResponse<>(List.of(visitor1, visitor2), 2);
-        when(visitorService.getAllVisitors(0, 10, "", "", "")).thenReturn(paginatedResponse);
+        when(visitorService.getAllVisitors(0, 10,  "")).thenReturn(paginatedResponse);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/visitors")
                         .param("page", "0")

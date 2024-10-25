@@ -5,6 +5,8 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 import java.time.LocalDateTime;
 
 /**
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
  * respective timestamps.
  */
 @Data
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass
@@ -45,12 +48,12 @@ public class AuditBaseEntity {
     /**
      * Constructor for AuditBaseEntity.
      *
-     * @param createdUser the ID of the user who created the entity
-     * @param lastUpdatedUser the ID of the user who last updated the entity
+     * @param initialCreatedUser the ID of the user who created the entity
+     * @param initialLastUpdatedUser the ID of the user who last updated the entity
      */
-    public AuditBaseEntity(Long createdUser, Long lastUpdatedUser) {
-        this.createdUser = createdUser;
-        this.lastUpdatedUser = lastUpdatedUser;
+    public AuditBaseEntity(Long initialCreatedUser, Long initialLastUpdatedUser) {
+        this.createdUser = initialCreatedUser;
+        this.lastUpdatedUser = initialLastUpdatedUser;
         this.createdDate = LocalDateTime.now();
         this.lastUpdatedDate = LocalDateTime.now();
     }

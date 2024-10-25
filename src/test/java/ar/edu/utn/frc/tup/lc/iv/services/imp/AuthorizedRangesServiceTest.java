@@ -1,32 +1,17 @@
 package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
-import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.RegisterAuthorizationRangesDTO;
-import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
-import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
-import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
+import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRangeRepository;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
-import ar.edu.utn.frc.tup.lc.iv.repositories.AuthorizedRangesRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class AuthorizedRangesServiceTest {
 
     @MockBean
-    private AuthorizedRangesRepository authorizedRangesRepository;
+    private AuthRangeRepository authRangeRepository;
 
     @MockBean
     private AuthRepository authRepository;
