@@ -23,7 +23,23 @@ public class UserHeaderInterceptor implements HandlerInterceptor {
     /**
      * Stores the current user's ID for the duration of the request.
      */
-    private static final ThreadLocal<Long> currentUser = new ThreadLocal<>();
+    private static final ThreadLocal<Long> CURRENT_USER = new ThreadLocal<>();
+    /**
+     * HTTP methods that are exempt from the 'x-user-id' validation.
+     */
+    private static final String POST = "POST";
+    /**
+     * HTTP methods that are exempt from the 'x-user-id' validation.
+     */
+    private static final String PUT = "PUT";
+    /**
+     * HTTP methods that are exempt from the 'x-user-id' validation.
+     */
+    private static final String DELETE = "DELETE";
+    /**
+     * HTTP methods that are exempt from the 'x-user-id' validation.
+     */
+    private static final String PATCH = "PATCH";
     /**
      * Paths that are exempt from the 'x-user-id' validation.
      */
@@ -31,7 +47,6 @@ public class UserHeaderInterceptor implements HandlerInterceptor {
     );
     /**
      * Validates the 'x-user-id' header for POST and PUT requests.
-     * If invalid or missing, returns a 400 Bad Request response.
      * @param request the HTTP request
      * @param response the HTTP response
      * @param handler the handler
@@ -49,8 +64,8 @@ public class UserHeaderInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        if ("POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method)
-            || "DELETE".equalsIgnoreCase(method) || "PATCH".equalsIgnoreCase(method)) {
+        if (POST.equalsIgnoreCase(method) || PUT.equalsIgnoreCase(method)
+            || DELETE.equalsIgnoreCase(method) || PATCH.equalsIgnoreCase(method)) {
             String userId = request.getHeader("x-user-id");
 
             if (userId == null || userId.isEmpty() || !isValidUserId(userId)) {
@@ -64,16 +79,15 @@ public class UserHeaderInterceptor implements HandlerInterceptor {
                         .build();
 
                 response.setContentType("application/json");
-                PrintWriter out = response.getWriter();
-
-                ObjectMapper mapper = new ObjectMapper();
-                String json = mapper.writeValueAsString(errorApi);
-
-                out.print(json);
-                out.flush();
+                try (PrintWriter out = response.getWriter()) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    String json = mapper.writeValueAsString(errorApi);
+                    out.print(json);
+                    out.flush();
+                }
                 return false;
             }
-            currentUser.set(Long.parseLong(userId));
+            CURRENT_USER.set(Long.parseLong(userId));
         }
         return true;
     }
@@ -83,7 +97,7 @@ public class UserHeaderInterceptor implements HandlerInterceptor {
      * @return the current user ID or null if not set
      */
     public static Long getCurrentUserId() {
-        return currentUser.get();
+        return CURRENT_USER.get();
     }
     /**
      * Cleans up the ThreadLocal after the request is complete.
@@ -98,7 +112,7 @@ public class UserHeaderInterceptor implements HandlerInterceptor {
                                 HttpServletResponse response,
                                 Object handler,
                                 Exception ex) throws Exception {
-        currentUser.remove();
+        CURRENT_USER.remove();
     }
     /**
      * Checks if the provided user ID is a valid number.

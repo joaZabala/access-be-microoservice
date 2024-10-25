@@ -13,10 +13,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-
-    /**
-     * The user header interceptor.
-     */
     @Autowired
     private UserHeaderInterceptor userHeaderInterceptor;
     /**

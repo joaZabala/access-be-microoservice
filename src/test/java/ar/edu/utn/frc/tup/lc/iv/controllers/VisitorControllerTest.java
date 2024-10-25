@@ -50,6 +50,7 @@ class VisitorControllerTest {
         when(visitorService.saveOrUpdateVisitor(visitorRequest , null)).thenReturn(visitorResponseDto);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/visitors")
+                        .header("x-user-id", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(visitorRequest)))
                 .andDo(print())
@@ -147,6 +148,7 @@ class VisitorControllerTest {
 
         // hago la petición DELETE
         mockMvc.perform(MockMvcRequestBuilders.delete("/visitors/12345678")
+                        .header("x-user-id", "1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
