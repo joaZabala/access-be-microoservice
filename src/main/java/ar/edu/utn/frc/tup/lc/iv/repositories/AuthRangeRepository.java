@@ -17,10 +17,29 @@ public interface AuthRangeRepository extends JpaRepository<AuthRangeEntity, Long
     // find by auth id
 
     /**
-     * find by auth id.
-     * @param authEntity auth entity
-     * @return auth range list
+     * Finds the list of authorized ranges for a specific auth entity.
+     *
+     * @param authEntity The auth entity to search for.
+     * @return List of authorized ranges associated with the given auth entity.
      */
     List<AuthRangeEntity> findByAuthId(AuthEntity authEntity);
 
+    /**
+     * Finds the list of authorized ranges for a given external ID.
+     *
+     * @param externalID The external ID associated with an auth entity.
+     * @return List of authorized ranges matching the external ID.
+     */
+    // PMD ignore MethodNamingConventions
+    List<AuthRangeEntity> findByAuthIdExternalID(Long externalID);
+
+    /**
+     * Finds the list of authorized ranges for a given external ID and plot ID.
+     *
+     * @param externalID The external ID associated with an auth entity.
+     * @param plotId The plot ID associated with an auth entity.
+     * @return List of authorized ranges matching the external ID and plot ID.
+     */
+    // PMD ignore MethodNamingConventions
+    List<AuthRangeEntity> findByAuthIdExternalIDAndAuthIdPlotId(Long externalID, Long plotId);
 }

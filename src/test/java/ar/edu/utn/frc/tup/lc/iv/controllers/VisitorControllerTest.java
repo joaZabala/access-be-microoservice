@@ -1,5 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.controllers;
 
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
@@ -46,7 +47,7 @@ class VisitorControllerTest {
         VisitorDTO visitorResponseDto =
                 new VisitorDTO(1L, "Mario", "Cenna", DocumentType.PASSPORT, 12345678L, LocalDate.of(1990, 1, 1), true);
 
-        when(visitorService.saveOrUpdateVisitor(visitorRequest)).thenReturn(visitorResponseDto);
+        when(visitorService.saveOrUpdateVisitor(visitorRequest , null)).thenReturn(visitorResponseDto);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/visitors")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -65,26 +66,30 @@ class VisitorControllerTest {
         VisitorDTO visitor1 = new VisitorDTO(1L, "Mario", "Cenna", DocumentType.CUIL,12345678L, LocalDate.of(1990, 1, 1), true);
         VisitorDTO visitor2 = new VisitorDTO(2L, "Mary", "Jane", DocumentType.CUIT,87654321L, LocalDate.of(1985, 5, 20), false);
 
-        when(visitorService.getAllVisitors(0, 10)).thenReturn(List.of(visitor1, visitor2));
+        PaginatedResponse<VisitorDTO> paginatedResponse = new PaginatedResponse<>(List.of(visitor1, visitor2), 2);
+        when(visitorService.getAllVisitors(0, 10,  "")).thenReturn(paginatedResponse);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/visitors")
                         .param("page", "0")
                         .param("size", "10")
+                        .param("name", "")
+                        .param("lastName", "")
+                        .param("filter", "")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].visitor_id").value(1L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Mario"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].last_name").value("Cenna"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].doc_number").value(12345678L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].birth_date").value("01-01-1990"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].is_active").value(true))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].visitor_id").value(2L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Mary"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].last_name").value("Jane"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].doc_number").value(87654321L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].birth_date").value("20-05-1985"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].is_active").value(false));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].visitor_id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items.[0].name").value("Mario"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].last_name").value("Cenna"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].doc_number").value(12345678L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].birth_date").value("01-01-1990"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].is_active").value(true))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[1].visitor_id").value(2L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[1].name").value("Mary"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[1].last_name").value("Jane"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[1].doc_number").value(87654321L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[1].birth_date").value("20-05-1985"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[1].is_active").value(false));
     }
 
     @Test
@@ -97,7 +102,7 @@ class VisitorControllerTest {
         when(visitorService.getVisitorByDocNumber(12345678L)).thenReturn(visitorDto);
 
         // hago la solicitud GET con el número de documento
-        mockMvc.perform(MockMvcRequestBuilders.get("/visitors/byDocNumber/12345678")
+        mockMvc.perform(MockMvcRequestBuilders.get("/visitors/by-doc-number/12345678")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 // Verifica que el estado de la respuesta sea 200 OK
@@ -141,7 +146,7 @@ class VisitorControllerTest {
         when(visitorService.deleteVisitor(12345678L)).thenReturn(visitorDTO);
 
         // hago la petición DELETE
-        mockMvc.perform(MockMvcRequestBuilders.delete("/visitors/deactivate/12345678")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/visitors/12345678")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())

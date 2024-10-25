@@ -12,8 +12,8 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 public interface IVisitorService {
     /**
      * Retrieves a list of all authorized persons.
-     * @param page   the page number for pagination
-     * @param size   the size of the page
+     * @param page the page number for pagination
+     * @param size the size of the page
      * @param filter filter
      * @return A list of {@link VisitorDTO} representing all authorized persons.
      */
@@ -21,6 +21,7 @@ public interface IVisitorService {
 
     /**
      * Creates a new visitor or update based on the provided data.
+     *
      * @param authorizedRequestDto Object containing the necessary data
      *                             to create a new authorization.
      * @param visitorId
@@ -32,6 +33,7 @@ public interface IVisitorService {
     /**
      * This method finds and returns the visitor
      * associated with the given document number.
+     *
      * @param docNumber The document number of the visitor.
      * @return VisitorDTO.
      */
@@ -39,6 +41,7 @@ public interface IVisitorService {
 
     /**
      * Deactivates a visitor by their document number.
+     *
      * @param docNumber The document number of the visitor to deactivate.
      * @return VisitorDTO representing the deactivated visitor.
      */

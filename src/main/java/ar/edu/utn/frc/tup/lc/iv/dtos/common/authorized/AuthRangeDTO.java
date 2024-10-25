@@ -5,8 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -64,7 +66,7 @@ public class AuthRangeDTO implements Serializable {
      * Hour from to form the authorized range.
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TIME_FORMAT)
-    @Schema(type = STRING_TYPE, pattern = TIME_FORMAT, example = "08:00", description = "The start time of the authorized range.")
+    @Schema(type = STRING_TYPE, pattern = TIME_FORMAT, example = "08:00:00", description = "The start time of the authorized range.")
     @JsonProperty("hour_from")
     private LocalTime hourFrom;
 
@@ -72,21 +74,15 @@ public class AuthRangeDTO implements Serializable {
      * Hour until to form the authorized range.
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TIME_FORMAT)
-    @Schema(type = STRING_TYPE, pattern = TIME_FORMAT, example = "17:00", description = "The end time of the authorized range.")
+    @Schema(type = STRING_TYPE, pattern = TIME_FORMAT, example = "17:00:00", description = "The end time of the authorized range.")
     @JsonProperty("hour_to")
     private LocalTime hourTo;
 
     /**
      * Days of the week to form the authorized range.
      */
-    @JsonProperty("day_of_weeks")
-    private String days;
-
-    /**
-     * Id of the plot.
-     */
-    @JsonProperty("plot_id")
-    private Long plotId;
+    @JsonProperty("days_of_week")
+    private List<DayOfWeek> daysOfWeek;
 
     /**
      * Comment of the authorized range.

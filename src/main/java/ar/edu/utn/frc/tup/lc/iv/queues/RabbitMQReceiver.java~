@@ -42,8 +42,7 @@ public class RabbitMQReceiver {
 //    @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
 //    public void receiveMessage(String jsonMessage) {
 //        try {
-//            VisitorAuthRequest visitorAuthRequest =
-//            objectMapper.readValue(jsonMessage, VisitorAuthRequest.class);
+//            VisitorAuthRequest visitorAuthRequest = objectMapper.readValue(jsonMessage, VisitorAuthRequest.class);
 //            //authService.authorizeVisitor(visitorAuthRequest);
 //        } catch (JsonProcessingException e) {
 //            return;
