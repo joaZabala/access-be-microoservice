@@ -10,6 +10,7 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
+import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
 import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
 import ar.edu.utn.frc.tup.lc.iv.services.IVisitorService;
 import jakarta.persistence.EntityNotFoundException;
@@ -83,8 +84,10 @@ public class VisitorService implements IVisitorService {
     public VisitorDTO saveOrUpdateVisitor(VisitorRequest visitorRequest, Long visitorId) {
         // VisitorEntity existVisitorEntity =
         // visitorRepository.findByDocNumber(visitorRequest.getDocNumber());
+        Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
 
         VisitorEntity existVisitorEntity = null;
+
         if (visitorId != null) {
             Optional<VisitorEntity> visitorEntity = visitorRepository.findById(visitorId);
 
@@ -97,9 +100,12 @@ public class VisitorService implements IVisitorService {
 
         VisitorEntity visitorEntity;
         if (Objects.nonNull(existVisitorEntity)) {
+            existVisitorEntity.setLastUpdatedUser(writerUserId);
+            existVisitorEntity.setLastUpdatedDate(LocalDateTime.now());
             visitorEntity = existVisitorEntity;
         } else {
             visitorEntity = new VisitorEntity();
+            visitorEntity.setCreatedUser(writerUserId);
             visitorEntity.setCreatedDate(LocalDateTime.now());
         }
 
@@ -109,7 +115,6 @@ public class VisitorService implements IVisitorService {
         visitorEntity.setDocNumber(visitorRequest.getDocNumber());
         visitorEntity.setBirthDate(visitorRequest.getBirthDate());
         visitorEntity.setActive(true);
-        visitorEntity.setLastUpdatedDate(LocalDateTime.now());
         return modelMapper.map(visitorRepository.save(visitorEntity), VisitorDTO.class);
     }
 
@@ -143,9 +148,11 @@ public class VisitorService implements IVisitorService {
         if (visitorEntity.isEmpty()) {
             throw new EntityNotFoundException("No existe el visitante con el id " + visitorId);
         }
+        Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
+
         visitorEntity.get().setActive(false);
         visitorEntity.get().setLastUpdatedDate(LocalDateTime.now());
-
+        visitorEntity.get().setLastUpdatedUser(writerUserId);
         return modelMapper.map(visitorRepository.save(visitorEntity.get()), VisitorDTO.class);
     }
 

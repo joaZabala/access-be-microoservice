@@ -5,6 +5,7 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.RegisterAuthorizati
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
+import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthRange;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
 import org.modelmapper.ModelMapper;
@@ -16,6 +17,7 @@ import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRangeRepository;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -184,6 +186,7 @@ public class AuthRangeService implements IAuthRangeService {
         if (authorizedRangeDTO == null) {
             throw new IllegalArgumentException("AuthorizedRangeDTO must not be null");
         }
+        Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
 
         AuthRangeEntity authRangeEntity = modelMapper.map(authorizedRangeDTO, AuthRangeEntity.class);
         authRangeEntity.setActive(true);
@@ -205,7 +208,8 @@ public class AuthRangeService implements IAuthRangeService {
         } else {
             authRangeEntity.setDaysOfWeek(null);
         }
-
+        authRangeEntity.setCreatedUser(writerUserId);
+        authRangeEntity.setCreatedDate(LocalDateTime.now());
         AuthRangeEntity authorizedRange = authRangeRepository.save(authRangeEntity);
 
         return new AuthRange(authorizedRange);

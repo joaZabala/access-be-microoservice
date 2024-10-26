@@ -2,6 +2,7 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
+import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AccessesRepository;
@@ -10,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -110,14 +112,14 @@ public class AccessesService implements IAccessesService {
      */
     @Override
     public AccessDTO registerAccess(AccessEntity accessEntity) {
-
+        Long userId = UserHeaderInterceptor.getCurrentUserId();
+        accessEntity.setCreatedUser(userId);
+        accessEntity.setCreatedDate(LocalDateTime.now());
         AccessEntity savedAccess = accessesRepository.save(accessEntity);
-
         AccessDTO accessDTO = modelMapper.map(savedAccess, AccessDTO.class);
         accessDTO.setName(savedAccess.getAuth().getVisitor().getName());
         accessDTO.setLastName(savedAccess.getAuth().getVisitor().getLastName());
         accessDTO.setDocNumber(savedAccess.getAuth().getVisitor().getDocNumber());
-
         return accessDTO;
     }
 
