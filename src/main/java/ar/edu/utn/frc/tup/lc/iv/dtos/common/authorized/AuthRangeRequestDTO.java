@@ -76,12 +76,6 @@ public class AuthRangeRequestDTO implements Serializable {
     @JsonProperty("days_of_week")
     private List<DayOfWeek> daysOfWeek;
 
-//    /**
-//     * Id of the plot.
-//     */
-//    @JsonProperty("plot_id")
-//    private Long plotId;
-
     /**
      * Comment of the authorized range.
      */

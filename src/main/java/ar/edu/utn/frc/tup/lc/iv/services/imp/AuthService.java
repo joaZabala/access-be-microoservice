@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
-import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRangeRepository;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
@@ -106,13 +105,9 @@ public class AuthService implements IAuthService {
                 AuthDTO authDTO = modelMapper.map(authEntity, AuthDTO.class);
                 VisitorDTO visitorDTO = modelMapper.map(visitorEntity, VisitorDTO.class);
 
-                List<AuthRangeEntity> authRangeEntitiesList = authRangeRepository.findByAuthId(authEntity)
-                        .stream().filter(AuthRangeEntity::isActive).toList();
+                List<AuthRangeDTO> authRangeDTOs = authRangeService.getAuthRangesByAuth(authEntity);
 
-                List<AuthRangeDTO> authRangeDTOs = authRangeEntitiesList.stream()
-                        .map(authRangeEntity -> modelMapper.map(authRangeEntity, AuthRangeDTO.class))
-                        .collect(Collectors.toList());
-
+                authDTO.setAuthorizerId(authEntity.getCreatedUser());
                 authDTO.setVisitor(visitorDTO);
                 authDTO.setAuthRanges(authRangeDTOs);
                 authDTOs.add(authDTO);

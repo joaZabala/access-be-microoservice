@@ -44,7 +44,7 @@ public class AccessesService implements IAccessesService {
     @Override
     public List<AccessDTO> getAllAccess() {
         return accessesRepository.findAll().stream()
-                .map(accessEntity -> modelMapper.map(accessEntity, AccessDTO.class))
+                .map(this::mapToAccessDTO)
                 .collect(Collectors.toList());
     }
 
@@ -80,8 +80,7 @@ public class AccessesService implements IAccessesService {
     @Override
     public List<AccessDTO> getAllAccessByType(VisitorType visitorType) {
         return accessesRepository.findByAuthVisitorType(visitorType).stream()
-                .map(accessEntity -> modelMapper.map(accessEntity, AccessDTO.class))
-                .collect(Collectors.toList());
+                .map(this::mapToAccessDTO).collect(Collectors.toList());
     }
 
     /**
@@ -94,7 +93,7 @@ public class AccessesService implements IAccessesService {
     @Override
     public List<AccessDTO> getAllAccessByTypeAndExternalID(VisitorType visitorType, Long externalId) {
         return accessesRepository.findByAuthVisitorTypeAndAuthExternalID(visitorType, externalId).stream()
-                .map(accessEntity -> modelMapper.map(accessEntity, AccessDTO.class))
+                .map(this::mapToAccessDTO)
                 .collect(Collectors.toList());
     }
 
@@ -115,6 +114,7 @@ public class AccessesService implements IAccessesService {
         Long userId = UserHeaderInterceptor.getCurrentUserId();
         accessEntity.setCreatedUser(userId);
         accessEntity.setCreatedDate(LocalDateTime.now());
+
         AccessEntity savedAccess = accessesRepository.save(accessEntity);
         AccessDTO accessDTO = modelMapper.map(savedAccess, AccessDTO.class);
         accessDTO.setName(savedAccess.getAuth().getVisitor().getName());
@@ -123,4 +123,21 @@ public class AccessesService implements IAccessesService {
         return accessDTO;
     }
 
+    /**
+     * Maps an AccessEntity to an AccessDTO.
+     * @param accessEntity AccessEntity to be mapped.
+     * @return AccessDTO representing the AccessEntity.
+     */
+    private AccessDTO mapToAccessDTO(AccessEntity accessEntity) {
+        AccessDTO accessDTO = modelMapper.map(accessEntity, AccessDTO.class);
+
+        accessDTO.setAuthorizerId(accessEntity.getAuth().getCreatedUser());
+        accessDTO.setDocType(accessEntity.getAuth().getVisitor().getDocumentType());
+        accessDTO.setName(accessEntity.getAuth().getVisitor().getName());
+        accessDTO.setLastName(accessEntity.getAuth().getVisitor().getLastName());
+        accessDTO.setDocNumber(accessEntity.getAuth().getVisitor().getDocNumber());
+        accessDTO.setVisitorType(accessEntity.getAuth().getVisitorType());
+
+        return accessDTO;
+    }
 }

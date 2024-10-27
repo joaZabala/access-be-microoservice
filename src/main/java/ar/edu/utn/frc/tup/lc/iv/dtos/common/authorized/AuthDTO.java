@@ -18,10 +18,17 @@ import java.util.List;
 @Data
 public class AuthDTO {
     /**
-     * ID of the authorized person.
+     * ID of the authorization person.
      */
     @JsonProperty("auth_id")
     private Long authId;
+
+    /**
+     *  ID of the authorizer person.
+     */
+    @JsonProperty("authorizer_id")
+    private Long authorizerId;
+
     /**
      * DTO of the authorized person.
      */
