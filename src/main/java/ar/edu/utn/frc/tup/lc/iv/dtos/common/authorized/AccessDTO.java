@@ -1,7 +1,9 @@
 package ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized;
 
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
+import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import ar.edu.utn.frc.tup.lc.iv.models.VehicleTypes;
+import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,6 +32,18 @@ public class AccessDTO {
      */
     @JsonProperty("last_name")
     private String lastName;
+
+    /**
+     * The last name of the visitor.
+     */
+    @JsonProperty("visitor_type")
+    private VisitorType visitorType;
+
+    /**
+     * The document number of the visitor.
+     */
+    @JsonProperty("doc_type")
+    private DocumentType docType;
 
     /**
      * The document number of the visitor.
@@ -72,4 +86,36 @@ public class AccessDTO {
      */
     @JsonProperty("comments")
     private String comments;
+
+    /**
+     * authorizer name.
+     */
+    @JsonProperty("auth_first_name")
+    private String authName;
+
+    /**
+     * The last name of authorizer.
+     */
+    @JsonProperty("auth_last_name")
+    private String authLastName;
+
+    /**
+     * The document number of the visitor.
+     */
+    @JsonProperty("auth_doc_number")
+    private Long authDocNumber;
+
+    /**
+     * The document type of the authorizer.
+     */
+    @JsonProperty("auth_doc_type")
+    private String authDocType;
+
+
+    /**
+     * The id of the authorizer.
+     */
+    @JsonProperty("authorizer_id")
+    private Long authorizerId;
+
 }
