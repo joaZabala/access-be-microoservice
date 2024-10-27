@@ -2,6 +2,7 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
+import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AccessesRepository;
@@ -10,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +44,7 @@ public class AccessesService implements IAccessesService {
     @Override
     public List<AccessDTO> getAllAccess() {
         return accessesRepository.findAll().stream()
-                .map(accessEntity -> modelMapper.map(accessEntity, AccessDTO.class))
+                .map(this::mapToAccessDTO)
                 .collect(Collectors.toList());
     }
 
@@ -78,8 +80,7 @@ public class AccessesService implements IAccessesService {
     @Override
     public List<AccessDTO> getAllAccessByType(VisitorType visitorType) {
         return accessesRepository.findByAuthVisitorType(visitorType).stream()
-                .map(accessEntity -> modelMapper.map(accessEntity, AccessDTO.class))
-                .collect(Collectors.toList());
+                .map(this::mapToAccessDTO).collect(Collectors.toList());
     }
 
     /**
@@ -92,7 +93,7 @@ public class AccessesService implements IAccessesService {
     @Override
     public List<AccessDTO> getAllAccessByTypeAndExternalID(VisitorType visitorType, Long externalId) {
         return accessesRepository.findByAuthVisitorTypeAndAuthExternalID(visitorType, externalId).stream()
-                .map(accessEntity -> modelMapper.map(accessEntity, AccessDTO.class))
+                .map(this::mapToAccessDTO)
                 .collect(Collectors.toList());
     }
 
@@ -110,15 +111,33 @@ public class AccessesService implements IAccessesService {
      */
     @Override
     public AccessDTO registerAccess(AccessEntity accessEntity) {
+        Long userId = UserHeaderInterceptor.getCurrentUserId();
+        accessEntity.setCreatedUser(userId);
+        accessEntity.setCreatedDate(LocalDateTime.now());
 
         AccessEntity savedAccess = accessesRepository.save(accessEntity);
-
         AccessDTO accessDTO = modelMapper.map(savedAccess, AccessDTO.class);
         accessDTO.setName(savedAccess.getAuth().getVisitor().getName());
         accessDTO.setLastName(savedAccess.getAuth().getVisitor().getLastName());
         accessDTO.setDocNumber(savedAccess.getAuth().getVisitor().getDocNumber());
-
         return accessDTO;
     }
 
+    /**
+     * Maps an AccessEntity to an AccessDTO.
+     * @param accessEntity AccessEntity to be mapped.
+     * @return AccessDTO representing the AccessEntity.
+     */
+    private AccessDTO mapToAccessDTO(AccessEntity accessEntity) {
+        AccessDTO accessDTO = modelMapper.map(accessEntity, AccessDTO.class);
+
+        accessDTO.setAuthorizerId(accessEntity.getAuth().getCreatedUser());
+        accessDTO.setDocType(accessEntity.getAuth().getVisitor().getDocumentType());
+        accessDTO.setName(accessEntity.getAuth().getVisitor().getName());
+        accessDTO.setLastName(accessEntity.getAuth().getVisitor().getLastName());
+        accessDTO.setDocNumber(accessEntity.getAuth().getVisitor().getDocNumber());
+        accessDTO.setVisitorType(accessEntity.getAuth().getVisitorType());
+
+        return accessDTO;
+    }
 }

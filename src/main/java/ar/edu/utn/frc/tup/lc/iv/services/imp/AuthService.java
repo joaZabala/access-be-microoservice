@@ -8,6 +8,7 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeRequestDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
+import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthRange;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import jakarta.transaction.Transactional;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
-import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRangeRepository;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
@@ -105,13 +105,9 @@ public class AuthService implements IAuthService {
                 AuthDTO authDTO = modelMapper.map(authEntity, AuthDTO.class);
                 VisitorDTO visitorDTO = modelMapper.map(visitorEntity, VisitorDTO.class);
 
-                List<AuthRangeEntity> authRangeEntitiesList = authRangeRepository.findByAuthId(authEntity)
-                        .stream().filter(AuthRangeEntity::isActive).toList();
+                List<AuthRangeDTO> authRangeDTOs = authRangeService.getAuthRangesByAuth(authEntity);
 
-                List<AuthRangeDTO> authRangeDTOs = authRangeEntitiesList.stream()
-                        .map(authRangeEntity -> modelMapper.map(authRangeEntity, AuthRangeDTO.class))
-                        .collect(Collectors.toList());
-
+                authDTO.setAuthorizerId(authEntity.getCreatedUser());
                 authDTO.setVisitor(visitorDTO);
                 authDTO.setAuthRanges(authRangeDTOs);
                 authDTOs.add(authDTO);
@@ -285,12 +281,16 @@ public class AuthService implements IAuthService {
      * @return new authorization
      */
     protected AuthDTO createNewAuthorization(VisitorDTO visitorDTO, VisitorAuthRequest visitorAuthRequest, Long creatorID) {
+        Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
+
         AuthEntity authEntity = new AuthEntity(creatorID, creatorID);
         authEntity.setVisitor(modelMapper.map(visitorDTO, VisitorEntity.class));
         authEntity.setVisitorType(visitorAuthRequest.getVisitorType());
         authEntity.setActive(true);
         authEntity.setPlotId(visitorAuthRequest.getPlotId());
         authEntity.setExternalID(visitorAuthRequest.getExternalID());
+        authEntity.setCreatedUser(writerUserId);
+        authEntity.setCreatedDate(LocalDateTime.now());
         authEntity = authRepository.save(authEntity);
 
         AuthDTO authDTO = new AuthDTO();
