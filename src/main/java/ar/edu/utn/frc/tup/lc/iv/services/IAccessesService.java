@@ -2,6 +2,7 @@ package ar.edu.utn.frc.tup.lc.iv.services;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
+import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 
 import java.util.List;
@@ -58,4 +59,12 @@ public interface IAccessesService {
      * @return A {@link AccessDTO} representing the registered access.
      */
     AccessDTO registerAccess(AccessEntity accessEntity);
+
+    /**
+     * Checks if a visitor can do an action.
+     * @param carPlate plate of the car.
+     * @param action action to do.
+     * @return true if the visitor can do the action, false otherwise.
+     */
+    Boolean canDoAction(String carPlate, ActionTypes action);
 }

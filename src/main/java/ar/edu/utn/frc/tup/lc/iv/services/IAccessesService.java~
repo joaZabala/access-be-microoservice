@@ -14,7 +14,8 @@ public interface IAccessesService {
 
     /**
      * Retrieves all access records.
-     * @return A list of {@link AccessDTO} representing all access records.
+     * @return A list of {@link AccessDTO} representing
+     * all access records.
      */
     List<AccessDTO> getAllAccess();
 

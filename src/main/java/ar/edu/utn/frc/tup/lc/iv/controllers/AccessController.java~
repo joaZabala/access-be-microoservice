@@ -58,7 +58,6 @@ public class AccessController {
     @GetMapping
     public List<AccessDTO> getAllAccess(@RequestParam(required = false) VisitorType visitorType,
             @RequestParam(required = false) Long externalID) {
-
         if (visitorType != null) {
             if (externalID != null) {
                 return accessesService.getAllAccessByTypeAndExternalID(visitorType, externalID);

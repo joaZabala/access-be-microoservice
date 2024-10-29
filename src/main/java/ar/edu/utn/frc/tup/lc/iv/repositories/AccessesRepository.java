@@ -62,5 +62,12 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
      * and external ID.
      */
     List<AccessEntity> findByAuthVisitorTypeAndAuthExternalID(VisitorType visitorType, Long externalID);
+
+    /**
+     *
+     * @param carPlate plate of the car.
+     * @return a list of AccessEntity that match the specified car plate.
+     */
+    List<AccessEntity> findByVehicleReg(String carPlate);
 }
 

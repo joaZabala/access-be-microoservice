@@ -58,6 +58,7 @@ public class AccessesService implements IAccessesService {
     public List<AccessDTO> getAllEntries() {
         return accessesRepository.findByAction(ActionTypes.ENTRY).stream()
                 .map(accessEntity -> modelMapper.map(accessEntity, AccessDTO.class))
+                .sorted(Comparator.comparing(AccessDTO::getActionDate).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -70,6 +71,7 @@ public class AccessesService implements IAccessesService {
     public List<AccessDTO> getAllExits() {
         return accessesRepository.findByAction(ActionTypes.EXIT).stream()
                 .map(accessEntity -> modelMapper.map(accessEntity, AccessDTO.class))
+                .sorted(Comparator.comparing(AccessDTO::getActionDate).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -97,13 +99,7 @@ public class AccessesService implements IAccessesService {
                 .map(this::mapToAccessDTO)
                 .collect(Collectors.toList());
     }
-
-    //todo: implement this
-//    @Override
-//    public List<AccessDTO> getMissingExits() {
-//        return null;  // Implementation to be added later
-//    }
-
+    
     /**
      * Registers a new access entry in the repository.
      *
@@ -122,6 +118,15 @@ public class AccessesService implements IAccessesService {
         accessDTO.setLastName(savedAccess.getAuth().getVisitor().getLastName());
         accessDTO.setDocNumber(savedAccess.getAuth().getVisitor().getDocNumber());
         return accessDTO;
+    }
+
+    @Override
+    public Boolean canDoAction(String carPlate, ActionTypes action) {
+        AccessEntity acc = accessesRepository.findByVehicleReg(carPlate).stream()
+                .max(Comparator.comparing(AccessEntity::getActionDate))
+                .orElse(null);
+        if (acc == null) {return true;}
+        return !acc.getAction().equals(action);
     }
 
     /**

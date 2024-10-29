@@ -100,12 +100,6 @@ public class AccessesService implements IAccessesService {
                 .collect(Collectors.toList());
     }
 
-    //todo: implement this
-//    @Override
-//    public List<AccessDTO> getMissingExits() {
-//        return null;  // Implementation to be added later
-//    }
-
     /**
      * Registers a new access entry in the repository.
      *
@@ -124,6 +118,15 @@ public class AccessesService implements IAccessesService {
         accessDTO.setLastName(savedAccess.getAuth().getVisitor().getLastName());
         accessDTO.setDocNumber(savedAccess.getAuth().getVisitor().getDocNumber());
         return accessDTO;
+    }
+
+    @Override
+    public Boolean canDoAction(String carPlate, ActionTypes action) {
+        AccessEntity acc = accessesRepository.findByVehicleReg(carPlate).stream()
+                .max(Comparator.comparing(AccessEntity::getActionDate))
+                .orElse(null);
+        if (acc == null) {return true;}
+        return !acc.getAction().equals(action);
     }
 
     /**
