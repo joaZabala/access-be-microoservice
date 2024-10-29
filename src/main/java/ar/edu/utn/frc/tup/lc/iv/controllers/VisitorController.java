@@ -42,8 +42,9 @@ public class VisitorController {
     @GetMapping()
     public PaginatedResponse<VisitorDTO> getAllVisitors(@RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue = "10") int size,
-                                                        @RequestParam(required = false) String filter) {
-        return visitorService.getAllVisitors(page, size, filter);
+                                                        @RequestParam(required = false) String filter,
+                                                        @RequestParam(required = false) boolean active) {
+        return visitorService.getAllVisitors(page, size, filter , active);
     }
 
     /**

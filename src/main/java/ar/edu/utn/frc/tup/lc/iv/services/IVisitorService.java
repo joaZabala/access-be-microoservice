@@ -17,7 +17,7 @@ public interface IVisitorService {
      * @param filter filter
      * @return A list of {@link VisitorDTO} representing all authorized persons.
      */
-    PaginatedResponse<VisitorDTO> getAllVisitors(int page, int size, String filter);
+    PaginatedResponse<VisitorDTO> getAllVisitors(int page, int size, String filter , boolean active);
 
     /**
      * Creates a new visitor or update based on the provided data.

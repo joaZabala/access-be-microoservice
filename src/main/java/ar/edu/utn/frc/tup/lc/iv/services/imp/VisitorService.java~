@@ -71,10 +71,8 @@ public class VisitorService implements IVisitorService {
             // Si no hay filtro, obtener todos los visitantes activos
             if (!active){
                 visitorPage = visitorRepository.findAllByActive(false, pageable);
-            }else {
-                visitorPage = visitorRepository.findAllByActive(true, pageable);
             }
-
+            visitorPage = visitorRepository.findAllByActive(true, pageable);
         }
 
         //incluimos los tipos de visitante al visitorDTO
