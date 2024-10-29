@@ -41,4 +41,6 @@ public interface AuthRepository extends JpaRepository<AuthEntity, Long> {
      * @return A list of authorization records matching the given criteria.
      */
     List<AuthEntity> findByVisitorTypeAndExternalIDAndPlotId(VisitorType visitorType, Long externalID, Long plotId);
+
+    AuthEntity findByVisitorAndVisitorTypeAndPlotId(VisitorEntity visitor, VisitorType visitorType, Long plotId);
 }

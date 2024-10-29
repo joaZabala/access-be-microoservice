@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-
 import java.util.List;
 
 /**
@@ -57,17 +56,20 @@ public class AuthController {
     public List<AuthDTO> getValidAuths(@RequestParam Long docNumber) {
         return authService.getValidAuthsByDocNumber(docNumber);
     }
+
     /**
      * Authorize visitor with authorized ranges.
+     * 
      * @param visitorAuthRequest request.
-     * @param userId request.
+     * @param userId             request.
      * @return authorization created.
      */
     @PostMapping("/authorization")
     public ResponseEntity<AuthDTO> createAuthorization(@RequestBody VisitorAuthRequest visitorAuthRequest,
-                                                       @RequestHeader("x-user-id") Long userId) {
+            @RequestHeader("x-user-id") Long userId) {
         return ResponseEntity.ok(authService.createAuthorization(visitorAuthRequest, userId));
     }
+
     /**
      * check if the visitor have access.
      *
@@ -79,3 +81,5 @@ public class AuthController {
         return ResponseEntity.ok(authService.isAuthorized(docNumber));
     }
 }
+
+

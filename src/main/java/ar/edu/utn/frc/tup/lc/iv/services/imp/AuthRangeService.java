@@ -6,8 +6,12 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
 import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
+import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthRange;
+import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
+import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,8 +54,12 @@ public class AuthRangeService implements IAuthRangeService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private VisitorRepository visitorRepository;
+
     /**
      * Retrieves all authorized ranges.
+     *
      * @return list of authorized ranges
      */
     @Override
@@ -79,6 +87,7 @@ public class AuthRangeService implements IAuthRangeService {
 
     /**
      * get auth ranges by auth external id and plot.
+     *
      * @param authID id of auth
      * @return list of auth ranges.
      */
@@ -95,6 +104,7 @@ public class AuthRangeService implements IAuthRangeService {
 
     /**
      * Get auth ranges by auth external id.
+     *
      * @param externalID id another microservice
      * @return list of auth ranges.
      */
@@ -110,6 +120,7 @@ public class AuthRangeService implements IAuthRangeService {
 
     /**
      * Register authorization ranges.
+     *
      * @param authRangeRequests details of the authorized range.
      * @param authEntity        the authorized entity.
      * @param visitorDTO        the visitor.
@@ -139,11 +150,12 @@ public class AuthRangeService implements IAuthRangeService {
 
     /**
      * Check if the authorization range is valid.
+     *
      * @param authRangeDTO the authorization range to check.
      * @param currentDate  current date.
      * @param currentTime  current time.
      * @return true if the authorization range is valid
-     * false otherwise.
+     *         false otherwise.
      */
     @Override
     public boolean isValidAuthRange(AuthRangeDTO authRangeDTO, LocalDate currentDate, LocalTime currentTime) {
@@ -179,6 +191,7 @@ public class AuthRangeService implements IAuthRangeService {
 
     /**
      * register authorized range.
+     *
      * @param authorizedRangeDTO the authorized range to register.
      * @return the authorized range.
      */
@@ -228,6 +241,47 @@ public class AuthRangeService implements IAuthRangeService {
         return Arrays.stream(daysOfWeek.split(","))
                 .map(DayOfWeek::valueOf)
                 .collect(Collectors.toList());
+    }
+
+    public List<AuthRangeDTO> getAuthRanges(VisitorType visitorType, Long docNumber, Long plotId) {
+        VisitorEntity visitor = visitorRepository.findByDocNumber(docNumber);
+
+        AuthEntity auths = authRepository.findByVisitorAndVisitorTypeAndPlotId(visitor, visitorType, plotId);
+
+        List<AuthRangeEntity> authRangeEntities = authRangeRepository.findByAuthId(auths);
+
+        List<AuthRangeDTO> dtos = authRangeEntities.stream().map(object -> modelMapper.map(object, AuthRangeDTO.class))
+                .collect(Collectors.toList());
+
+        return dtos;
+    }
+
+    public AuthRangeDTO deleteAuthRange(Long id) {
+        AuthRangeEntity authRangeEntity = authRangeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("AuthRange id not found"));
+        authRangeEntity.setActive(false);
+        authRangeRepository.save(authRangeEntity);
+
+        AuthRangeDTO dto = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
+
+        return dto;
+    }
+
+    public AuthRangeDTO updateAuthRange(Long authId, AuthRangeRequestDTO request) {
+        AuthRangeEntity authRangeEntity = authRangeRepository.findById(authId)
+                .orElseThrow(() -> new RuntimeException("AuthRange id not found"));
+
+        authRangeEntity.setDateFrom(request.getDateFrom());
+        authRangeEntity.setDateTo(request.getDateTo());
+        authRangeEntity.setHourFrom(request.getHourFrom());
+        authRangeEntity.setHourTo(request.getHourTo());
+        authRangeEntity.setDaysOfWeek(request.getDaysOfWeek().stream().map(DayOfWeek::name).collect(Collectors.joining(",")));
+
+        authRangeRepository.save(authRangeEntity);
+
+        AuthRangeDTO dto = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
+
+        return dto;
     }
 
 }

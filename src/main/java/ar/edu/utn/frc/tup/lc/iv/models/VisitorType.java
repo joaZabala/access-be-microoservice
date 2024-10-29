@@ -19,6 +19,14 @@ public enum VisitorType {
     /** enum for cohabitant. */
     COHABITANT,
     /** enum for emergency. */
-    EMERGENCY
+    EMERGENCY;
 
+    public static boolean contains(VisitorType type) {
+        for (VisitorType visitorType : values()) {
+            if (visitorType == type) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
