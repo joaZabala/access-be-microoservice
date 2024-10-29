@@ -1,16 +1,17 @@
 package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
+import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
+import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
+import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
 import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
 import ar.edu.utn.frc.tup.lc.iv.services.IVisitorService;
 import jakarta.persistence.EntityNotFoundException;
@@ -38,6 +39,12 @@ public class VisitorService implements IVisitorService {
     private VisitorRepository visitorRepository;
 
     /**
+     * Repository to access Authorized entities from the database.
+     */
+    @Autowired
+    private AuthRepository authRepository;
+
+    /**
      * ModelMapper for converting between entities and DTOs.
      */
     @Autowired
@@ -54,21 +61,31 @@ public class VisitorService implements IVisitorService {
 
     @Override
     public PaginatedResponse<VisitorDTO> getAllVisitors(int page, int size, String filter) {
-        Pageable pageable =
-                PageRequest.of(page, size, Sort.by("lastName").and(Sort.by("name")));
+        Pageable pageable = PageRequest.of(page, size, Sort.by("lastName").and(Sort.by("name")));
 
         Page<VisitorEntity> visitorPage;
 
-        if (Objects.nonNull(filter)) {
+        if (Objects.nonNull(filter) && !filter.isEmpty()) {
             visitorPage = visitorRepository.findByFilter(filter, pageable);
         } else {
-            // Si no hay filtros, devuelve todos los visitantes activos
+            // Si no hay filtro, obtener todos los visitantes activos
             visitorPage = visitorRepository.findAllByActive(true, pageable);
         }
 
-        // Convertimos el Page en una lista de VisitorDTO
+        //incluimos los tipos de visitante al visitorDTO
         List<VisitorDTO> visitorDTOs = visitorPage.stream()
-                .map(entity -> modelMapper.map(entity, VisitorDTO.class))
+                .map(visitorEntity -> {
+                    VisitorDTO visitorDTO = modelMapper.map(visitorEntity, VisitorDTO.class);
+
+                    // Asigna los tipos de visitante para cada VisitorDTO
+                    List<VisitorType> visitorTypes = authRepository.findByVisitor(visitorEntity).stream()
+                            .map(AuthEntity::getVisitorType)
+                            .distinct()
+                            .collect(Collectors.toList());
+                    visitorDTO.setVisitorTypes(visitorTypes);
+
+                    return visitorDTO;
+                })
                 .collect(Collectors.toList());
 
         return new PaginatedResponse<>(visitorDTOs, visitorPage.getTotalElements());

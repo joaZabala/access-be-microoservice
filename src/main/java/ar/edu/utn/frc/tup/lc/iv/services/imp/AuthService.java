@@ -269,7 +269,7 @@ public class AuthService implements IAuthService {
             return updateAuthorization(existingAuthOpt.get(), visitorDTO, visitorAuthRequest);
         }
         // Si no existe, crea una nueva autorización
-        return createNewAuthorization(visitorDTO, visitorAuthRequest, creatorID);
+        return createNewAuthorization(visitorDTO, visitorAuthRequest);
     }
 
     /**
@@ -277,13 +277,12 @@ public class AuthService implements IAuthService {
      *
      * @param visitorDTO         visitor.
      * @param visitorAuthRequest request.
-     * @param creatorID          creator.
      * @return new authorization
      */
-    protected AuthDTO createNewAuthorization(VisitorDTO visitorDTO, VisitorAuthRequest visitorAuthRequest, Long creatorID) {
+    protected AuthDTO createNewAuthorization(VisitorDTO visitorDTO, VisitorAuthRequest visitorAuthRequest) {
         Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
 
-        AuthEntity authEntity = new AuthEntity(creatorID, creatorID);
+        AuthEntity authEntity = new AuthEntity(writerUserId, writerUserId);
         authEntity.setVisitor(modelMapper.map(visitorDTO, VisitorEntity.class));
         authEntity.setVisitorType(visitorAuthRequest.getVisitorType());
         authEntity.setActive(true);
@@ -299,6 +298,7 @@ public class AuthService implements IAuthService {
         authDTO.setVisitor(modelMapper.map(authEntity.getVisitor(), VisitorDTO.class));
         authDTO.setActive(authEntity.isActive());
         authDTO.setPlotId(authEntity.getPlotId());
+        authDTO.setAuthorizerId(authEntity.getCreatedUser());
         authDTO.setExternalID(authEntity.getExternalID());
 
 
@@ -381,13 +381,8 @@ public class AuthService implements IAuthService {
      * @return optional authorization
      */
     private Optional<AuthDTO> findExistingAuthorization(VisitorAuthRequest visitorAuthRequest) {
-        // Buscar autorizaciones por documento y filtrar por visitorType y plotId
+        // Busca autorizaciones por documento y filtra por visitorType y plotId
         List<AuthDTO> auths = getAuthsByDocNumber(visitorAuthRequest.getVisitorRequest().getDocNumber());
-
-        //        List<AuthDTO> auths =
-//        getAuthsByTypeAndExternalId(visitorAuthRequest.getVisitorType()
-//        , visitorAuthRequest.getExternalID()
-//                , visitorAuthRequest.getPlotId());
 
         return auths.stream()
                 .filter(auth -> auth.getVisitorType() == visitorAuthRequest.getVisitorType()
