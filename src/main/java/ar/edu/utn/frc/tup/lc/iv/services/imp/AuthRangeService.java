@@ -260,6 +260,8 @@ public class AuthRangeService implements IAuthRangeService {
         AuthRangeEntity authRangeEntity = authRangeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("AuthRange id not found"));
         authRangeEntity.setActive(false);
+        authRangeEntity.setLastUpdatedUser(UserHeaderInterceptor.getCurrentUserId());
+        authRangeEntity.setLastUpdatedDate(LocalDateTime.now());
         authRangeRepository.save(authRangeEntity);
 
         AuthRangeDTO dto = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
@@ -275,6 +277,8 @@ public class AuthRangeService implements IAuthRangeService {
         authRangeEntity.setDateTo(request.getDateTo());
         authRangeEntity.setHourFrom(request.getHourFrom());
         authRangeEntity.setHourTo(request.getHourTo());
+        authRangeEntity.setLastUpdatedUser(UserHeaderInterceptor.getCurrentUserId());
+        authRangeEntity.setLastUpdatedDate(LocalDateTime.now());
         authRangeEntity.setDaysOfWeek(request.getDaysOfWeek().stream().map(DayOfWeek::name).collect(Collectors.joining(",")));
 
         authRangeRepository.save(authRangeEntity);
