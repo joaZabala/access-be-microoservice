@@ -104,8 +104,6 @@ public class VisitorService implements IVisitorService {
      */
     @Override
     public VisitorDTO saveOrUpdateVisitor(VisitorRequest visitorRequest, Long visitorId) {
-        // VisitorEntity existVisitorEntity =
-        // visitorRepository.findByDocNumber(visitorRequest.getDocNumber());
         Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
 
         VisitorEntity existVisitorEntity = null;
