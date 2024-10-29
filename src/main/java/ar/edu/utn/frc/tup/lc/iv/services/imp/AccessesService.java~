@@ -58,7 +58,6 @@ public class AccessesService implements IAccessesService {
     public List<AccessDTO> getAllEntries() {
         return accessesRepository.findByAction(ActionTypes.ENTRY).stream()
                 .map(accessEntity -> modelMapper.map(accessEntity, AccessDTO.class))
-                .sorted(Comparator.comparing(AccessDTO::getActionDate).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -71,7 +70,6 @@ public class AccessesService implements IAccessesService {
     public List<AccessDTO> getAllExits() {
         return accessesRepository.findByAction(ActionTypes.EXIT).stream()
                 .map(accessEntity -> modelMapper.map(accessEntity, AccessDTO.class))
-                .sorted(Comparator.comparing(AccessDTO::getActionDate).reversed())
                 .collect(Collectors.toList());
     }
 
