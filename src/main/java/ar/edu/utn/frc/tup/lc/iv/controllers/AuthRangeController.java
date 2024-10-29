@@ -29,7 +29,13 @@ public class AuthRangeController {
     @Autowired
     private AuthRangeService authRangeService;
 
-
+    /**
+     *  Creates a new authorized range.
+     * @param visitorType the type of visitor.
+     * @param docNumber the document number of the visitor.
+     * @param plotId the plot id.
+     * @return the created authorized range.
+     */
     @GetMapping
     public List<AuthRangeDTO> getAuthRanges(@RequestParam(required = true) VisitorType visitorType, @RequestParam(required = true) Long docNumber, @RequestParam(required = true) Long plotId) {
         List<AuthRangeDTO> dtos = authRangeService.getAuthRanges(visitorType, docNumber, plotId);
@@ -37,14 +43,27 @@ public class AuthRangeController {
         return dtos;
     }
 
+    /**
+     * Deletes an authorized range.
+     * @param id the id of the authorized range.
+     * @param userId the id of the user making the request.
+     * @return the deleted authorized range.
+     */
     @DeleteMapping
-    public ResponseEntity<AuthRangeDTO> deleteAuthRange(@RequestParam(required = true) Long id) {
+    public ResponseEntity<AuthRangeDTO> deleteAuthRange(@RequestParam(required = true) Long id , @RequestHeader("x-user-id") Long userId) {
         return ResponseEntity.ok(authRangeService.deleteAuthRange(id));
     }
 
+    /**
+     * Updates an existing authorized range.
+     * @param authRangeId  id of the authorized range.
+     * @param request the updated authorized range.
+     * @param id the id of the user making the request.
+     * @return the updated authorized range.
+     */
     @PutMapping
-    public ResponseEntity<AuthRangeDTO> updateAuthRange(@RequestParam(required = true) Long authId, @RequestBody AuthRangeRequestDTO request, @RequestHeader("x-user-id") Long id) {
-        return ResponseEntity.ok(authRangeService.updateAuthRange(authId, request));
+    public ResponseEntity<AuthRangeDTO> updateAuthRange(@RequestParam(required = true) Long authRangeId, @RequestBody AuthRangeRequestDTO request, @RequestHeader("x-user-id") Long id) {
+        return ResponseEntity.ok(authRangeService.updateAuthRange(authRangeId, request));
     }
     
 
