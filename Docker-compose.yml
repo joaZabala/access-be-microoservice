@@ -21,10 +21,9 @@ services:
       dockerfile: Dockerfile
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:mysql://database-container:3306/accesses
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=password
-      - TZ=America/Argentina/Buenos_Aires
+      - SPRING_DATASOURCE_URL=jdbc:mysql://accesses-db:3306/accesses
+      - SPRING_DATASOURCE_USERNAME=utn
+      - SPRING_DATASOURCE_PASSWORD=utn
     ports:
       - "8001:8001"
     networks:
