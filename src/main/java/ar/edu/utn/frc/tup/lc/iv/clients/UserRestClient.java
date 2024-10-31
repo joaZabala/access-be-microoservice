@@ -1,10 +1,14 @@
 package ar.edu.utn.frc.tup.lc.iv.clients;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -80,6 +84,30 @@ public class UserRestClient {
         if (users.getStatusCode().is2xxSuccessful() && users.getBody() != null) {
 
             return List.of(users.getBody());
+        } else {
+            throw new EntityNotFoundException("No existen usuarios");
+        }
+    }
+    /**
+     * fetches users by ids.
+     *
+     * @return list of users.
+     */
+    @CircuitBreaker(name = INSTANCE_NAME, fallbackMethod = FALLBACK_METHOD)
+    public List<UserDetailDto> getUsersByIds(List<Long> ids) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<List<Long>> requestEntity = new HttpEntity<>(ids, headers);
+
+        ResponseEntity<UserDetailDto[]> response = restTemplate.postForEntity(
+                userServiceUrl + "/byIds",
+                requestEntity,
+                UserDetailDto[].class
+        );
+
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            return List.of(response.getBody());
         } else {
             throw new EntityNotFoundException("No existen usuarios");
         }
