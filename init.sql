@@ -1,6 +1,5 @@
 SET NAMES utf8mb4;
 
-
 CREATE DATABASE accesses;
 
 USE accesses;
@@ -16,19 +15,19 @@ CREATE TABLE visitors (
     is_active BOOLEAN NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Tabla de Auths
 CREATE TABLE auths (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     visitor_id BIGINT,
-    visitor_type ENUM('OWNER', 'WORKER', 'VISITOR', 'EMPLOYEE', 'PROVIDER', 'PROVIDER_ORGANIZATION', 'COHABITANT', 'EMERGENCY') NOT NULL ,
+    visitor_type ENUM('OWNER', 'WORKER', 'VISITOR', 'EMPLOYEE', 'PROVIDER', 'PROVIDER_ORGANIZATION', 'COHABITANT', 'EMERGENCY') NOT NULL,
     plot_id BIGINT,
     is_active BOOLEAN NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_visitor FOREIGN KEY (visitor_id) REFERENCES visitors(id)
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Tabla de Auth_Ranges
 CREATE TABLE auth_ranges (
@@ -44,15 +43,15 @@ CREATE TABLE auth_ranges (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_auth FOREIGN KEY (auth_id) REFERENCES auths(id)
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Insertar datos en Visitors
-INSERT INTO visitors (name, lastname, doc_number, birth_date, is_active) VALUES
-('Juan', 'Pérez', 12345678, '1980-05-20', TRUE),
-('María', 'Gómez', 23456789, '1992-11-15', TRUE),
-('Carlos', 'Fernández', 34567890, '1985-03-10', FALSE),
-('Laura', 'Rodríguez', 45678901, '1990-07-25', TRUE),
-('Pedro', 'Martínez', 56789012, '1978-12-30', TRUE);
+INSERT INTO visitors (name, lastname, doc_type, doc_number, birth_date, is_active) VALUES
+('Juan', 'Pérez', 'DNI', 12345678, '1980-05-20', TRUE),
+('María', 'Gómez', 'DNI', 23456789, '1992-11-15', TRUE),
+('Carlos', 'Fernández', 'CUIL', 34567890, '1985-03-10', FALSE),
+('Laura', 'Rodríguez', 'CUIL', 45678901, '1990-07-25', TRUE),
+('Pedro', 'Martínez', 'CUIL', 56789012, '1978-12-30', TRUE);
 
 -- Insertar datos en Auths
 INSERT INTO auths (visitor_id, visitor_type, plot_id, is_active) VALUES
