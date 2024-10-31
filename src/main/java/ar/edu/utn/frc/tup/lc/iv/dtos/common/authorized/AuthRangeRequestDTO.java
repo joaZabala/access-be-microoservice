@@ -3,6 +3,7 @@ package ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,6 +45,7 @@ public class AuthRangeRequestDTO implements Serializable {
     @JsonProperty("date_from")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
     @Schema(type = STRING_TYPE, pattern = DATE_FORMAT, example = "01-01-2022", description = "The start date of the authorized range.")
+    @NotNull(message = "DateFrom cant be null")
     private LocalDate dateFrom;
 
     /**
@@ -52,6 +54,7 @@ public class AuthRangeRequestDTO implements Serializable {
     @JsonProperty("date_to")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
     @Schema(type = STRING_TYPE, pattern = DATE_FORMAT, example = "02-01-2024", description = "The end date of the authorized range.")
+    @NotNull(message = "DateTo cant be null")
     private LocalDate dateTo;
 
     /**
@@ -60,6 +63,7 @@ public class AuthRangeRequestDTO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TIME_FORMAT)
     @Schema(type = STRING_TYPE, pattern = TIME_FORMAT, example = "08:00:00", description = "The start time of the authorized range.")
     @JsonProperty("hour_from")
+    @NotNull(message = "HourFrom cant be null")
     private LocalTime hourFrom;
 
     /**
@@ -68,6 +72,7 @@ public class AuthRangeRequestDTO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TIME_FORMAT)
     @Schema(type = STRING_TYPE, pattern = TIME_FORMAT, example = "17:00:00", description = "The end time of the authorized range.")
     @JsonProperty("hour_to")
+    @NotNull(message = "HourTo cant be null")
     private LocalTime hourTo;
 
     /**

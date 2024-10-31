@@ -33,11 +33,11 @@ CREATE TABLE auths (
 CREATE TABLE auth_ranges (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     auth_id BIGINT NULL,
-    date_from DATE,
-    date_to DATE,
-    hour_from TIME,
-    hour_to TIME,
-    days VARCHAR(50) NOT NULL,
+    date_from DATE NULL,
+    date_to DATE NULL,
+    hour_from TIME NULL,
+    hour_to TIME NULL,
+    days VARCHAR(50) NULL,
     comment VARCHAR(255),
     is_active BOOLEAN NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -55,17 +55,17 @@ INSERT INTO visitors (name, lastname, doc_type, doc_number, birth_date, is_activ
 
 -- Insertar datos en Auths
 INSERT INTO auths (visitor_id, visitor_type, plot_id, is_active) VALUES
-(1, 'OWNER', 1, TRUE),
-(2, 'WORKER', 2, TRUE),
-(3, 'VISITOR', 3, TRUE),
-(4, 'EMPLOYEE', 4, FALSE),
-(5, 'PROVIDER', 5, TRUE);
+(1, 'OWNER', 1,TRUE),
+(2 ,'WORKER',2 ,TRUE),
+(3, 'VISITOR',3 ,TRUE),
+(4, 'EMPLOYEE',4, FALSE),
+(5, 'PROVIDER', 5,TRUE);
 
 -- Insertar datos en Auth_Ranges
 INSERT INTO auth_ranges (auth_id, date_from, date_to, hour_from, hour_to, days, comment, is_active) VALUES
-(1, '2024-10-01', '2024-12-31', '08:00:00', '18:00:00', 'Mon,Tue,Wed,Thu,Fri', 'Autorización para oficinas', TRUE),
-(1, '2024-10-01', '2024-12-31', '05:00:00', '12:00:00', 'Mon,Tue,Wed,Thu,Fri', 'Autorización para para', TRUE),
-(2, '2024-09-15', '2024-10-15', '09:00:00', '17:00:00', 'Mon,Wed,Fri', 'Visita regular', TRUE),
-(3, '2024-10-01', '2024-11-30', '07:00:00', '15:00:00', 'Tue,Thu', 'Acceso restringido', FALSE),
-(4, '2024-10-05', '2024-10-20', '06:00:00', '14:00:00', 'Mon,Tue', 'Entrega de suministros', TRUE),
-(5, '2024-10-01', '2024-12-31', '08:30:00', '16:30:00', 'Mon,Tue,Wed,Thu,Fri', 'Autorización temporal', TRUE);
+(1, '2024-10-01', '2024-12-31', '08:00:00', '18:00:00', 'MONDAY,TUESDAY', 'Autorización para oficinas', TRUE),
+(1, '2024-10-01', '2024-12-31', '05:00:00', '12:00:00', 'MONDAY', 'Autorización para para', TRUE),
+(2, '2024-09-15', '2024-10-15', '09:00:00', '17:00:00', 'MONDAY,TUESDAY', 'Visita regular', TRUE),
+(3, '2024-10-01', '2024-11-30', '07:00:00', '15:00:00', 'MONDAY,TUESDAY', 'Acceso restringido', FALSE),
+(4, '2024-10-05', '2024-10-20', '06:00:00', '14:00:00', 'MONDAY', 'Entrega de suministros', TRUE),
+(5, '2024-10-01', '2024-12-31', '08:30:00', '16:30:00', 'MONDAY,TUESDAY', 'Autorización temporal', TRUE);

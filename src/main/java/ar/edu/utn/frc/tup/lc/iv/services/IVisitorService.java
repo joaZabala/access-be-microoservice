@@ -15,9 +15,10 @@ public interface IVisitorService {
      * @param page   the page number for pagination
      * @param size   the size of the page
      * @param filter filter
+     * @param active filter
      * @return A list of {@link VisitorDTO} representing all authorized persons.
      */
-    PaginatedResponse<VisitorDTO> getAllVisitors(int page, int size, String filter);
+    PaginatedResponse<VisitorDTO> getAllVisitors(int page, int size, String filter, boolean active);
 
     /**
      * Creates a new visitor or update based on the provided data.

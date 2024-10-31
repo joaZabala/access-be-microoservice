@@ -1,7 +1,10 @@
 package ar.edu.utn.frc.tup.lc.iv.services;
 
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
+import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 
 import java.util.List;
@@ -13,11 +16,13 @@ import java.util.List;
 public interface IAccessesService {
 
     /**
-     * Retrieves all access records.
-     * @return A list of {@link AccessDTO} representing
-     * all access records.
+     * Retrieves access records with optional filtering and pagination.
+     * @param filter the filtering criteria for access records.
+     * @param page   the page number for pagination.
+     * @param size   the number of records per page.
+     * @return a paginated response containing a list of {@link AccessDTO}.
      */
-    List<AccessDTO> getAllAccess();
+    PaginatedResponse<AccessDTO> getAllAccess(AccessesFilter filter, int page, int size);
 
     /**
      * Retrieves all entries (access actions of type ENTRY).
@@ -58,4 +63,12 @@ public interface IAccessesService {
      * @return A {@link AccessDTO} representing the registered access.
      */
     AccessDTO registerAccess(AccessEntity accessEntity);
+
+    /**
+     * Checks if a visitor can do an action.
+     * @param carPlate plate of the car.
+     * @param action action to do.
+     * @return true if the visitor can do the action, false otherwise.
+     */
+    Boolean canDoAction(String carPlate, ActionTypes action);
 }

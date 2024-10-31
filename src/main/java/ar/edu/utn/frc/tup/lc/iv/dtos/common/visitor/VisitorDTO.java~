@@ -54,7 +54,7 @@ public class VisitorDTO {
     private LocalDate birthDate;
 
     /**
-     * List of visitor types.
+     * Visitor types of the authorized person.
      */
     @JsonProperty("visitor_types")
     private List<VisitorType> visitorTypes;

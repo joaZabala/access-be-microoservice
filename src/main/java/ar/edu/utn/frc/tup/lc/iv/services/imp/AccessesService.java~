@@ -82,7 +82,7 @@ public class AccessesService implements IAccessesService {
     @Override
     public List<AccessDTO> getAllEntries() {
         return accessesRepository.findByAction(ActionTypes.ENTRY).stream()
-                .map(this::mapToAccessDTO)
+                .map(accessEntity -> modelMapper.map(accessEntity, AccessDTO.class))
                 .sorted(Comparator.comparing(AccessDTO::getActionDate).reversed())
                 .collect(Collectors.toList());
     }

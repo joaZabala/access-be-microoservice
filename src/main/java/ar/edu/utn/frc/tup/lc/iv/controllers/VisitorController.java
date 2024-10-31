@@ -33,17 +33,19 @@ public class VisitorController {
 
     /**
      * Retrieves a list of all visitors.
-     *
      * @param page   the page number for pagination
      * @param size   the size of the page
      * @param filter filter
+     * @param active indicates if the visitors list is active .
      * @return a list of VisitorDTO objects
      */
     @GetMapping()
     public PaginatedResponse<VisitorDTO> getAllVisitors(@RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue = "10") int size,
-                                                        @RequestParam(required = false) String filter) {
-        return visitorService.getAllVisitors(page, size, filter);
+                                                        @RequestParam(required = false) String filter,
+                                                        @RequestParam(required = false, defaultValue = "true")
+                                                            boolean active) {
+        return visitorService.getAllVisitors(page, size, filter, active);
     }
 
     /**

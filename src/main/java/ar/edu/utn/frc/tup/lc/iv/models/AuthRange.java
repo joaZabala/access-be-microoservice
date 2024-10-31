@@ -81,11 +81,13 @@ public class AuthRange extends AuditBase {
         this.dateTo = authorizedRangesEntity.getDateTo();
         this.hourFrom = authorizedRangesEntity.getHourFrom();
         this.hourTo = authorizedRangesEntity.getHourTo();
-        this.daysOfWeek = Arrays.stream(authorizedRangesEntity.getDaysOfWeek().split(","))
-                .map(String::toUpperCase)
-                .map(DayOfWeek::valueOf)
-                .collect(Collectors.toList());
-//        this.plotId = authorizedRangesEntity.getPlotId();
+
+        if (authorizedRangesEntity.getDaysOfWeek() != null) {
+            this.daysOfWeek = Arrays.stream(authorizedRangesEntity.getDaysOfWeek().split(","))
+                    .map(String::toUpperCase)
+                    .map(DayOfWeek::valueOf)
+                    .collect(Collectors.toList());
+        }
         this.comment = authorizedRangesEntity.getComment();
         this.isActive = authorizedRangesEntity.isActive();
     }

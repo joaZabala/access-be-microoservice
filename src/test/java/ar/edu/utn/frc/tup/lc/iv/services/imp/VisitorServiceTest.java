@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -88,7 +89,7 @@ class VisitorServiceTest {
 
         //then
         VisitorDTO visitorDTOExpected =
-                new VisitorDTO(1L,"joaquin","zabala",DocumentType.DNI,12345678L,LocalDate.of(2005,3,17), true);
+                new VisitorDTO(1L,"joaquin","zabala",DocumentType.DNI,12345678L,LocalDate.of(2005,3,17),null, true);
 
         VisitorDTO visitorDTOResult = visitorService.saveOrUpdateVisitor(visitorRequest , null);
 
@@ -113,7 +114,7 @@ class VisitorServiceTest {
 
         //then
         VisitorDTO visitorDTOExpected =
-                new VisitorDTO(1L, "joaquin","zabala",DocumentType.DNI,12345678L,LocalDate.of(2005,3,17),true);
+                new VisitorDTO(1L, "joaquin","zabala",DocumentType.DNI,12345678L,LocalDate.of(2005,3,17),null,true);
 
         VisitorDTO visitorDTOResult = visitorService.saveOrUpdateVisitor(visitorRequest , null);
 
