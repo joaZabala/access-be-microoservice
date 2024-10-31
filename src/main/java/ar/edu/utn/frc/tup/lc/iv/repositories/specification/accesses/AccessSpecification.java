@@ -30,7 +30,7 @@ public class AccessSpecification {
 
         if (filter.getTextFilter() != null) {
             String visitorTable = "visitor";
-            String authTable = "visitor";
+            String authTable = "auth";
 
             String filterPattern = "%" + filter.getTextFilter().toLowerCase(Locale.ROOT) + "%";
             predicates.add(criteriaBuilder.or(
