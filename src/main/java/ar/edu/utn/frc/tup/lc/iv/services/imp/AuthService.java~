@@ -11,7 +11,6 @@ import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthRange;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -340,7 +339,7 @@ public class AuthService implements IAuthService {
         List<AuthDTO> authDTOs = getValidAuthsByDocNumber(accessDTO.getDocNumber());
 
         if (authDTOs.isEmpty()) {
-            throw new EntityNotFoundException("No existen autorizaciones validas para el documento " + accessDTO.getDocNumber());
+            return null;
         }
 
         AuthEntity authEntity = authRepository.findById(authDTOs.get(0).getAuthId()).get();

@@ -82,7 +82,9 @@ public class AuthRangeService implements IAuthRangeService {
         return authRangeRepository.findByAuthId(auth).stream()
                 .map(authRangeEntity -> {
                     AuthRangeDTO authRangeDTO = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
-                    authRangeDTO.setDaysOfWeek(convertDaysOfWeek(authRangeEntity.getDaysOfWeek()));
+                    if (authRangeEntity.getDaysOfWeek() != null) {
+                        authRangeDTO.setDaysOfWeek(convertDaysOfWeek(authRangeEntity.getDaysOfWeek()));
+                    }
                     return authRangeDTO;
                 }).collect(Collectors.toList());
     }
@@ -99,7 +101,9 @@ public class AuthRangeService implements IAuthRangeService {
                 .stream()
                 .map(authRangeEntity -> {
                     AuthRangeDTO authRangeDTO = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
-                    authRangeDTO.setDaysOfWeek(convertDaysOfWeek(authRangeEntity.getDaysOfWeek()));
+                    if (authRangeEntity.getDaysOfWeek() != null) {
+                        authRangeDTO.setDaysOfWeek(convertDaysOfWeek(authRangeEntity.getDaysOfWeek()));
+                    }
                     return authRangeDTO;
                 }).collect(Collectors.toList());
     }
@@ -115,7 +119,9 @@ public class AuthRangeService implements IAuthRangeService {
         return authRangeRepository.findByAuthIdExternalID(externalID).stream()
                 .map(authRangeEntity -> {
                     AuthRangeDTO authRangeDTO = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
-                    authRangeDTO.setDaysOfWeek(convertDaysOfWeek(authRangeEntity.getDaysOfWeek()));
+                    if (authRangeEntity.getDaysOfWeek() != null) {
+                        authRangeDTO.setDaysOfWeek(convertDaysOfWeek(authRangeEntity.getDaysOfWeek()));
+                    }
                     return authRangeDTO;
                 }).collect(Collectors.toList());
     }
@@ -165,16 +171,16 @@ public class AuthRangeService implements IAuthRangeService {
                 && (authRangeDTO.getDateTo() == null || !currentDate.isAfter(authRangeDTO.getDateTo()))
                 && (authRangeDTO.getHourFrom() == null || !currentTime.isBefore(authRangeDTO.getHourFrom()))
                 && (authRangeDTO.getHourTo() == null || !currentTime.isAfter(authRangeDTO.getHourTo()))
-                && authRangeDTO.getDaysOfWeek().contains(currentDate.getDayOfWeek());
+                && authRangeDTO.getDaysOfWeek() == null || authRangeDTO.getDaysOfWeek().contains(currentDate.getDayOfWeek())
+                || authRangeDTO.getDaysOfWeek().isEmpty();
     }
 
     /**
      * Get valid authorization ranges.
-     *
      * @param authRanges  list of authorization ranges.
      * @param currentDate current date.
      * @param currentTime current time.
-     * @return
+     * @return list of valid authorization ranges.
      */
     @Override
     public List<AuthRangeDTO> getValidAuthRanges(List<AuthRangeDTO> authRanges, LocalDate currentDate,
@@ -213,13 +219,13 @@ public class AuthRangeService implements IAuthRangeService {
             authRangeEntity.setAuthId(null);
         }
 
-        if (authorizedRangeDTO.getDaysOfWeek() != null && !authorizedRangeDTO.getDaysOfWeek().isEmpty()) {
 
+        if (authorizedRangeDTO.getDaysOfWeek() != null && !authorizedRangeDTO.getDaysOfWeek().isEmpty()) {
             authRangeEntity.setDaysOfWeek(authorizedRangeDTO.getDaysOfWeek().stream()
                     .map(DayOfWeek::name)
                     .collect(Collectors.joining(",")));
-
         } else {
+
             authRangeEntity.setDaysOfWeek(null);
         }
         authRangeEntity.setCreatedUser(writerUserId);
@@ -243,6 +249,7 @@ public class AuthRangeService implements IAuthRangeService {
                 .map(DayOfWeek::valueOf)
                 .collect(Collectors.toList());
     }
+
     /**
      * Retrieves authorization ranges for a visitor.
      * @param visitorType the type of visitor.
@@ -262,9 +269,11 @@ public class AuthRangeService implements IAuthRangeService {
                 .collect(Collectors.toList());
 
     }
+
     /**
      * Marks an existing authorization range as inactive based on the provided ID.
-     * @param id  the unique identifier of the authorization range to be deleted.
+     *
+     * @param id the unique identifier of the authorization range to be deleted.
      * @return an {@link AuthRangeDTO} containing the updated
      * authorization range data with the active status set to false.
      * @throws RuntimeException if the specified authorization range ID is not found.
@@ -279,10 +288,12 @@ public class AuthRangeService implements IAuthRangeService {
 
         return modelMapper.map(authRangeEntity, AuthRangeDTO.class);
     }
+
     /**
      * Updates an existing authorization range.
+     *
      * @param authId  the unique identifier.
-     * @param request  containing the new values for range.
+     * @param request containing the new values for range.
      * @return an {@link AuthRangeDTO}  updated  range data.
      * @throws RuntimeException if not found.
      */
