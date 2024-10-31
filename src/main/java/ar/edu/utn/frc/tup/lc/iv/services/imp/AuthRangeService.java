@@ -53,7 +53,9 @@ public class AuthRangeService implements IAuthRangeService {
      */
     @Autowired
     private ModelMapper modelMapper;
-
+    /**
+     * Repository for Visitor.
+     */
     @Autowired
     private VisitorRepository visitorRepository;
 
@@ -150,12 +152,11 @@ public class AuthRangeService implements IAuthRangeService {
 
     /**
      * Check if the authorization range is valid.
-     *
      * @param authRangeDTO the authorization range to check.
      * @param currentDate  current date.
      * @param currentTime  current time.
      * @return true if the authorization range is valid
-     *         false otherwise.
+     * false otherwise.
      */
     @Override
     public boolean isValidAuthRange(AuthRangeDTO authRangeDTO, LocalDate currentDate, LocalTime currentTime) {
@@ -242,7 +243,14 @@ public class AuthRangeService implements IAuthRangeService {
                 .map(DayOfWeek::valueOf)
                 .collect(Collectors.toList());
     }
-
+    /**
+     * Retrieves authorization ranges for a visitor.
+     * @param visitorType the type of visitor.
+     * @param docNumber   the document number of the visitor.
+     * @param plotId      the ID of the plot.
+     * @return a list of {@link AuthRangeDTO} with the authorization ranges.
+     * @throws RuntimeException if entity is not found.
+     */
     public List<AuthRangeDTO> getAuthRanges(VisitorType visitorType, Long docNumber, Long plotId) {
         VisitorEntity visitor = visitorRepository.findByDocNumber(docNumber);
 
@@ -250,12 +258,17 @@ public class AuthRangeService implements IAuthRangeService {
 
         List<AuthRangeEntity> authRangeEntities = authRangeRepository.findByAuthId(auths);
 
-        List<AuthRangeDTO> dtos = authRangeEntities.stream().map(object -> modelMapper.map(object, AuthRangeDTO.class))
+        return authRangeEntities.stream().map(object -> modelMapper.map(object, AuthRangeDTO.class))
                 .collect(Collectors.toList());
 
-        return dtos;
     }
-
+    /**
+     * Marks an existing authorization range as inactive based on the provided ID.
+     * @param id  the unique identifier of the authorization range to be deleted.
+     * @return an {@link AuthRangeDTO} containing the updated
+     * authorization range data with the active status set to false.
+     * @throws RuntimeException if the specified authorization range ID is not found.
+     */
     public AuthRangeDTO deleteAuthRange(Long id) {
         AuthRangeEntity authRangeEntity = authRangeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("AuthRange id not found"));
@@ -264,11 +277,15 @@ public class AuthRangeService implements IAuthRangeService {
         authRangeEntity.setLastUpdatedDate(LocalDateTime.now());
         authRangeRepository.save(authRangeEntity);
 
-        AuthRangeDTO dto = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
-
-        return dto;
+        return modelMapper.map(authRangeEntity, AuthRangeDTO.class);
     }
-
+    /**
+     * Updates an existing authorization range.
+     * @param authId  the unique identifier.
+     * @param request  containing the new values for range.
+     * @return an {@link AuthRangeDTO}  updated  range data.
+     * @throws RuntimeException if not found.
+     */
     public AuthRangeDTO updateAuthRange(Long authId, AuthRangeRequestDTO request) {
         AuthRangeEntity authRangeEntity = authRangeRepository.findById(authId)
                 .orElseThrow(() -> new RuntimeException("AuthRange id not found"));
@@ -283,9 +300,8 @@ public class AuthRangeService implements IAuthRangeService {
 
         authRangeRepository.save(authRangeEntity);
 
-        AuthRangeDTO dto = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
+        return modelMapper.map(authRangeEntity, AuthRangeDTO.class);
 
-        return dto;
     }
 
 }

@@ -8,6 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
+/**
+ * DTO for filters.
+ */
 @Data
 public class AccessesFilter {
     /**

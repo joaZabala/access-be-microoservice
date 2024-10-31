@@ -16,9 +16,11 @@ import java.util.List;
 public interface IAccessesService {
 
     /**
-     * Retrieves all access records.
-     * @return A list of {@link AccessDTO} representing
-     * all access records.
+     * Retrieves access records with optional filtering and pagination.
+     * @param filter the filtering criteria for access records.
+     * @param page   the page number for pagination.
+     * @param size   the number of records per page.
+     * @return a paginated response containing a list of {@link AccessDTO}.
      */
     PaginatedResponse<AccessDTO> getAllAccess(AccessesFilter filter, int page, int size);
 

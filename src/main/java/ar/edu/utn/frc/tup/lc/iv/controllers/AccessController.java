@@ -51,9 +51,9 @@ public class AccessController {
     }
 
     /**
-     * Retrieves all access records, optionally filtered by criteria specified in the filter object.
-     *
-     * @param filter    The filtering criteria for retrieving access records (optional).
+     * Retrieves all access records, optionally filtered
+     * by criteria specified in the filter object.
+     * @param filter    The filtering criteria
      * @param page      The page number for pagination (default is 0).
      * @param size      The number of records per page (default is 10).
      * @return A list of {@link AccessDTO} containing access records.

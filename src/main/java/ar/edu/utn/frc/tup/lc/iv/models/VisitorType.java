@@ -20,7 +20,12 @@ public enum VisitorType {
     COHABITANT,
     /** enum for emergency. */
     EMERGENCY;
-
+    /**
+     * Checks if the specified visitor
+     * type is part of the enum.
+     * @param type the {@link VisitorType} to check.
+     * @return true if the visitor type is found; false otherwise.
+     */
     public static boolean contains(VisitorType type) {
         for (VisitorType visitorType : values()) {
             if (visitorType == type) {

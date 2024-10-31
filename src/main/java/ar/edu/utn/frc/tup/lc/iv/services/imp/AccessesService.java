@@ -8,6 +8,7 @@ import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AccessesRepository;
+import ar.edu.utn.frc.tup.lc.iv.repositories.specification.accesses.AccessSpecification;
 import ar.edu.utn.frc.tup.lc.iv.services.IAccessesService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -55,23 +57,14 @@ public class AccessesService implements IAccessesService {
         LocalDateTime fromDateTime = filter.getFromDate() != null
                 ? filter.getFromDate().atStartOfDay()
                 : null;
-        if (fromDateTime != null) {
-            System.out.println("From DateTime: " + fromDateTime);
-        } else {
-            System.out.println("From DateTime is null");
-        }
+
         LocalDateTime toDateTime = filter.getToDate() != null
                 ? filter.getToDate().atTime(LocalTime.MAX)
                 : null;
 
-        Page<AccessEntity> accesses = accessesRepository.findAccesses(filter.getTextFilter(),
-                        filter.getVisitorType(),
-                        fromDateTime,
-                        toDateTime,
-                        filter.getActionType(),
-                        filter.getDocumentType(),
-                        filter.getExternalId(),
-                        pageable);
+        Specification<AccessEntity> spec = AccessSpecification.withFilters(filter, fromDateTime, toDateTime);
+
+        Page<AccessEntity> accesses = accessesRepository.findAll(spec, pageable);
 
         PaginatedResponse<AccessDTO> response = new PaginatedResponse<>();
         response.setItems(accesses.stream()
@@ -151,13 +144,20 @@ public class AccessesService implements IAccessesService {
         accessDTO.setDocNumber(savedAccess.getAuth().getVisitor().getDocNumber());
         return accessDTO;
     }
-
+    /**
+     * Checks if an action can be performed for a vehicle.
+     * @param carPlate the vehicle's plate number.
+     * @param action   the action to check.
+     * @return true if the action can be performed; false otherwise.
+     */
     @Override
     public Boolean canDoAction(String carPlate, ActionTypes action) {
         AccessEntity acc = accessesRepository.findByVehicleReg(carPlate).stream()
                 .max(Comparator.comparing(AccessEntity::getActionDate))
                 .orElse(null);
-        if (acc == null) {return true;}
+        if (acc == null) {
+            return true;
+        }
         return !acc.getAction().equals(action);
     }
 

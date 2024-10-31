@@ -40,9 +40,8 @@ public class AuthRangeController {
     public List<AuthRangeDTO> getAuthRanges(@RequestParam(required = true) VisitorType visitorType,
                                             @RequestParam(required = true) Long docNumber,
                                             @RequestParam(required = true) Long plotId) {
-        List<AuthRangeDTO> dtos = authRangeService.getAuthRanges(visitorType, docNumber, plotId);
+        return  authRangeService.getAuthRanges(visitorType, docNumber, plotId);
 
-        return dtos;
     }
 
     /**

@@ -1,7 +1,9 @@
 package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
@@ -60,7 +62,7 @@ public class VisitorService implements IVisitorService {
      */
 
     @Override
-    public PaginatedResponse<VisitorDTO> getAllVisitors(int page, int size, String filter , boolean active) {
+    public PaginatedResponse<VisitorDTO> getAllVisitors(int page, int size, String filter, boolean active) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("lastName").and(Sort.by("name")));
 
         Page<VisitorEntity> visitorPage;
@@ -69,9 +71,9 @@ public class VisitorService implements IVisitorService {
             visitorPage = visitorRepository.findByFilter(filter, pageable);
         } else {
             // Si no hay filtro, obtener todos los visitantes activos
-            if (!active){
+            if (!active) {
                 visitorPage = visitorRepository.findAllByActive(false, pageable);
-            }else {
+            } else {
                 visitorPage = visitorRepository.findAllByActive(true, pageable);
             }
 
