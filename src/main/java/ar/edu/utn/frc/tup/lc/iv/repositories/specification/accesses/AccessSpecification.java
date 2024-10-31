@@ -27,11 +27,9 @@ public class AccessSpecification {
 
     return (root, query, criteriaBuilder) -> {
         List<Predicate> predicates = new ArrayList<>();
-
+        String visitorTable = "visitor";
+        String authTable = "auth";
         if (filter.getTextFilter() != null) {
-            String visitorTable = "visitor";
-            String authTable = "auth";
-
             String filterPattern = "%" + filter.getTextFilter().toLowerCase(Locale.ROOT) + "%";
             predicates.add(criteriaBuilder.or(
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("vehicleReg")), filterPattern),
@@ -46,7 +44,7 @@ public class AccessSpecification {
         }
 
         if (filter.getVisitorType() != null) {
-            predicates.add(criteriaBuilder.equal(root.join("auth").get("visitorType"), filter.getVisitorType()));
+            predicates.add(criteriaBuilder.equal(root.join(authTable).get("visitorType"), filter.getVisitorType()));
         }
 
         if (fromDate != null) {
@@ -62,12 +60,12 @@ public class AccessSpecification {
         }
 
         if (filter.getDocumentType() != null) {
-            predicates.add(criteriaBuilder.equal(root.join("auth").join("visitor").get("documentType"),
+            predicates.add(criteriaBuilder.equal(root.join(authTable).join(visitorTable).get("documentType"),
                     filter.getDocumentType()));
         }
 
         if (filter.getExternalId() != null) {
-            predicates.add(criteriaBuilder.equal(root.join("auth").get("externalID"), filter.getExternalId()));
+            predicates.add(criteriaBuilder.equal(root.join(authTable).get("externalID"), filter.getExternalId()));
         }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
