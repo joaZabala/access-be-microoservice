@@ -1,5 +1,7 @@
 package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
@@ -9,9 +11,14 @@ import ar.edu.utn.frc.tup.lc.iv.repositories.AccessesRepository;
 import ar.edu.utn.frc.tup.lc.iv.services.IAccessesService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,10 +50,35 @@ public class AccessesService implements IAccessesService {
      * @return List of AccessDTO representing access records.
      */
     @Override
-    public List<AccessDTO> getAllAccess() {
-        return accessesRepository.findAll().stream()
+    public PaginatedResponse<AccessDTO> getAllAccess(AccessesFilter filter, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("actionDate"));
+        LocalDateTime fromDateTime = filter.getFromDate() != null
+                ? filter.getFromDate().atStartOfDay()
+                : null;
+        if (fromDateTime != null) {
+            System.out.println("From DateTime: " + fromDateTime);
+        } else {
+            System.out.println("From DateTime is null");
+        }
+        LocalDateTime toDateTime = filter.getToDate() != null
+                ? filter.getToDate().atTime(LocalTime.MAX)
+                : null;
+
+        Page<AccessEntity> accesses = accessesRepository.findAccesses(filter.getTextFilter(),
+                        filter.getVisitorType(),
+                        fromDateTime,
+                        toDateTime,
+                        filter.getActionType(),
+                        filter.getDocumentType(),
+                        filter.getExternalId(),
+                        pageable);
+
+        PaginatedResponse<AccessDTO> response = new PaginatedResponse<>();
+        response.setItems(accesses.stream()
                 .map(this::mapToAccessDTO).sorted(Comparator.comparing(AccessDTO::getActionDate).reversed())
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
+        response.setTotalElements(accesses.getTotalElements());
+        return response;
     }
 
     /**

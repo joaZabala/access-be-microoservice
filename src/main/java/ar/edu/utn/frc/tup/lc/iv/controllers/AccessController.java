@@ -1,11 +1,13 @@
 package ar.edu.utn.frc.tup.lc.iv.controllers;
 
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
-import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.services.IAccessesService;
 import ar.edu.utn.frc.tup.lc.iv.services.imp.AuthService;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,23 +51,19 @@ public class AccessController {
     }
 
     /**
-     * Retrieves all access records, optionally filtered by
-     * visitor type and external ID.
-     * @param visitorType Type of the visitor (optional).
-     * @param externalID  External identifier (optional).
-     * @return List of AccessDTOs.
+     * Retrieves all access records, optionally filtered by criteria specified in the filter object.
+     *
+     * @param filter    The filtering criteria for retrieving access records (optional).
+     * @param page      The page number for pagination (default is 0).
+     * @param size      The number of records per page (default is 10).
+     * @return A list of {@link AccessDTO} containing access records.
      */
     @GetMapping
-    public List<AccessDTO> getAllAccess(@RequestParam(required = false) VisitorType visitorType,
-            @RequestParam(required = false) Long externalID) {
+    public PaginatedResponse<AccessDTO> getAllAccess(@Valid AccessesFilter filter,
+                                                     @RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "10") int size) {
 
-        if (visitorType != null) {
-            if (externalID != null) {
-                return accessesService.getAllAccessByTypeAndExternalID(visitorType, externalID);
-            }
-            return accessesService.getAllAccessByType(visitorType);
-        }
-        return accessesService.getAllAccess();
+        return accessesService.getAllAccess(filter, page, size);
     }
 
     /**

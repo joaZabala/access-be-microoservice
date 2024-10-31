@@ -59,7 +59,6 @@ public class AuthController {
 
     /**
      * Authorize visitor with authorized ranges.
-     * 
      * @param visitorAuthRequest request.
      * @param userId             request.
      * @return authorization created.

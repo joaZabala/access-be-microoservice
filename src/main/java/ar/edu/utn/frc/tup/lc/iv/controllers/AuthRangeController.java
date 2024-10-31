@@ -37,7 +37,9 @@ public class AuthRangeController {
      * @return the created authorized range.
      */
     @GetMapping
-    public List<AuthRangeDTO> getAuthRanges(@RequestParam(required = true) VisitorType visitorType, @RequestParam(required = true) Long docNumber, @RequestParam(required = true) Long plotId) {
+    public List<AuthRangeDTO> getAuthRanges(@RequestParam(required = true) VisitorType visitorType,
+                                            @RequestParam(required = true) Long docNumber,
+                                            @RequestParam(required = true) Long plotId) {
         List<AuthRangeDTO> dtos = authRangeService.getAuthRanges(visitorType, docNumber, plotId);
 
         return dtos;
@@ -50,7 +52,8 @@ public class AuthRangeController {
      * @return the deleted authorized range.
      */
     @DeleteMapping
-    public ResponseEntity<AuthRangeDTO> deleteAuthRange(@RequestParam(required = true) Long id , @RequestHeader("x-user-id") Long userId) {
+    public ResponseEntity<AuthRangeDTO> deleteAuthRange(@RequestParam(required = true) Long id,
+                                                        @RequestHeader("x-user-id") Long userId) {
         return ResponseEntity.ok(authRangeService.deleteAuthRange(id));
     }
 
@@ -62,10 +65,9 @@ public class AuthRangeController {
      * @return the updated authorized range.
      */
     @PutMapping
-    public ResponseEntity<AuthRangeDTO> updateAuthRange(@RequestParam(required = true) Long authRangeId, @RequestBody AuthRangeRequestDTO request, @RequestHeader("x-user-id") Long id) {
+    public ResponseEntity<AuthRangeDTO> updateAuthRange(@RequestParam(required = true) Long authRangeId,
+                                                        @RequestBody AuthRangeRequestDTO request,
+                                                        @RequestHeader("x-user-id") Long id) {
         return ResponseEntity.ok(authRangeService.updateAuthRange(authRangeId, request));
     }
-    
-
-
 }

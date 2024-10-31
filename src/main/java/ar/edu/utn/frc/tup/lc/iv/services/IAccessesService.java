@@ -1,5 +1,7 @@
 package ar.edu.utn.frc.tup.lc.iv.services;
 
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
@@ -18,7 +20,7 @@ public interface IAccessesService {
      * @return A list of {@link AccessDTO} representing
      * all access records.
      */
-    List<AccessDTO> getAllAccess();
+    PaginatedResponse<AccessDTO> getAllAccess(AccessesFilter filter, int page, int size);
 
     /**
      * Retrieves all entries (access actions of type ENTRY).
