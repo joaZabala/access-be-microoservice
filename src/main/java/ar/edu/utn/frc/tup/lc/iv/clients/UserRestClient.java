@@ -12,8 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -100,16 +102,26 @@ public class UserRestClient {
 
         HttpEntity<List<Long>> requestEntity = new HttpEntity<>(ids, headers);
 
-        ResponseEntity<UserDetailDto[]> response = restTemplate.postForEntity(
-                userServiceUrl + "/byIds",
-                requestEntity,
-                UserDetailDto[].class
-        );
+        try {
+            ResponseEntity<UserDetailDto[]> response = restTemplate.postForEntity(
+                    userServiceUrl + "/byIds",
+                    requestEntity,
+                    UserDetailDto[].class
+            );
 
-        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-            return List.of(response.getBody());
-        } else {
-            throw new EntityNotFoundException("No existen usuarios");
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                return List.of(response.getBody());
+            } else {
+                return new ArrayList<>();
+            }
+        } catch (RestClientException e) {
+            System.err.println("Error al realizar la solicitud: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        } catch (Exception e) {
+            System.err.println("Error inesperado: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 }
