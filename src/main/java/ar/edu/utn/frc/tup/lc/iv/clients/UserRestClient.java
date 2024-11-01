@@ -92,7 +92,7 @@ public class UserRestClient {
     }
     /**
      * fetches users by ids.
-     *
+     * @param ids all ids for filter
      * @return list of users.
      */
     @CircuitBreaker(name = INSTANCE_NAME, fallbackMethod = FALLBACK_METHOD)

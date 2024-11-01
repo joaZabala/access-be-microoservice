@@ -4,6 +4,7 @@ import java.util.List;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
@@ -16,11 +17,11 @@ public interface IAuthService {
 
     /**
      * Retrieves a list of all authorized persons.
-     *
+     * @param filter object with fitlers
      * @return A list of {@link AuthDTO} representing
      * all authorized persons.
      */
-    List<AuthDTO> getAllAuths();
+    List<AuthDTO> getAllAuths(AuthFilter filter);
 
     /**
      * Retrieves a list of individual authorizations
@@ -97,4 +98,16 @@ public interface IAuthService {
      * valid invitation exists, {@code false} otherwise.
      */
     Boolean isAuthorized(Long documentNumber);
+    /**
+     * Deletes the authorization by ID.
+     * @param authId    the ID of the authorization to delete
+     * @return the deleted {@link AuthDTO}
+     */
+    AuthDTO deleteAuthorization(Long authId);
+    /**
+     * Activates the authorization by ID.
+     * @param authId    the ID of the authorization to activate
+     * @return the activated {@link AuthDTO}
+     */
+    AuthDTO activateAuthorization(Long authId);
 }

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeRequestDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
@@ -91,7 +92,7 @@ public class AuthService implements IAuthService {
      * @return List<AuthDTO>
      */
     @Override
-    public List<AuthDTO> getAllAuths() {
+    public List<AuthDTO> getAllAuths(AuthFilter filter) {
 
         List<AuthEntity> authEntities = authRepository.findAll()
                 .stream().filter(AuthEntity::isActive).toList();
@@ -389,6 +390,37 @@ public class AuthService implements IAuthService {
                         && Objects.equals(auth.getPlotId(), visitorAuthRequest.getPlotId()))
                 .findFirst();
     }
-
+    /**
+     * Deletes the authorization.
+     *
+     * @param authId the ID of the authorization to delete
+     * @return ResponseEntity containing the deleted {@link AuthDTO}
+     */
+    @Override
+    @Transactional
+    public AuthDTO deleteAuthorization(Long authId) {
+        AuthEntity authEntity = authRepository.findByAuthId(authId).get(0);
+        authEntity.setActive(false);
+        Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
+        authEntity.setLastUpdatedUser(writerUserId);
+        authEntity.setLastUpdatedDate(LocalDateTime.now());
+        return null;
+    }
+    /**
+     * Activates the authorization.
+     *
+     * @param authId the ID of the authorization to activate
+     * @return ResponseEntity containing the activated {@link AuthDTO}
+     */
+    @Override
+    @Transactional
+    public AuthDTO  activateAuthorization(Long authId) {
+        AuthEntity authEntity = authRepository.findByAuthId(authId).get(0);
+        authEntity.setActive(true);
+        Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
+        authEntity.setLastUpdatedUser(writerUserId);
+        authEntity.setLastUpdatedDate(LocalDateTime.now());
+        return null;
+    }
 
 }

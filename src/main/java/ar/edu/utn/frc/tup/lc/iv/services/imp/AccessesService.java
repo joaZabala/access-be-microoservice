@@ -50,7 +50,7 @@ public class AccessesService implements IAccessesService {
     @Autowired
     private ModelMapper modelMapper;
     /**
-        userRestclient
+        userRestclient.
      */
     @Autowired
     private UserRestClient userRestClient;

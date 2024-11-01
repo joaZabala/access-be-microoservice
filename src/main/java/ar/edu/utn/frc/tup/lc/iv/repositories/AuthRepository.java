@@ -50,4 +50,11 @@ public interface AuthRepository extends JpaRepository<AuthEntity, Long> {
      * @return the matching {@link AuthEntity}, or null if not found.
      */
     AuthEntity findByVisitorAndVisitorTypeAndPlotId(VisitorEntity visitor, VisitorType visitorType, Long plotId);
+    /**
+     * Finds an {@link AuthEntity}.
+     * @param id     unique identifier.
+     * @return the matching {@link AuthEntity}, or null if not found.
+     */
+    List<AuthEntity> findByAuthId(Long id);
+
 }
