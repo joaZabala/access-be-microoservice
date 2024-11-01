@@ -6,6 +6,9 @@ import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import java.util.List;
 
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -56,5 +59,13 @@ public interface AuthRepository extends JpaRepository<AuthEntity, Long> {
      * @return the matching {@link AuthEntity}, or null if not found.
      */
     List<AuthEntity> findByAuthId(Long id);
+    /**
+     * Retrieves a paginated list of AuthEntity
+     * based on specified filters.
+     * @param spec     Specification defining the filters .
+     * @param pageable Pagination information.
+     * @return records that match the given specification and pagination.
+     */
+    Page<AuthEntity> findAll(Specification<AuthEntity> spec, Pageable pageable);
 
 }

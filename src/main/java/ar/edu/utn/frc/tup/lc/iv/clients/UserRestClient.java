@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -114,14 +113,8 @@ public class UserRestClient {
             } else {
                 return new ArrayList<>();
             }
-        } catch (RestClientException e) {
-            System.err.println("Error al realizar la solicitud: " + e.getMessage());
-            e.printStackTrace();
-            return new ArrayList<>();
         } catch (Exception e) {
-            System.err.println("Error inesperado: " + e.getMessage());
-            e.printStackTrace();
             return new ArrayList<>();
-        }
+        } //ver qeu hacer, si esto devuelve null, mostarlo en el front o no?
     }
 }

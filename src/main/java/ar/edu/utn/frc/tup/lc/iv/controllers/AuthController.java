@@ -38,11 +38,15 @@ public class AuthController {
      * Retrieve authorizations for authorized persons by document number.
      *
      * @param filter object with filters.
+     * @param page      The page number for pagination (default is 0).
+     * @param size      The number of records per page (default is 10).
      * @return list of authorizations.
      */
     @GetMapping
-    public List<AuthDTO> getAuth(@Valid AuthFilter filter) {
-        return authService.getAllAuths(filter);
+    public List<AuthDTO> getAuth(@Valid AuthFilter filter,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "10") int size) {
+        return authService.getAllAuths(filter, page, size);
     }
 
     /**

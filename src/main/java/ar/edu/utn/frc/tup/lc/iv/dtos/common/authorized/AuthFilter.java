@@ -12,6 +12,10 @@ import java.time.LocalDate;
 @Data
 public class AuthFilter {
     /**
+     * Filter by identifier.
+     */
+    private Long id;
+    /**
      * Filter text to search
      * text values on table .
      */

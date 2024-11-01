@@ -18,10 +18,12 @@ public interface IAuthService {
     /**
      * Retrieves a list of all authorized persons.
      * @param filter object with fitlers
+     * @param page      The page number for pagination (default is 0).
+     * @param size      The number of records per page (default is 10).
      * @return A list of {@link AuthDTO} representing
      * all authorized persons.
      */
-    List<AuthDTO> getAllAuths(AuthFilter filter);
+    List<AuthDTO> getAllAuths(AuthFilter filter, int page, int size);
 
     /**
      * Retrieves a list of individual authorizations

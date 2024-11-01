@@ -64,4 +64,15 @@ public class AuthDTO {
      */
     @JsonProperty("is_active")
     private boolean isActive;
+    /**
+     * authorizer name.
+     */
+    @JsonProperty("auth_first_name")
+    private String authName;
+
+    /**
+     * The last name of authorizer.
+     */
+    @JsonProperty("auth_last_name")
+    private String authLastName;
 }
