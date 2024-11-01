@@ -1,6 +1,7 @@
 package ar.edu.utn.frc.tup.lc.iv.controllers;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
@@ -65,10 +66,13 @@ class AuthControllerTest {
     @Test
     void getAuth() throws Exception {
 
-        when(authService.getAuthsByDocNumber(123456L)).thenReturn(List.of(authDTO));
+        AuthFilter filter = new AuthFilter();
+        filter.setTextFilter("123456");
+
+        when(authService.getAllAuths(filter, 0, 10)).thenReturn(List.of(authDTO));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/auths")
-                        .param("docNumber", "123456")
+                        .param("textFilter", "123456")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
