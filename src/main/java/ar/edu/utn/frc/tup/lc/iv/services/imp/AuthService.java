@@ -11,7 +11,6 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeRequestDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
-import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthRange;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.specification.auth.AuthSpecification;
@@ -312,15 +311,13 @@ public class AuthService implements IAuthService {
      * @return new authorization
      */
     protected AuthDTO createNewAuthorization(VisitorDTO visitorDTO, VisitorAuthRequest visitorAuthRequest) {
-        Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
 
-        AuthEntity authEntity = new AuthEntity(writerUserId, writerUserId);
+        AuthEntity authEntity = new AuthEntity();
         authEntity.setVisitor(modelMapper.map(visitorDTO, VisitorEntity.class));
         authEntity.setVisitorType(visitorAuthRequest.getVisitorType());
         authEntity.setActive(true);
         authEntity.setPlotId(visitorAuthRequest.getPlotId());
         authEntity.setExternalID(visitorAuthRequest.getExternalID());
-        authEntity.setCreatedUser(writerUserId);
         authEntity.setCreatedDate(LocalDateTime.now());
         authEntity = authRepository.save(authEntity);
 
@@ -429,11 +426,11 @@ public class AuthService implements IAuthService {
      */
     @Override
     public AuthDTO deleteAuthorization(Long authId) {
-        AuthEntity authEntity = authRepository.findByAuthId(authId).get(0);
-        authEntity.setActive(false);
-        Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
-        authEntity.setLastUpdatedUser(writerUserId);
-        authEntity.setLastUpdatedDate(LocalDateTime.now());
+        AuthEntity authEntity = authRepository.findByAuthId(authId);
+        if (authEntity != null) {
+            authEntity.setActive(false);
+            authRepository.save(authEntity);
+        }
         return null;
     }
     /**
@@ -444,11 +441,11 @@ public class AuthService implements IAuthService {
      */
     @Override
     public AuthDTO  activateAuthorization(Long authId) {
-        AuthEntity authEntity = authRepository.findByAuthId(authId).get(0);
-        authEntity.setActive(true);
-        Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
-        authEntity.setLastUpdatedUser(writerUserId);
-        authEntity.setLastUpdatedDate(LocalDateTime.now());
+        AuthEntity authEntity = authRepository.findByAuthId(authId);
+        if (authEntity != null) {
+            authEntity.setActive(true);
+            authRepository.save(authEntity);
+        }
         return null;
     }
 

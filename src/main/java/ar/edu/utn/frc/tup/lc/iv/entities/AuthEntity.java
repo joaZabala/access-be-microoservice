@@ -72,14 +72,4 @@ public class AuthEntity extends AuditBaseEntity {
      */
     @Column(name = "plot_id")
     private Long plotId;
-
-    /**
-     * Constructor.
-     * @param createdUser id of the user who created the record.
-     * @param lastUpdatedUser id of the user who last updated
-     *                        the record.
-     */
-    public AuthEntity(Long createdUser, Long lastUpdatedUser) {
-        super(createdUser, lastUpdatedUser);
-    }
 }

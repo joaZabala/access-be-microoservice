@@ -58,7 +58,7 @@ public interface AuthRepository extends JpaRepository<AuthEntity, Long> {
      * @param id     unique identifier.
      * @return the matching {@link AuthEntity}, or null if not found.
      */
-    List<AuthEntity> findByAuthId(Long id);
+    AuthEntity findByAuthId(Long id);
     /**
      * Retrieves a paginated list of AuthEntity
      * based on specified filters.

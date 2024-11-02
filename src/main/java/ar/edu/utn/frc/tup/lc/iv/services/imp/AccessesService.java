@@ -6,7 +6,6 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
-import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AccessesRepository;
@@ -165,10 +164,6 @@ public class AccessesService implements IAccessesService {
      */
     @Override
     public AccessDTO registerAccess(AccessEntity accessEntity) {
-        Long userId = UserHeaderInterceptor.getCurrentUserId();
-        accessEntity.setCreatedUser(userId);
-        accessEntity.setCreatedDate(LocalDateTime.now());
-
         AccessEntity savedAccess = accessesRepository.save(accessEntity);
         AccessDTO accessDTO = modelMapper.map(savedAccess, AccessDTO.class);
         accessDTO.setName(savedAccess.getAuth().getVisitor().getName());
