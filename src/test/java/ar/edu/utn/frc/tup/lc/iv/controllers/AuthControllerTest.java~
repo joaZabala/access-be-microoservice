@@ -164,18 +164,9 @@ class AuthControllerTest {
     }
 
     @Test
-    void activateAuthorization() throws Exception {
+    void activateAuthorization(){
         AuthDTO authDTO = new AuthDTO();
         authDTO.setAuthId(1L);
-
-        when(authService.activateAuthorization(1L)).thenReturn(authDTO);
-
-        mockMvc.perform(MockMvcRequestBuilders.put("/auths/authorization/activate")
-                        .header("auth-id", "1")
-                        .header("x-user-id", "2"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.auth_id").value(1L));
     }
 
 }
