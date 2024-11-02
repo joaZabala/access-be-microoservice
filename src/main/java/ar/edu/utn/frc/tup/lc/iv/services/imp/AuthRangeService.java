@@ -6,8 +6,12 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
 import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
+import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthRange;
+import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
+import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,9 +53,15 @@ public class AuthRangeService implements IAuthRangeService {
      */
     @Autowired
     private ModelMapper modelMapper;
+    /**
+     * Repository for Visitor.
+     */
+    @Autowired
+    private VisitorRepository visitorRepository;
 
     /**
      * Retrieves all authorized ranges.
+     *
      * @return list of authorized ranges
      */
     @Override
@@ -72,13 +82,16 @@ public class AuthRangeService implements IAuthRangeService {
         return authRangeRepository.findByAuthId(auth).stream()
                 .map(authRangeEntity -> {
                     AuthRangeDTO authRangeDTO = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
-                    authRangeDTO.setDaysOfWeek(convertDaysOfWeek(authRangeEntity.getDaysOfWeek()));
+                    if (authRangeEntity.getDaysOfWeek() != null) {
+                        authRangeDTO.setDaysOfWeek(convertDaysOfWeek(authRangeEntity.getDaysOfWeek()));
+                    }
                     return authRangeDTO;
                 }).collect(Collectors.toList());
     }
 
     /**
      * get auth ranges by auth external id and plot.
+     *
      * @param authID id of auth
      * @return list of auth ranges.
      */
@@ -88,13 +101,16 @@ public class AuthRangeService implements IAuthRangeService {
                 .stream()
                 .map(authRangeEntity -> {
                     AuthRangeDTO authRangeDTO = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
-                    authRangeDTO.setDaysOfWeek(convertDaysOfWeek(authRangeEntity.getDaysOfWeek()));
+                    if (authRangeEntity.getDaysOfWeek() != null) {
+                        authRangeDTO.setDaysOfWeek(convertDaysOfWeek(authRangeEntity.getDaysOfWeek()));
+                    }
                     return authRangeDTO;
                 }).collect(Collectors.toList());
     }
 
     /**
      * Get auth ranges by auth external id.
+     *
      * @param externalID id another microservice
      * @return list of auth ranges.
      */
@@ -103,13 +119,16 @@ public class AuthRangeService implements IAuthRangeService {
         return authRangeRepository.findByAuthIdExternalID(externalID).stream()
                 .map(authRangeEntity -> {
                     AuthRangeDTO authRangeDTO = modelMapper.map(authRangeEntity, AuthRangeDTO.class);
-                    authRangeDTO.setDaysOfWeek(convertDaysOfWeek(authRangeEntity.getDaysOfWeek()));
+                    if (authRangeEntity.getDaysOfWeek() != null) {
+                        authRangeDTO.setDaysOfWeek(convertDaysOfWeek(authRangeEntity.getDaysOfWeek()));
+                    }
                     return authRangeDTO;
                 }).collect(Collectors.toList());
     }
 
     /**
      * Register authorization ranges.
+     *
      * @param authRangeRequests details of the authorized range.
      * @param authEntity        the authorized entity.
      * @param visitorDTO        the visitor.
@@ -152,16 +171,16 @@ public class AuthRangeService implements IAuthRangeService {
                 && (authRangeDTO.getDateTo() == null || !currentDate.isAfter(authRangeDTO.getDateTo()))
                 && (authRangeDTO.getHourFrom() == null || !currentTime.isBefore(authRangeDTO.getHourFrom()))
                 && (authRangeDTO.getHourTo() == null || !currentTime.isAfter(authRangeDTO.getHourTo()))
-                && authRangeDTO.getDaysOfWeek().contains(currentDate.getDayOfWeek());
+                && authRangeDTO.getDaysOfWeek() == null || authRangeDTO.getDaysOfWeek().contains(currentDate.getDayOfWeek())
+                || authRangeDTO.getDaysOfWeek().isEmpty();
     }
 
     /**
      * Get valid authorization ranges.
-     *
      * @param authRanges  list of authorization ranges.
      * @param currentDate current date.
      * @param currentTime current time.
-     * @return
+     * @return list of valid authorization ranges.
      */
     @Override
     public List<AuthRangeDTO> getValidAuthRanges(List<AuthRangeDTO> authRanges, LocalDate currentDate,
@@ -179,6 +198,7 @@ public class AuthRangeService implements IAuthRangeService {
 
     /**
      * register authorized range.
+     *
      * @param authorizedRangeDTO the authorized range to register.
      * @return the authorized range.
      */
@@ -199,13 +219,13 @@ public class AuthRangeService implements IAuthRangeService {
             authRangeEntity.setAuthId(null);
         }
 
-        if (authorizedRangeDTO.getDaysOfWeek() != null && !authorizedRangeDTO.getDaysOfWeek().isEmpty()) {
 
+        if (authorizedRangeDTO.getDaysOfWeek() != null && !authorizedRangeDTO.getDaysOfWeek().isEmpty()) {
             authRangeEntity.setDaysOfWeek(authorizedRangeDTO.getDaysOfWeek().stream()
                     .map(DayOfWeek::name)
                     .collect(Collectors.joining(",")));
-
         } else {
+
             authRangeEntity.setDaysOfWeek(null);
         }
         authRangeEntity.setCreatedUser(writerUserId);
@@ -228,6 +248,71 @@ public class AuthRangeService implements IAuthRangeService {
         return Arrays.stream(daysOfWeek.split(","))
                 .map(DayOfWeek::valueOf)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Retrieves authorization ranges for a visitor.
+     * @param visitorType the type of visitor.
+     * @param docNumber   the document number of the visitor.
+     * @param plotId      the ID of the plot.
+     * @return a list of {@link AuthRangeDTO} with the authorization ranges.
+     * @throws RuntimeException if entity is not found.
+     */
+    public List<AuthRangeDTO> getAuthRanges(VisitorType visitorType, Long docNumber, Long plotId) {
+        VisitorEntity visitor = visitorRepository.findByDocNumber(docNumber);
+
+        AuthEntity auths = authRepository.findByVisitorAndVisitorTypeAndPlotId(visitor, visitorType, plotId);
+
+        List<AuthRangeEntity> authRangeEntities = authRangeRepository.findByAuthId(auths);
+
+        return authRangeEntities.stream().map(object -> modelMapper.map(object, AuthRangeDTO.class))
+                .collect(Collectors.toList());
+
+    }
+
+    /**
+     * Marks an existing authorization range as inactive based on the provided ID.
+     *
+     * @param id the unique identifier of the authorization range to be deleted.
+     * @return an {@link AuthRangeDTO} containing the updated
+     * authorization range data with the active status set to false.
+     * @throws RuntimeException if the specified authorization range ID is not found.
+     */
+    public AuthRangeDTO deleteAuthRange(Long id) {
+        AuthRangeEntity authRangeEntity = authRangeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("AuthRange id not found"));
+        authRangeEntity.setActive(false);
+        authRangeEntity.setLastUpdatedUser(UserHeaderInterceptor.getCurrentUserId());
+        authRangeEntity.setLastUpdatedDate(LocalDateTime.now());
+        authRangeRepository.save(authRangeEntity);
+
+        return modelMapper.map(authRangeEntity, AuthRangeDTO.class);
+    }
+
+    /**
+     * Updates an existing authorization range.
+     *
+     * @param authId  the unique identifier.
+     * @param request containing the new values for range.
+     * @return an {@link AuthRangeDTO}  updated  range data.
+     * @throws RuntimeException if not found.
+     */
+    public AuthRangeDTO updateAuthRange(Long authId, AuthRangeRequestDTO request) {
+        AuthRangeEntity authRangeEntity = authRangeRepository.findById(authId)
+                .orElseThrow(() -> new RuntimeException("AuthRange id not found"));
+
+        authRangeEntity.setDateFrom(request.getDateFrom());
+        authRangeEntity.setDateTo(request.getDateTo());
+        authRangeEntity.setHourFrom(request.getHourFrom());
+        authRangeEntity.setHourTo(request.getHourTo());
+        authRangeEntity.setLastUpdatedUser(UserHeaderInterceptor.getCurrentUserId());
+        authRangeEntity.setLastUpdatedDate(LocalDateTime.now());
+        authRangeEntity.setDaysOfWeek(request.getDaysOfWeek().stream().map(DayOfWeek::name).collect(Collectors.joining(",")));
+
+        authRangeRepository.save(authRangeEntity);
+
+        return modelMapper.map(authRangeEntity, AuthRangeDTO.class);
+
     }
 
 }

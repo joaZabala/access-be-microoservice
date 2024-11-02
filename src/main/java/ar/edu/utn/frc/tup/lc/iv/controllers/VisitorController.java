@@ -2,8 +2,10 @@ package ar.edu.utn.frc.tup.lc.iv.controllers;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.services.IVisitorService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,16 +35,15 @@ public class VisitorController {
 
     /**
      * Retrieves a list of all visitors.
-     *
      * @param page   the page number for pagination
      * @param size   the size of the page
-     * @param filter filter
+     * @param filter dto with filters
      * @return a list of VisitorDTO objects
      */
     @GetMapping()
     public PaginatedResponse<VisitorDTO> getAllVisitors(@RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue = "10") int size,
-                                                        @RequestParam(required = false) String filter) {
+                                                        @Valid VisitorFilter filter) {
         return visitorService.getAllVisitors(page, size, filter);
     }
 

@@ -3,7 +3,10 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import ar.edu.utn.frc.tup.lc.iv.clients.UserDetailDto;
+import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeRequestDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
@@ -11,9 +14,15 @@ import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthRange;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
+import ar.edu.utn.frc.tup.lc.iv.repositories.specification.auth.AuthSpecification;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthDTO;
@@ -30,6 +39,7 @@ import java.time.LocalTime;
 
 import java.util.ArrayList;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -83,19 +93,37 @@ public class AuthService implements IAuthService {
      */
     @Autowired
     private AccessesService accessesService;
-
+    /**
+     userRestclient.
+     */
+    @Autowired
+    private UserRestClient userRestClient;
     /**
      * Get all authorizations.
-     *
+     * @param filter object with fitlers
+     * @param page      The page number for pagination (default is 0).
+     * @param size      The number of records per page (default is 10).
      * @return List<AuthDTO>
      */
     @Override
-    public List<AuthDTO> getAllAuths() {
+    public List<AuthDTO> getAllAuths(AuthFilter filter, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
 
-        List<AuthEntity> authEntities = authRepository.findAll()
-                .stream().filter(AuthEntity::isActive).toList();
+        Specification<AuthEntity> spec = AuthSpecification.withFilters(filter);
+
+        Page<AuthEntity> authEntities = authRepository.findAll(spec, pageable);
 
         List<AuthDTO> authDTOs = new ArrayList<>();
+
+        List<Long> uniqueAuthIds = authEntities.getContent().stream()
+                .map(AuthEntity::getCreatedUser)
+                .distinct()
+                .collect(Collectors.toList());
+
+        List<UserDetailDto> userInfo = userRestClient.getUsersByIds(uniqueAuthIds);
+
+        Map<Long, UserDetailDto> userDetailMap = userInfo.stream()
+                .collect(Collectors.toMap(UserDetailDto::getId, userDetail -> userDetail));
 
         for (AuthEntity authEntity : authEntities) {
             VisitorEntity visitorEntity = authEntity.getVisitor();
@@ -106,7 +134,12 @@ public class AuthService implements IAuthService {
                 VisitorDTO visitorDTO = modelMapper.map(visitorEntity, VisitorDTO.class);
 
                 List<AuthRangeDTO> authRangeDTOs = authRangeService.getAuthRangesByAuth(authEntity);
+                UserDetailDto userDetail = userDetailMap.get(authEntity.getCreatedUser());
 
+                if (userDetail != null) {
+                    authDTO.setAuthName(userDetail.getUserName());
+                    authDTO.setAuthLastName(userDetail.getLastName());
+                }
                 authDTO.setAuthorizerId(authEntity.getCreatedUser());
                 authDTO.setVisitor(visitorDTO);
                 authDTO.setAuthRanges(authRangeDTOs);
@@ -181,7 +214,6 @@ public class AuthService implements IAuthService {
     /**
      * Retrieves a list of valid authorizations
      * by document number.
-     *
      * @param docNumber document number.
      * @return list of valid authorizations.
      */
@@ -269,7 +301,7 @@ public class AuthService implements IAuthService {
             return updateAuthorization(existingAuthOpt.get(), visitorDTO, visitorAuthRequest);
         }
         // Si no existe, crea una nueva autorización
-        return createNewAuthorization(visitorDTO, visitorAuthRequest, creatorID);
+        return createNewAuthorization(visitorDTO, visitorAuthRequest);
     }
 
     /**
@@ -277,13 +309,12 @@ public class AuthService implements IAuthService {
      *
      * @param visitorDTO         visitor.
      * @param visitorAuthRequest request.
-     * @param creatorID          creator.
      * @return new authorization
      */
-    protected AuthDTO createNewAuthorization(VisitorDTO visitorDTO, VisitorAuthRequest visitorAuthRequest, Long creatorID) {
+    protected AuthDTO createNewAuthorization(VisitorDTO visitorDTO, VisitorAuthRequest visitorAuthRequest) {
         Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
 
-        AuthEntity authEntity = new AuthEntity(creatorID, creatorID);
+        AuthEntity authEntity = new AuthEntity(writerUserId, writerUserId);
         authEntity.setVisitor(modelMapper.map(visitorDTO, VisitorEntity.class));
         authEntity.setVisitorType(visitorAuthRequest.getVisitorType());
         authEntity.setActive(true);
@@ -299,6 +330,7 @@ public class AuthService implements IAuthService {
         authDTO.setVisitor(modelMapper.map(authEntity.getVisitor(), VisitorDTO.class));
         authDTO.setActive(authEntity.isActive());
         authDTO.setPlotId(authEntity.getPlotId());
+        authDTO.setAuthorizerId(authEntity.getCreatedUser());
         authDTO.setExternalID(authEntity.getExternalID());
 
 
@@ -340,7 +372,7 @@ public class AuthService implements IAuthService {
         List<AuthDTO> authDTOs = getValidAuthsByDocNumber(accessDTO.getDocNumber());
 
         if (authDTOs.isEmpty()) {
-            return null;
+            throw new EntityNotFoundException("No existen autorizaciones validas para el documento " + accessDTO.getDocNumber());
         }
 
         AuthEntity authEntity = authRepository.findById(authDTOs.get(0).getAuthId()).get();
@@ -381,19 +413,43 @@ public class AuthService implements IAuthService {
      * @return optional authorization
      */
     private Optional<AuthDTO> findExistingAuthorization(VisitorAuthRequest visitorAuthRequest) {
-        // Buscar autorizaciones por documento y filtrar por visitorType y plotId
+        // Busca autorizaciones por documento y filtra por visitorType y plotId
         List<AuthDTO> auths = getAuthsByDocNumber(visitorAuthRequest.getVisitorRequest().getDocNumber());
-
-        //        List<AuthDTO> auths =
-//        getAuthsByTypeAndExternalId(visitorAuthRequest.getVisitorType()
-//        , visitorAuthRequest.getExternalID()
-//                , visitorAuthRequest.getPlotId());
 
         return auths.stream()
                 .filter(auth -> auth.getVisitorType() == visitorAuthRequest.getVisitorType()
                         && Objects.equals(auth.getPlotId(), visitorAuthRequest.getPlotId()))
                 .findFirst();
     }
-
+    /**
+     * Deletes the authorization.
+     *
+     * @param authId the ID of the authorization to delete
+     * @return ResponseEntity containing the deleted {@link AuthDTO}
+     */
+    @Override
+    public AuthDTO deleteAuthorization(Long authId) {
+        AuthEntity authEntity = authRepository.findByAuthId(authId).get(0);
+        authEntity.setActive(false);
+        Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
+        authEntity.setLastUpdatedUser(writerUserId);
+        authEntity.setLastUpdatedDate(LocalDateTime.now());
+        return null;
+    }
+    /**
+     * Activates the authorization.
+     *
+     * @param authId the ID of the authorization to activate
+     * @return ResponseEntity containing the activated {@link AuthDTO}
+     */
+    @Override
+    public AuthDTO  activateAuthorization(Long authId) {
+        AuthEntity authEntity = authRepository.findByAuthId(authId).get(0);
+        authEntity.setActive(true);
+        Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
+        authEntity.setLastUpdatedUser(writerUserId);
+        authEntity.setLastUpdatedDate(LocalDateTime.now());
+        return null;
+    }
 
 }

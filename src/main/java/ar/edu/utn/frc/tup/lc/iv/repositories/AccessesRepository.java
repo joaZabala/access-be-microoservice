@@ -4,6 +4,9 @@ import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -62,5 +65,20 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
      * and external ID.
      */
     List<AccessEntity> findByAuthVisitorTypeAndAuthExternalID(VisitorType visitorType, Long externalID);
+
+    /**
+     *
+     * @param carPlate plate of the car.
+     * @return a list of AccessEntity that match the specified car plate.
+     */
+    List<AccessEntity> findByVehicleReg(String carPlate);
+    /**
+     * Retrieves a paginated list of AccessEntity
+     * based on specified filters.
+     * @param spec     Specification defining the filters .
+     * @param pageable Pagination information.
+     * @return records that match the given specification and pagination.
+     */
+    Page<AccessEntity> findAll(Specification<AccessEntity> spec, Pageable pageable);
 }
 

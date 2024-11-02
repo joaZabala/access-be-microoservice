@@ -25,14 +25,16 @@ public class WebConfig implements WebMvcConfigurer {
      *
      * @param registry the CorsRegistry to configure.
      */
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:4200")
+                .allowedOriginPatterns("*") // Permite cualquier origen con credenciales
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
+
     /**
      * Configures custom request interceptors.
      * This method adds the {@code userHeaderInterceptor}

@@ -3,6 +3,7 @@ package ar.edu.utn.frc.tup.lc.iv.repositories;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -41,4 +42,12 @@ public interface VisitorRepository extends JpaRepository<VisitorEntity, Long> {
             + "LOWER(v.lastName) LIKE LOWER(CONCAT('%', :filter, '%')) OR "
             + "CAST(v.docNumber AS string) LIKE CONCAT('%', :filter, '%'))")
     Page<VisitorEntity> findByFilter(String filter, Pageable pageable);
+    /**
+     * Retrieves a paginated list of VisitorEntity
+     * based on specified filters.
+     * @param spec     Specification defining the filters .
+     * @param pageable Pagination information.
+     * @return records that match the given specification and pagination.
+     */
+    Page<VisitorEntity> findAll(Specification<VisitorEntity> spec, Pageable pageable);
 }

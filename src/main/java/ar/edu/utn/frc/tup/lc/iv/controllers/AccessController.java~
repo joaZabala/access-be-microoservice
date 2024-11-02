@@ -47,7 +47,7 @@ public class AccessController {
     @PostMapping("/authorize")
     public ResponseEntity<AccessDTO> authorizeVisitor(@RequestBody AccessDTO accessDTO,  @RequestHeader("x-user-id") Long userId) {
         AccessDTO access = authService.authorizeVisitor(accessDTO, userId);
-        return access == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(access);
+        return access == null ? ResponseEntity.notFound().build : ResponseEntity.ok(access);
     }
 
     /**

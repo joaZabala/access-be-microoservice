@@ -6,6 +6,9 @@ import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import java.util.List;
 
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -41,4 +44,28 @@ public interface AuthRepository extends JpaRepository<AuthEntity, Long> {
      * @return A list of authorization records matching the given criteria.
      */
     List<AuthEntity> findByVisitorTypeAndExternalIDAndPlotId(VisitorType visitorType, Long externalID, Long plotId);
+    /**
+     * Finds an {@link AuthEntity} by the specified visitor,
+     * visitor type, and plot ID.
+     * @param visitor     the visitor entity to search for.
+     * @param visitorType the type of visitor.
+     * @param plotId     the ID of the plot associated with the authorization.
+     * @return the matching {@link AuthEntity}, or null if not found.
+     */
+    AuthEntity findByVisitorAndVisitorTypeAndPlotId(VisitorEntity visitor, VisitorType visitorType, Long plotId);
+    /**
+     * Finds an {@link AuthEntity}.
+     * @param id     unique identifier.
+     * @return the matching {@link AuthEntity}, or null if not found.
+     */
+    List<AuthEntity> findByAuthId(Long id);
+    /**
+     * Retrieves a paginated list of AuthEntity
+     * based on specified filters.
+     * @param spec     Specification defining the filters .
+     * @param pageable Pagination information.
+     * @return records that match the given specification and pagination.
+     */
+    Page<AuthEntity> findAll(Specification<AuthEntity> spec, Pageable pageable);
+
 }

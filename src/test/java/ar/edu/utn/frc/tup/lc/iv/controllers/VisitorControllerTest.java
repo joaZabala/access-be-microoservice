@@ -2,6 +2,7 @@ package ar.edu.utn.frc.tup.lc.iv.controllers;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import ar.edu.utn.frc.tup.lc.iv.services.IVisitorService;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -45,7 +47,7 @@ class VisitorControllerTest {
         visitorRequest.setBirthDate(LocalDate.of(1990, 1, 1));
 
         VisitorDTO visitorResponseDto =
-                new VisitorDTO(1L, "Mario", "Cenna", DocumentType.PASSPORT, 12345678L, LocalDate.of(1990, 1, 1), true);
+                new VisitorDTO(1L, "Mario", "Cenna", DocumentType.PASSPORT, 12345678L, LocalDate.of(1990, 1, 1), new ArrayList<>() , true);
 
         when(visitorService.saveOrUpdateVisitor(visitorRequest , null)).thenReturn(visitorResponseDto);
 
@@ -64,18 +66,18 @@ class VisitorControllerTest {
 
     @Test
     void getAllVisitors() throws Exception {
-        VisitorDTO visitor1 = new VisitorDTO(1L, "Mario", "Cenna", DocumentType.CUIL,12345678L, LocalDate.of(1990, 1, 1), true);
-        VisitorDTO visitor2 = new VisitorDTO(2L, "Mary", "Jane", DocumentType.CUIT,87654321L, LocalDate.of(1985, 5, 20), false);
+        VisitorDTO visitor1 = new VisitorDTO(1L, "Mario", "Cenna", DocumentType.CUIL,12345678L, LocalDate.of(1990, 1, 1),new ArrayList<>(), true);
+        VisitorDTO visitor2 = new VisitorDTO(2L, "Mary", "Jane", DocumentType.CUIT,87654321L, LocalDate.of(1985, 5, 20),new ArrayList<>(), false);
 
+        VisitorFilter filter = new VisitorFilter();
         PaginatedResponse<VisitorDTO> paginatedResponse = new PaginatedResponse<>(List.of(visitor1, visitor2), 2);
-        when(visitorService.getAllVisitors(0, 10,  "")).thenReturn(paginatedResponse);
+        when(visitorService.getAllVisitors(0, 10, filter )).thenReturn(paginatedResponse);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/visitors")
                         .param("page", "0")
                         .param("size", "10")
-                        .param("name", "")
-                        .param("lastName", "")
                         .param("filter", "")
+                        .param("active", "true")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -97,7 +99,7 @@ class VisitorControllerTest {
     void getVisitorByDocNumberTest() throws Exception {
         //DTO de respuesta
         VisitorDTO visitorDto =
-                new VisitorDTO(1L, "Mario", "Cenna",DocumentType.CUIT, 12345678L, LocalDate.of(1990, 1, 1), true);
+                new VisitorDTO(1L, "Mario", "Cenna",DocumentType.CUIT, 12345678L, LocalDate.of(1990, 1, 1), new ArrayList<>(),true);
 
         // Simulo la respuesta del servicio
         when(visitorService.getVisitorByDocNumber(12345678L)).thenReturn(visitorDto);
@@ -121,7 +123,7 @@ class VisitorControllerTest {
     void getVisitorByIdTest() throws Exception {
         //DTO de respuesta
         VisitorDTO visitorDto =
-                new VisitorDTO(1L, "Mario", "Cenna", DocumentType.CUIL,12345678L, LocalDate.of(1990, 1, 1), true);
+                new VisitorDTO(1L, "Mario", "Cenna", DocumentType.CUIL,12345678L, LocalDate.of(1990, 1, 1), new ArrayList<>(),true);
         // Simulo la respuesta del servicio
         when(visitorService.getVisitorById(1L)).thenReturn(visitorDto);
 
@@ -142,7 +144,7 @@ class VisitorControllerTest {
     @Test
     void deleteVisitorTest() throws Exception {
         VisitorDTO visitorDTO =
-                new VisitorDTO(1L, "Mario", "Cenna", DocumentType.PASSPORT,12345678L, LocalDate.of(1990, 1, 1),false);
+                new VisitorDTO(1L, "Mario", "Cenna", DocumentType.PASSPORT,12345678L, LocalDate.of(1990, 1, 1),new ArrayList<>(),false);
 
         when(visitorService.deleteVisitor(12345678L)).thenReturn(visitorDTO);
 

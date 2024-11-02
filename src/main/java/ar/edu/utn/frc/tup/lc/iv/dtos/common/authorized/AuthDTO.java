@@ -24,10 +24,15 @@ public class AuthDTO {
     private Long authId;
 
     /**
-     *  ID of the authorizer person.
+     * Type of the authorized person.
      */
-    @JsonProperty("authorizer_id")
-    private Long authorizerId;
+    @JsonProperty("visitor_type")
+    private VisitorType visitorType;
+    /**
+     * ID of the plot.
+     */
+    @JsonProperty("plot_id")
+    private Long plotId;
 
     /**
      * DTO of the authorized person.
@@ -38,20 +43,9 @@ public class AuthDTO {
     /**
      * Type of the authorized person.
      */
-    @JsonProperty("visitor_type")
-    private VisitorType visitorType;
-
-    /**
-     * Type of the authorized person.
-     */
     @JsonProperty("external_id")
     private Long externalID;
 
-    /**
-     * ID of the plot.
-     */
-    @JsonProperty("plot_id")
-    private Long plotId;
 
     /**
      * List of authorized ranges.
@@ -60,8 +54,25 @@ public class AuthDTO {
     private List<AuthRangeDTO> authRanges;
 
     /**
+     *  ID of the authorizer person.
+     */
+    @JsonProperty("authorizer_id")
+    private Long authorizerId;
+
+    /**
      * Status of the authorized person.
      */
     @JsonProperty("is_active")
     private boolean isActive;
+    /**
+     * authorizer name.
+     */
+    @JsonProperty("auth_first_name")
+    private String authName;
+
+    /**
+     * The last name of authorizer.
+     */
+    @JsonProperty("auth_last_name")
+    private String authLastName;
 }
