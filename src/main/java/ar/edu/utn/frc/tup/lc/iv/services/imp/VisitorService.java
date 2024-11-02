@@ -12,7 +12,6 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
-import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
 import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
@@ -98,7 +97,6 @@ public class VisitorService implements IVisitorService {
      */
     @Override
     public VisitorDTO saveOrUpdateVisitor(VisitorRequest visitorRequest, Long visitorId) {
-        Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
 
         VisitorEntity existVisitorEntity = null;
 
@@ -114,13 +112,11 @@ public class VisitorService implements IVisitorService {
 
         VisitorEntity visitorEntity;
         if (Objects.nonNull(existVisitorEntity)) {
-            existVisitorEntity.setLastUpdatedUser(writerUserId);
-            existVisitorEntity.setLastUpdatedDate(LocalDateTime.now());
+
             visitorEntity = existVisitorEntity;
         } else {
             visitorEntity = new VisitorEntity();
-            visitorEntity.setCreatedUser(writerUserId);
-            visitorEntity.setCreatedDate(LocalDateTime.now());
+
         }
 
         visitorEntity.setName(visitorRequest.getName());
@@ -162,11 +158,8 @@ public class VisitorService implements IVisitorService {
         if (visitorEntity.isEmpty()) {
             throw new EntityNotFoundException("No existe el visitante con el id " + visitorId);
         }
-        Long writerUserId = UserHeaderInterceptor.getCurrentUserId();
 
         visitorEntity.get().setActive(false);
-        visitorEntity.get().setLastUpdatedDate(LocalDateTime.now());
-        visitorEntity.get().setLastUpdatedUser(writerUserId);
         return modelMapper.map(visitorRepository.save(visitorEntity.get()), VisitorDTO.class);
     }
 

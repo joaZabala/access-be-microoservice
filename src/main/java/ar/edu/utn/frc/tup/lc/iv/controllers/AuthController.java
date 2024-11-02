@@ -93,6 +93,7 @@ public class AuthController {
     @DeleteMapping("/authorization")
     public ResponseEntity<AuthDTO> deleteAuthorization(@RequestHeader("auth-id") Long authId,
                                                        @RequestHeader("x-user-id") Long userId) {
+        System.out.println(authId);
         return ResponseEntity.ok(authService.deleteAuthorization(authId));
     }
     /**

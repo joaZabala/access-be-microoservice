@@ -165,10 +165,6 @@ public class AccessesService implements IAccessesService {
      */
     @Override
     public AccessDTO registerAccess(AccessEntity accessEntity) {
-        Long userId = UserHeaderInterceptor.getCurrentUserId();
-        accessEntity.setCreatedUser(userId);
-        accessEntity.setCreatedDate(LocalDateTime.now());
-
         AccessEntity savedAccess = accessesRepository.save(accessEntity);
         AccessDTO accessDTO = modelMapper.map(savedAccess, AccessDTO.class);
         accessDTO.setName(savedAccess.getAuth().getVisitor().getName());
