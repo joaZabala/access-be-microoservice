@@ -3,7 +3,9 @@ SET NAMES utf8mb4;
 CREATE DATABASE accesses;
 
 USE accesses;
-
+CREATE DATABASE IF NOT EXISTS accesses;
+GRANT ALL PRIVILEGES ON accesses.* TO 'utn'@'%';
+FLUSH PRIVILEGES;
 -- Tabla de Visitors
 CREATE TABLE visitors (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

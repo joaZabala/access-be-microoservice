@@ -7,13 +7,21 @@ services:
     ports:
       - '3301:3306'
     environment:
-      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_USER: utn
+      MYSQL_PASSWORD: utn
+      MYSQL_ROOT_PASSWORD: rootpassword
     volumes:
       - ./mysql.cnf:/etc/mysql/conf.d/mysql.cnf
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - mysql-data:/var/lib/mysql
     networks:
       service-net-app:
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 25
   accesses:
     container_name: accesses-container
     build:
@@ -22,12 +30,12 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_DATASOURCE_URL=jdbc:mysql://database-container:3306/accesses
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_DATASOURCE_USERNAME=utn
+      - SPRING_DATASOURCE_PASSWORD=utn
       - TZ=America/Argentina/Buenos_Aires
       - USERS_API_URL=http://host.docker.internal:8283/users #usar así si se levantan dos compose por separado
     ports:
-      - "8001:8001"
+      - "8001:8081"
     networks:
       service-net-app:
     restart: on-failure
