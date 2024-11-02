@@ -20,7 +20,6 @@ import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRangeRepository;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -6,7 +6,6 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
-import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AccessesRepository;

@@ -427,8 +427,7 @@ public class AuthService implements IAuthService {
     @Override
     public AuthDTO deleteAuthorization(Long authId) {
         AuthEntity authEntity = authRepository.findByAuthId(authId);
-        if(authEntity != null)
-        {
+        if (authEntity != null) {
             authEntity.setActive(false);
             authRepository.save(authEntity);
         }
@@ -443,8 +442,7 @@ public class AuthService implements IAuthService {
     @Override
     public AuthDTO  activateAuthorization(Long authId) {
         AuthEntity authEntity = authRepository.findByAuthId(authId);
-        if(authEntity != null)
-        {
+        if (authEntity != null) {
             authEntity.setActive(true);
             authRepository.save(authEntity);
         }
