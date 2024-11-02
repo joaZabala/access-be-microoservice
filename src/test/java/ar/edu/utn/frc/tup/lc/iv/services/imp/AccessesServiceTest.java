@@ -6,6 +6,7 @@ import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
+import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AccessesRepository;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -68,5 +69,112 @@ public class AccessesServiceTest {
         assertEquals(2, result.size());
         assertEquals(access2.getActionDate(), result.get(0).getActionDate());
         assertEquals(access1.getActionDate(), result.get(1).getActionDate());
+    }
+
+    @Test
+    void testGetAllEntries() {
+        AccessEntity access1 = new AccessEntity();
+        access1.setActionDate(LocalDateTime.now().minusDays(1));
+        AuthEntity auth1 = new AuthEntity();
+        auth1.setCreatedUser(1L);
+        access1.setAuth(auth1);
+
+        AccessEntity access2 = new AccessEntity();
+        access2.setActionDate(LocalDateTime.now());
+        VisitorEntity v1 = new VisitorEntity();
+        v1.setDocumentType(DocumentType.DNI);
+        AuthEntity auth2 = new AuthEntity();
+        auth2.setCreatedUser(1L);
+        access2.setAuth(auth2);
+        VisitorEntity v2 = new VisitorEntity();
+        v1.setDocumentType(DocumentType.DNI);
+        auth2.setVisitor(v2);
+        auth1.setVisitor(v1);
+
+        when(accessesRepository.findByAction(ActionTypes.ENTRY)).thenReturn(Arrays.asList(access1, access2));
+
+        when(modelMapper.map(any(AccessEntity.class), any())).thenAnswer(invocation -> {
+            AccessEntity accessEntity = invocation.getArgument(0);
+            AccessDTO accessDTO = new AccessDTO();
+            accessDTO.setActionDate(accessEntity.getActionDate());
+            accessDTO.setAuthorizerId(accessEntity.getAuth().getCreatedUser());
+            return accessDTO;
+        });
+
+        List<AccessDTO> result = accessesService.getAllEntries();
+        verify(accessesRepository).findByAction(ActionTypes.ENTRY);
+
+        assertEquals(2, result.size());
+        assertEquals(access2.getActionDate(), result.get(0).getActionDate());
+        assertEquals(access1.getActionDate(), result.get(1).getActionDate());
+    }
+    @Test
+    void testGetByTypeAndExternalId() {
+        AccessEntity access1 = new AccessEntity();
+        access1.setActionDate(LocalDateTime.now().minusDays(1));
+        AuthEntity auth1 = new AuthEntity();
+        auth1.setCreatedUser(1L);
+        access1.setAuth(auth1);
+
+        AccessEntity access2 = new AccessEntity();
+        access2.setActionDate(LocalDateTime.now());
+        VisitorEntity v1 = new VisitorEntity();
+        v1.setDocumentType(DocumentType.DNI);
+        AuthEntity auth2 = new AuthEntity();
+        auth2.setCreatedUser(1L);
+        access2.setAuth(auth2);
+        VisitorEntity v2 = new VisitorEntity();
+        auth2.setExternalID(1L);
+        v1.setDocumentType(DocumentType.DNI);
+        auth2.setVisitor(v2);
+        auth2.setVisitorType(VisitorType.VISITOR);
+        auth1.setVisitor(v1);
+
+        when(accessesRepository.findByAuthVisitorTypeAndAuthExternalID(VisitorType.VISITOR, 1L)).thenReturn(Arrays.asList(access2));
+
+        when(modelMapper.map(any(AccessEntity.class), any())).thenAnswer(invocation -> {
+            AccessEntity accessEntity = invocation.getArgument(0);
+            AccessDTO accessDTO = new AccessDTO();
+            accessDTO.setActionDate(accessEntity.getActionDate());
+            accessDTO.setAuthorizerId(accessEntity.getAuth().getCreatedUser());
+            return accessDTO;
+        });
+
+        List<AccessDTO> result = accessesService.getAllAccessByTypeAndExternalID(VisitorType.VISITOR, 1L);
+
+        assertEquals(1, result.size());
+        assertEquals(access2.getActionDate(), result.get(0).getActionDate());
+    }
+
+    @Test
+    void testGetByAccessesType() {
+
+        AccessEntity access2 = new AccessEntity();
+        access2.setActionDate(LocalDateTime.now());
+        VisitorEntity v1 = new VisitorEntity();
+        v1.setDocumentType(DocumentType.DNI);
+        AuthEntity auth2 = new AuthEntity();
+        auth2.setCreatedUser(1L);
+        access2.setAuth(auth2);
+        VisitorEntity v2 = new VisitorEntity();
+        auth2.setExternalID(1L);
+        v1.setDocumentType(DocumentType.DNI);
+        auth2.setVisitor(v2);
+        auth2.setVisitorType(VisitorType.VISITOR);
+
+        when(accessesRepository.findByAuthVisitorType(VisitorType.VISITOR)).thenReturn(Arrays.asList(access2));
+
+        when(modelMapper.map(any(AccessEntity.class), any())).thenAnswer(invocation -> {
+            AccessEntity accessEntity = invocation.getArgument(0);
+            AccessDTO accessDTO = new AccessDTO();
+            accessDTO.setActionDate(accessEntity.getActionDate());
+            accessDTO.setAuthorizerId(accessEntity.getAuth().getCreatedUser());
+            return accessDTO;
+        });
+
+        List<AccessDTO> result = accessesService.getAllAccessByType(VisitorType.VISITOR);
+
+        assertEquals(1, result.size());
+        assertEquals(access2.getActionDate(), result.get(0).getActionDate());
     }
 }
