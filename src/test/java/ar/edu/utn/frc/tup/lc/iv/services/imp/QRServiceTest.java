@@ -42,7 +42,7 @@ public class QRServiceTest {
     }
 
     @Test
-    public void testGenerateQrForVisitor_Success() throws IOException {
+    public void generateQrForVisitorSuccess() throws IOException {
         when(visitorRepository.findByDocNumber(anyLong())).thenReturn(visitor);
 
         byte[] qrCode = qrService.generateQrForVisitor(12345678L);
@@ -53,7 +53,7 @@ public class QRServiceTest {
     }
 
     @Test
-    public void testGenerateQrForVisitor_VisitorNotFound() {
+    public void generateQrForVisitorVisitorNotFound() {
         when(visitorRepository.findByDocNumber(anyLong())).thenReturn(null);
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -65,7 +65,7 @@ public class QRServiceTest {
     }
 
     @Test
-    public void testGenerateQrForVisitor_WriterException() throws Exception {
+    public void generateQrForVisitorWriterException() throws Exception {
         when(visitorRepository.findByDocNumber(anyLong())).thenReturn(visitor);
 
         try (MockedConstruction<QRCodeWriter> mocked = mockConstruction(QRCodeWriter.class,

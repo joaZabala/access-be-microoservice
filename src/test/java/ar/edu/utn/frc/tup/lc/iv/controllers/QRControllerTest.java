@@ -24,9 +24,9 @@ public class QRControllerTest {
     private IQRService qrService;
 
     @Test
-    void generateQrTest_Success() throws Exception {
+    void generateQrTestSuccess() throws Exception {
         Long docNumber = 12345678L;
-        byte[] qrCode = new byte[]{1, 2, 3}; 
+        byte[] qrCode = new byte[]{1, 2, 3};
 
         when(qrService.generateQrForVisitor(docNumber)).thenReturn(qrCode);
 
@@ -39,7 +39,7 @@ public class QRControllerTest {
     }
 
     @Test
-    void generateQrTest_VisitorNotFound() throws Exception {
+    void generateQrTestVisitorNotFound() throws Exception {
         Long docNumber = 12345678L;
 
         when(qrService.generateQrForVisitor(docNumber))
@@ -53,7 +53,7 @@ public class QRControllerTest {
     }
 
     @Test
-    void generateQrTest_IOError() throws Exception {
+    void generateQrTestIOError() throws Exception {
         Long docNumber = 12345678L;
 
         when(qrService.generateQrForVisitor(docNumber))
