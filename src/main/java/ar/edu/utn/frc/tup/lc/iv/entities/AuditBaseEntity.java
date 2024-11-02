@@ -1,6 +1,8 @@
 package ar.edu.utn.frc.tup.lc.iv.entities;
 
+import ar.edu.utn.frc.tup.lc.iv.listeners.AuditEntityListener;
 import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +23,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass
+@EntityListeners(AuditEntityListener.class)
 public class AuditBaseEntity {
     /**
      * The ID of the user who created the entity.
