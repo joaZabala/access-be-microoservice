@@ -1,5 +1,7 @@
 package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
+import ar.edu.utn.frc.tup.lc.iv.clients.UserDetailDto;
+import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -46,7 +49,11 @@ public class AccessesService implements IAccessesService {
      */
     @Autowired
     private ModelMapper modelMapper;
-
+    /**
+        userRestclient.
+     */
+    @Autowired
+    private UserRestClient userRestClient;
     /**
      * Retrieves all access records from the repository.
      * @return List of AccessDTO representing access records.
@@ -70,7 +77,32 @@ public class AccessesService implements IAccessesService {
         response.setItems(accesses.stream()
                 .map(this::mapToAccessDTO).sorted(Comparator.comparing(AccessDTO::getActionDate).reversed())
                 .collect(Collectors.toList()));
+
+
         response.setTotalElements(accesses.getTotalElements());
+
+
+        List<Long> uniqueAuthorizerIds = accesses.stream()
+                .map(this::mapToAccessDTO)
+                .map(AccessDTO::getAuthorizerId)
+                .distinct()
+                .collect(Collectors.toList());
+
+
+        List<UserDetailDto> userInfo = userRestClient.getUsersByIds(uniqueAuthorizerIds);
+
+        Map<Long, UserDetailDto> userMap = userInfo.stream()
+                .collect(Collectors.toMap(UserDetailDto::getId, user -> user));
+
+        response.getItems().forEach(access -> {
+            UserDetailDto user = userMap.get(access.getAuthorizerId());
+            if (user != null) {
+                access.setAuthName(user.getFirstName());
+                access.setAuthLastName(user.getLastName());
+            }
+        });
+
+
         return response;
     }
 

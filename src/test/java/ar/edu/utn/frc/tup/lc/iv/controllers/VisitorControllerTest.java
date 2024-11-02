@@ -2,6 +2,7 @@ package ar.edu.utn.frc.tup.lc.iv.controllers;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import ar.edu.utn.frc.tup.lc.iv.services.IVisitorService;
@@ -68,8 +69,9 @@ class VisitorControllerTest {
         VisitorDTO visitor1 = new VisitorDTO(1L, "Mario", "Cenna", DocumentType.CUIL,12345678L, LocalDate.of(1990, 1, 1),new ArrayList<>(), true);
         VisitorDTO visitor2 = new VisitorDTO(2L, "Mary", "Jane", DocumentType.CUIT,87654321L, LocalDate.of(1985, 5, 20),new ArrayList<>(), false);
 
+        VisitorFilter filter = new VisitorFilter();
         PaginatedResponse<VisitorDTO> paginatedResponse = new PaginatedResponse<>(List.of(visitor1, visitor2), 2);
-        when(visitorService.getAllVisitors(0, 10,  "" , true )).thenReturn(paginatedResponse);
+        when(visitorService.getAllVisitors(0, 10, filter )).thenReturn(paginatedResponse);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/visitors")
                         .param("page", "0")

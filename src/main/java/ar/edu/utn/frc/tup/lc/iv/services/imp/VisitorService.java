@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
@@ -15,6 +16,7 @@ import ar.edu.utn.frc.tup.lc.iv.interceptor.UserHeaderInterceptor;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
 import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
+import ar.edu.utn.frc.tup.lc.iv.repositories.specification.visitor.VisitorSpecification;
 import ar.edu.utn.frc.tup.lc.iv.services.IVisitorService;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -23,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import lombok.NoArgsConstructor;
 
@@ -62,22 +65,11 @@ public class VisitorService implements IVisitorService {
      */
 
     @Override
-    public PaginatedResponse<VisitorDTO> getAllVisitors(int page, int size, String filter, boolean active) {
+    public PaginatedResponse<VisitorDTO> getAllVisitors(int page, int size, VisitorFilter filter) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("lastName").and(Sort.by("name")));
 
-        Page<VisitorEntity> visitorPage;
-
-        if (Objects.nonNull(filter) && !filter.isEmpty()) {
-            visitorPage = visitorRepository.findByFilter(filter, pageable);
-        } else {
-            // Si no hay filtro, obtener todos los visitantes activos
-            if (!active) {
-                visitorPage = visitorRepository.findAllByActive(false, pageable);
-            } else {
-                visitorPage = visitorRepository.findAllByActive(true, pageable);
-            }
-
-        }
+        Specification<VisitorEntity> spec = VisitorSpecification.withVisitorFilters(filter);
+        Page<VisitorEntity> visitorPage = visitorRepository.findAll(spec, pageable);
 
         //incluimos los tipos de visitante al visitorDTO
         List<VisitorDTO> visitorDTOs = visitorPage.stream()
