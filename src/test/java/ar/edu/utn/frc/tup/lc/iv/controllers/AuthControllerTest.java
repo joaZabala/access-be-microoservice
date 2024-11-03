@@ -164,6 +164,19 @@ class AuthControllerTest {
     }
 
     @Test
+    void deleteAuthorizationMissingXUserId() throws Exception {
+        AuthDTO authDTO = new AuthDTO();
+        authDTO.setAuthId(1L);
+
+        when(authService.deleteAuthorization(1L)).thenReturn(authDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/auths/authorization")
+                        .header("auth-id", "1"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void activateAuthorization() throws Exception {
         AuthDTO authDTO = new AuthDTO();
         authDTO.setAuthId(1L);
