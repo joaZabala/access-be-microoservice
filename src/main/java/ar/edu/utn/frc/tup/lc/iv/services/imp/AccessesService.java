@@ -59,6 +59,10 @@ public class AccessesService implements IAccessesService {
     @Autowired
     private UserRestClient userRestClient;
     /**
+     * Constant for the 24 Hours.
+     */
+    private static final int HOUR = 24;
+    /**
      * Retrieves all access records from the repository.
      * @return List of AccessDTO representing access records.
      */
@@ -217,11 +221,12 @@ public class AccessesService implements IAccessesService {
      * @return a list of {@link DashboardDTO} objects representing
      * access counts per hour
      */
+    @Override
     public List<DashboardDTO> getHourlyInfo(LocalDateTime from, LocalDateTime to) {
         List<Object[]> results = accessesRepository.findAccessCountsByHourNative(from, to);
 
         Map<String, Long> hourlyAccessMap = new LinkedHashMap<>();
-        for (int hour = 0; hour < 24; hour++) {
+        for (int hour = 0; hour < HOUR; hour++) {
             String hourString = String.format("%02d:00", hour);
             hourlyAccessMap.put(hourString, 0L);
         }
@@ -248,7 +253,8 @@ public class AccessesService implements IAccessesService {
 
         Map<String, Long> dayOfWeekAccessMap = new LinkedHashMap<>();
         for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
-            dayOfWeekAccessMap.put(dayOfWeek.toString().toUpperCase(), 0L);
+            dayOfWeekAccessMap.put(dayOfWeek
+                    .getDisplayName(TextStyle.FULL, Locale.ENGLISH), 0L);
         }
 
         for (Object[] row : results) {
@@ -256,7 +262,8 @@ public class AccessesService implements IAccessesService {
             Long count = ((Number) row[1]).longValue();
 
             DayOfWeek dayOfWeek = DayOfWeek.of(dayOfWeekValue);
-            String dayName = dayOfWeek.toString().toUpperCase();
+            String dayName = dayOfWeek
+                    .getDisplayName(TextStyle.FULL, Locale.ENGLISH);
             dayOfWeekAccessMap.put(dayName, count);
         }
 
