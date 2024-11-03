@@ -121,7 +121,7 @@ class VisitorsTest {
     @Test
     void testSetActiveAndIsActive() {
         Visitors visitor = new Visitors();
-        
+
         assertFalse(visitor.isActive());
 
         visitor.setActive(true);
