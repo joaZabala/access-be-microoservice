@@ -90,10 +90,10 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
      * @return a list of Object arrays where each array contains:
      * String: formatted hour - Long: count of accesses during that hour.
      */
-    @Query(value = "SELECT DATE_FORMAT(action_date, '%Y-%m-%d %H:00') AS hour, COUNT(*) AS count "
+    @Query(value = "SELECT DATE_FORMAT(action_date, '%H:00') AS hour, COUNT(*) AS count "
             + "FROM accesses "
             + "WHERE action_date BETWEEN :fromDate AND :toDate "
-            + "GROUP BY DATE_FORMAT(action_date, '%Y-%m-%d %H:00') "
+            + "GROUP BY DATE_FORMAT(action_date, '%H:00') "
             + "ORDER BY hour", nativeQuery = true)
     List<Object[]> findAccessCountsByHourNative(@Param("fromDate") LocalDateTime fromDate,
                                                 @Param("toDate") LocalDateTime toDate);
