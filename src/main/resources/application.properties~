@@ -25,7 +25,8 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 
 # URLS
 user.service.url=${USERS_API_URL}
-notification.service.url=${NOTIFICATIONS_API_URL}
+notification.service.url=${NOTIFICATION_SERVICE_URL}
+qr.url = ${QR_API_URL}
 
 # Resiliece4j Configuration
 management.endpoint.health.show-details=always
