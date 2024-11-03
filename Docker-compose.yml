@@ -34,6 +34,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=utn
       - SPRING_DATASOURCE_PASSWORD=utn
       - TZ=America/Argentina/Buenos_Aires
+      - QR_API_URL=http:http://api.qrserver.com/v1/create-qr-code/?size=200x200&format=png&data=
       - USERS_API_URL=http://host.docker.internal:8283/users #usar así si se levantan dos compose por separado
       - NOTIFICATION_SERVICE_URL=http://host.docker.internal:8011  # Agregamos la URL del servicio de notificaciones
     ports:

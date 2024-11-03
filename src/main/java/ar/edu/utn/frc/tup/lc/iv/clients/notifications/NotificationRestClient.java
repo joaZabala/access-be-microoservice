@@ -27,6 +27,9 @@ public class NotificationRestClient {
 
     @Value("${notification.service.url}")
     private String EMAIL_SERVICE_BASE_URL; // Cambiar por la URL real
+
+    @Value("${qr.url}")
+    private String QR_SERVICE_BASE_URL; // Cambiar por la URL real
     private Long templateId; // Guardar el ID de la plantilla una vez creada
 
     public void initializeTemplate() {
@@ -67,12 +70,12 @@ public class NotificationRestClient {
                 "        <div class=\"logo\">\n" +
                 "            <img src=\"https://www.villadelcondor.com/imagenes/villa_del_condor.png\" alt=\"Logo de la Empresa\" style=\"max-width: 100%; height: auto;\">\n" +
                 "        </div>\n" +
-                "        <h2 style=\"text-align: center; color: #ffffff;\">Aquí está tu Código QR</h2>\n" +
+                "        <h2 style=\"text-align: center; color: #ffffff;\"></h2>\n" +
                 "        <div class=\"qr-code\">\n" +
-                "            <img src=\"http://api.qrserver.com/v1/create-qr-code/?size=200x200&format=png&data=Name:fede,%20LastName:%20Tahan,%20Document:%C2%A02043673720\" alt=\"Código QR\" style=\"max-width: 100%; height: auto;\">\n" +
+                "            <img src=\"{QR_SERVICE_BASE_URL}Name:fede,%20LastName:%20Tahan,%20Document:%C2%A02043673720\" alt=\"Código QR\" style=\"max-width: 100%; height: auto;\">\n" +
                 "        </div>\n" +
                 "        <p style=\"text-align: center; margin-top: 20px; color: #ffffff;\">\n" +
-                "            Escanea el código QR para más información.\n" +
+                "            Presentá este QR en la entrada del complejo.\n" +
                 "        </p>\n" +
                 "    </div>\n" +
                 "</body>\n" +
@@ -107,6 +110,7 @@ public class NotificationRestClient {
 
         // Crear la lista de variables para la plantilla
         List<EmailVariable> variables = new ArrayList<>();
+        variables.add((new EmailVariable("name", recipientName)));
 
         // Crear la solicitud de envío de email
         var emailRequest = new EmailRequest();
