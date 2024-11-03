@@ -35,7 +35,7 @@ public class NotificationRestClient {
                 + "<h2>Tu código QR</h2>"
                 + "<p>Hola {{nombre}},</p>"
                 + "<p>Aquí está tu código QR:</p>"
-                + "<img src='data:image/png;base64,{{qr_code}}' alt='QR Code'/>"
+                + "<img src='{{qr_code}}' alt='QR Code'/>"
                 + "<p>Por favor, guárdalo de forma segura.</p>"
                 + "</body></html>";
 
@@ -69,7 +69,7 @@ public class NotificationRestClient {
         // Crear la lista de variables para la plantilla
         List<EmailVariable> variables = new ArrayList<>();
         variables.add(new EmailVariable("nombre", recipientName));
-        variables.add(new EmailVariable("qr_code", qrBase64));
+        variables.add(new EmailVariable("qr_code", "http://api.qrserver.com/v1/create-qr-code/?size=400x400&format=png&data=Name:fede, LastName: Tahan, Document: 2043673720"));
 
         // Crear la solicitud de envío de email
         var emailRequest = new EmailRequest();
