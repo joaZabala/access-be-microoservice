@@ -104,12 +104,15 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
      * @return a list of Object arrays where each array contains:
      * String: formatted week - Long: count of accesses during that week.
      */
-    @Query(value = "SELECT DAYOFWEEK(action_date) AS dayOfWeek, COUNT(*) AS count "
+    @Query(value = "SELECT DAYOFWEEK(action_date) AS dayOfWeek, "
+            + "SUM(CASE WHEN action = 'ENTRY' THEN 1 ELSE 0 END) AS entryCount, "
+            + "SUM(CASE WHEN action = 'EXIT' THEN 1 ELSE 0 END) AS exitCount "
             + "FROM accesses "
             + "WHERE action_date BETWEEN :fromDate AND :toDate "
             + "GROUP BY DAYOFWEEK(action_date) "
             + "ORDER BY dayOfWeek", nativeQuery = true)
     List<Object[]> findAccessCountsByDayOfWeekNative(@Param("fromDate") LocalDateTime fromDate,
                                                      @Param("toDate") LocalDateTime toDate);
+
 }
 
