@@ -6,6 +6,7 @@ import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
@@ -295,5 +296,23 @@ public class AccessesServiceTest {
 
         assertEquals(1, response.getItems().size());
         AccessDTO accessDTO = response.getItems().get(0);
+    }
+
+    @Test
+    public void testGetHourlyInfo() {
+        LocalDateTime from = LocalDateTime.of(2024, 11, 1, 0, 0);
+        LocalDateTime to = LocalDateTime.of(2024, 11, 2, 23, 59);
+        List<Object[]> mockResults = Arrays.asList(
+                new Object[]{"2024-11-01 00:00", 10L},
+                new Object[]{"2024-11-01 01:00", 5L}
+        );
+        when(accessesRepository.findAccessCountsByHourNative(from, to)).thenReturn(mockResults);
+        List<DashboardDTO> result = accessesService.getHourlyInfo(from, to);
+        assertEquals(2, result.size());
+        assertEquals("2024-11-01 00:00", result.get(0).getKey());
+        assertEquals(10L, result.get(0).getValue());
+        assertEquals("2024-11-01 01:00", result.get(1).getKey());
+        assertEquals(5L, result.get(1).getValue());
+        verify(accessesRepository).findAccessCountsByHourNative(from, to);
     }
 }

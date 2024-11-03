@@ -3,10 +3,12 @@ package ar.edu.utn.frc.tup.lc.iv.services;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -71,4 +73,12 @@ public interface IAccessesService {
      * @return true if the visitor can do the action, false otherwise.
      */
     Boolean canDoAction(String carPlate, ActionTypes action);
+    /**
+     * Retrieves hourly access information within a specified date range.
+     * @param from the start date and time (inclusive) of the range
+     * @param to   the end date and time (inclusive) of the range
+     * @return a list of {@link DashboardDTO} objects representing
+     * access counts per hour
+     */
+    List<DashboardDTO> getHourlyInfo(LocalDateTime from, LocalDateTime to);
 }

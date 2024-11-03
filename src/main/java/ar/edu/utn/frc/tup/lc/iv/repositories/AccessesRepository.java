@@ -8,8 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -80,5 +83,19 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
      * @return records that match the given specification and pagination.
      */
     Page<AccessEntity> findAll(Specification<AccessEntity> spec, Pageable pageable);
+    /**
+     * Retrieves access counts grouped by hour within the specified date range.
+     * @param fromDate the start date and time (inclusive).
+     * @param toDate   the end date and time (inclusive).
+     * @return a list of Object arrays where each array contains:
+     * String: formatted hour - Long: count of accesses during that hour.
+     */
+    @Query(value = "SELECT DATE_FORMAT(action_date, '%Y-%m-%d %H:00') AS hour, COUNT(*) AS count "
+            + "FROM accesses "
+            + "WHERE action_date BETWEEN :fromDate AND :toDate "
+            + "GROUP BY DATE_FORMAT(action_date, '%Y-%m-%d %H:00') "
+            + "ORDER BY hour", nativeQuery = true)
+    List<Object[]> findAccessCountsByHourNative(@Param("fromDate") LocalDateTime fromDate,
+                                                @Param("toDate") LocalDateTime toDate);
 }
 

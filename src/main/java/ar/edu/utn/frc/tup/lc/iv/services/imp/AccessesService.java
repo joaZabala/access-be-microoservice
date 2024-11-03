@@ -5,6 +5,7 @@ import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
@@ -204,5 +205,20 @@ public class AccessesService implements IAccessesService {
         accessDTO.setVisitorType(accessEntity.getAuth().getVisitorType());
 
         return accessDTO;
+    }
+    /**
+     * Retrieves hourly access information within a specified date range.
+     * @param from the start date and time (inclusive) of the range
+     * @param to   the end date and time (inclusive) of the range
+     * @return a list of {@link DashboardDTO} objects representing
+     * access counts per hour
+     */
+    @Override
+    public List<DashboardDTO> getHourlyInfo(LocalDateTime from, LocalDateTime to) {
+        List<Object[]> results = accessesRepository.findAccessCountsByHourNative(from, to);
+        return results.stream()
+                .map(row -> new DashboardDTO((String) row[0], (Long) row[1]))
+                .collect(Collectors.toList());
+
     }
 }
