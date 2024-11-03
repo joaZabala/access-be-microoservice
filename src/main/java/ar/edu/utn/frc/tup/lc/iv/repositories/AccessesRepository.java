@@ -97,5 +97,19 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
             + "ORDER BY hour", nativeQuery = true)
     List<Object[]> findAccessCountsByHourNative(@Param("fromDate") LocalDateTime fromDate,
                                                 @Param("toDate") LocalDateTime toDate);
+    /**
+     * Retrieves access counts grouped by weekday within the specified date range.
+     * @param fromDate the start date and time (inclusive).
+     * @param toDate   the end date and time (inclusive).
+     * @return a list of Object arrays where each array contains:
+     * String: formatted week - Long: count of accesses during that week.
+     */
+    @Query(value = "SELECT DAYOFWEEK(action_date) AS dayOfWeek, COUNT(*) AS count " +
+            "FROM accesses " +
+            "WHERE action_date BETWEEN :fromDate AND :toDate " +
+            "GROUP BY DAYOFWEEK(action_date) " +
+            "ORDER BY dayOfWeek", nativeQuery = true)
+    List<Object[]> findAccessCountsByDayOfWeekNative(@Param("fromDate") LocalDateTime fromDate,
+                                                     @Param("toDate") LocalDateTime toDate);
 }
 

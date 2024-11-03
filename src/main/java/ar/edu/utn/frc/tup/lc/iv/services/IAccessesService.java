@@ -81,4 +81,12 @@ public interface IAccessesService {
      * access counts per hour
      */
     List<DashboardDTO> getHourlyInfo(LocalDateTime from, LocalDateTime to);
+    /**
+     * Retrieves hourly access information within a specified date range.
+     * @param from the start date and time (inclusive) of the range
+     * @param to   the end date and time (inclusive) of the range
+     * @return a list of {@link DashboardDTO} objects representing
+     * access counts per day of week
+     */
+    List<DashboardDTO> getDayOfWeekInfo(LocalDateTime from, LocalDateTime to);
 }

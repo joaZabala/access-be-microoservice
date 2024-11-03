@@ -113,4 +113,19 @@ public class AccessController {
 
         return accessesService.getHourlyInfo(fromDateTime, toDateTime);
     }
+
+    /**
+     * Retrieves day of week access counts within a specified date range.
+     * @param from the start date of the range (inclusive)
+     * @param to   the end date of the range (inclusive)
+     * @return a list of {@link DashboardDTO} objects
+     * containing access counts per day of week
+     */
+    @GetMapping("/weekly")
+    public List<DashboardDTO> getDayOfWeekAccesses(@RequestParam LocalDate from, @RequestParam LocalDate to) {
+        LocalDateTime fromDateTime = from.atStartOfDay();
+        LocalDateTime toDateTime = to.atTime(LocalTime.MAX);
+
+        return accessesService.getDayOfWeekInfo(fromDateTime, toDateTime);
+    }
 }
