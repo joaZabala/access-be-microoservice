@@ -409,7 +409,7 @@ public class AuthService implements IAuthService {
      * @param visitorAuthRequest request
      * @return optional authorization
      */
-    private Optional<AuthDTO> findExistingAuthorization(VisitorAuthRequest visitorAuthRequest) {
+    public Optional<AuthDTO> findExistingAuthorization(VisitorAuthRequest visitorAuthRequest) {
         // Busca autorizaciones por documento y filtra por visitorType y plotId
         List<AuthDTO> auths = getAuthsByDocNumber(visitorAuthRequest.getVisitorRequest().getDocNumber());
 

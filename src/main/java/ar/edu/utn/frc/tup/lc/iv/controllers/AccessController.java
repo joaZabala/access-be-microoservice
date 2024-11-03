@@ -3,6 +3,7 @@ package ar.edu.utn.frc.tup.lc.iv.controllers;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.services.IAccessesService;
 import ar.edu.utn.frc.tup.lc.iv.services.imp.AuthService;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -95,4 +99,33 @@ public class AccessController {
         return accessesService.canDoAction(carPlate, action);
     }
 
+    /**
+     * Retrieves hourly access counts within a specified date range.
+     * @param from the start date of the range (inclusive)
+     * @param to   the end date of the range (inclusive)
+     * @return a list of {@link DashboardDTO} objects
+     * containing access counts per hour
+     */
+    @GetMapping("/hourly")
+    public List<DashboardDTO> getHourlyAccesses(@RequestParam LocalDate from, @RequestParam LocalDate to) {
+        LocalDateTime fromDateTime = from.atStartOfDay();
+        LocalDateTime toDateTime = to.atTime(LocalTime.MAX);
+
+        return accessesService.getHourlyInfo(fromDateTime, toDateTime);
+    }
+
+    /**
+     * Retrieves day of week access counts within a specified date range.
+     * @param from the start date of the range (inclusive)
+     * @param to   the end date of the range (inclusive)
+     * @return a list of {@link DashboardDTO} objects
+     * containing access counts per day of week
+     */
+    @GetMapping("/weekly")
+    public List<DashboardDTO> getDayOfWeekAccesses(@RequestParam LocalDate from, @RequestParam LocalDate to) {
+        LocalDateTime fromDateTime = from.atStartOfDay();
+        LocalDateTime toDateTime = to.atTime(LocalTime.MAX);
+
+        return accessesService.getDayOfWeekInfo(fromDateTime, toDateTime);
+    }
 }

@@ -5,6 +5,7 @@ import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
@@ -20,10 +21,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -53,6 +58,10 @@ public class AccessesService implements IAccessesService {
      */
     @Autowired
     private UserRestClient userRestClient;
+    /**
+     * Constant for the 24 Hours.
+     */
+    private static final int HOUR = 24;
     /**
      * Retrieves all access records from the repository.
      * @return List of AccessDTO representing access records.
@@ -204,5 +213,62 @@ public class AccessesService implements IAccessesService {
         accessDTO.setVisitorType(accessEntity.getAuth().getVisitorType());
 
         return accessDTO;
+    }
+    /**
+     * Retrieves hourly access information within a specified date range.
+     * @param from the start date and time (inclusive) of the range
+     * @param to   the end date and time (inclusive) of the range
+     * @return a list of {@link DashboardDTO} objects representing
+     * access counts per hour
+     */
+    @Override
+    public List<DashboardDTO> getHourlyInfo(LocalDateTime from, LocalDateTime to) {
+        List<Object[]> results = accessesRepository.findAccessCountsByHourNative(from, to);
+
+        Map<String, Long> hourlyAccessMap = new LinkedHashMap<>();
+        for (int hour = 0; hour < HOUR; hour++) {
+            String hourString = String.format("%02d:00", hour);
+            hourlyAccessMap.put(hourString, 0L);
+        }
+
+        for (Object[] row : results) {
+            String hour = (String) row[0];
+            Long count = ((Number) row[1]).longValue();
+            hourlyAccessMap.put(hour, count);
+        }
+        return hourlyAccessMap.entrySet().stream()
+                .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+    }
+    /**
+     * Retrieves hourly access information within a specified date range.
+     * @param from the start date and time (inclusive) of the range
+     * @param to   the end date and time (inclusive) of the range
+     * @return a list of {@link DashboardDTO} objects representing
+     * access counts per day of week
+     */
+    @Override
+    public List<DashboardDTO> getDayOfWeekInfo(LocalDateTime from, LocalDateTime to) {
+        List<Object[]> results = accessesRepository.findAccessCountsByDayOfWeekNative(from, to);
+
+        Map<String, Long> dayOfWeekAccessMap = new LinkedHashMap<>();
+        for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
+            dayOfWeekAccessMap.put(dayOfWeek
+                    .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase(Locale.ENGLISH), 0L);
+        }
+
+        for (Object[] row : results) {
+            Integer dayOfWeekValue = ((Number) row[0]).intValue();
+            Long count = ((Number) row[1]).longValue();
+
+            DayOfWeek dayOfWeek = DayOfWeek.of(dayOfWeekValue);
+            String dayName = dayOfWeek
+                    .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase(Locale.ENGLISH);
+            dayOfWeekAccessMap.put(dayName, count);
+        }
+
+        return dayOfWeekAccessMap.entrySet().stream()
+                .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
     }
 }
