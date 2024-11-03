@@ -193,7 +193,7 @@ public class AccessesService implements IAccessesService {
      * @param accessEntity AccessEntity to be mapped.
      * @return AccessDTO representing the AccessEntity.
      */
-    private AccessDTO mapToAccessDTO(AccessEntity accessEntity) {
+    public AccessDTO mapToAccessDTO(AccessEntity accessEntity) {
         AccessDTO accessDTO = modelMapper.map(accessEntity, AccessDTO.class);
 
         accessDTO.setAuthorizerId(accessEntity.getAuth().getCreatedUser());
