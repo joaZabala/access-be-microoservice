@@ -50,9 +50,12 @@ public class AuthController {
      * @param size   The number of records per page (default is 10).
      * @return list of authorizations.
      */
-    @Operation(summary = "Get all neighborhood access authorizations", description = "Retrieves a paginated list of visitor access authorizations based on specified filters")
+    @Operation(summary = "Get all neighborhood access authorizations",
+        description = "Retrieves a paginated list of visitor access authorizations based on specified filters")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved access authorizations", content = @Content(schema = @Schema(implementation = AuthDTO.class))),
+            @ApiResponse(responseCode = "200",
+                description = "Successfully retrieved access authorizations",
+                content = @Content(schema = @Schema(implementation = AuthDTO.class))),
     })
     @GetMapping
     public List<AuthDTO> getAuth(@Valid AuthFilter filter,
@@ -69,10 +72,13 @@ public class AuthController {
      * @return list of valid authorizations.
      */
 
-    @Operation(summary = "Get valid neighborhood access authorizations by document number", description = "Retrieves all active and valid access permits for a visitor identified by their document number")
+    @Operation(summary = "Get valid neighborhood access authorizations by document number",
+        description = "Retrieves all active and valid access permits for a visitor identified by their document number")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved valid access authorizations", content = @Content(schema = @Schema(implementation = AuthDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Visitor with document number not found", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved valid access authorizations",
+                content = @Content(schema = @Schema(implementation = AuthDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Visitor with document number not found",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @GetMapping("/valid")
     public List<AuthDTO> getValidAuths(@RequestParam Long docNumber) {
@@ -81,16 +87,19 @@ public class AuthController {
 
     /**
      * Authorize visitor with authorized ranges.
-     * 
+     *
      * @param visitorAuthRequest request.
      * @param userId             request.
      * @return authorization created.
      */
 
-    @Operation(summary = "Create new neighborhood access authorization", description = "Creates a new authorization for a visitor to enter the private neighborhood during specified time ranges")
+    @Operation(summary = "Create new neighborhood access authorization",
+        description = "Creates a new authorization for a visitor to enter the private neighborhood during specified time ranges")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Access authorization successfully created", content = @Content(schema = @Schema(implementation = AuthDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid request parameters or time ranges", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "200", description = "Access authorization successfully created",
+                content = @Content(schema = @Schema(implementation = AuthDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters or time ranges",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @PostMapping("/authorization")
     public ResponseEntity<AuthDTO> createAuthorization(@RequestBody VisitorAuthRequest visitorAuthRequest,
@@ -105,10 +114,13 @@ public class AuthController {
      * @return authorization created.
      */
 
-    @Operation(summary = "Verify visitor's access permission", description = "Checks if a visitor has current valid authorization to enter the private neighborhood")
+    @Operation(summary = "Verify visitor's access permission",
+        description = "Checks if a visitor has current valid authorization to enter the private neighborhood")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Access verification completed successfully", content = @Content(schema = @Schema(implementation = Boolean.class))),
-            @ApiResponse(responseCode = "404", description = "Document number not found in the system", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "200", description = "Access verification completed successfully",
+                content = @Content(schema = @Schema(implementation = Boolean.class))),
+            @ApiResponse(responseCode = "404", description = "Document number not found in the system",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @GetMapping("/authorization/{docNumber}")
     public ResponseEntity<Boolean> checkAuthorization(@PathVariable Long docNumber) {
@@ -123,10 +135,13 @@ public class AuthController {
      * @return ResponseEntity containing the deleted {@link AuthDTO}
      */
 
-    @Operation(summary = "Delete a neighborhood access authorization", description = "Revokes and removes an existing access authorization for a visitor")
+    @Operation(summary = "Delete a neighborhood access authorization",
+        description = "Revokes and removes an existing access authorization for a visitor")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Access authorization successfully deleted", content = @Content(schema = @Schema(implementation = AuthDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Authorization not found", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "200", description = "Access authorization successfully deleted",
+                content = @Content(schema = @Schema(implementation = AuthDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Authorization not found",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @DeleteMapping("/authorization")
     public ResponseEntity<AuthDTO> deleteAuthorization(@RequestHeader("auth-id") Long authId,

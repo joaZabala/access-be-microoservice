@@ -40,17 +40,20 @@ public class AuthRangeController {
 
     /**
      * Creates a new authorized range.
-     * 
+     *
      * @param visitorType the type of visitor.
      * @param docNumber   the document number of the visitor.
      * @param plotId      the plot id.
      * @return the created authorized range.
      */
 
-    @Operation(summary = "Get authorization ranges", description = "Retrieves authorization ranges based on visitor type, document number, and plot ID")
+    @Operation(summary = "Get authorization ranges",
+        description = "Retrieves authorization ranges based on visitor type, document number, and plot ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved authorization ranges", content = @Content(schema = @Schema(implementation = AuthRangeDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Visitor or plot id not found.", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved authorization ranges",
+                content = @Content(schema = @Schema(implementation = AuthRangeDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Visitor or plot id not found.",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @GetMapping
     public List<AuthRangeDTO> getAuthRanges(@RequestParam(required = true) VisitorType visitorType,
@@ -62,7 +65,7 @@ public class AuthRangeController {
 
     /**
      * Deletes an authorized range.
-     * 
+     *
      * @param id     the id of the authorized range.
      * @param userId the id of the user making the request.
      * @return the deleted authorized range.
@@ -70,8 +73,10 @@ public class AuthRangeController {
 
     @Operation(summary = "Delete authorization range", description = "Removes an existing authorization range by its ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Authorization range successfully deleted", content = @Content(schema = @Schema(implementation = AuthRangeDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Authorization range not found", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "200", description = "Authorization range successfully deleted",
+                content = @Content(schema = @Schema(implementation = AuthRangeDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Authorization range not found",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @DeleteMapping
     public ResponseEntity<AuthRangeDTO> deleteAuthRange(@RequestParam(required = true) Long id,
@@ -81,7 +86,7 @@ public class AuthRangeController {
 
     /**
      * Updates an existing authorized range.
-     * 
+     *
      * @param authRangeId id of the authorized range.
      * @param request     the updated authorized range.
      * @param id          the id of the user making the request.
@@ -90,9 +95,12 @@ public class AuthRangeController {
 
     @Operation(summary = "Update authorization range", description = "Updates an existing authorization range with new information")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Authorization range successfully updated", content = @Content(schema = @Schema(implementation = AuthRangeDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid request data or ID format", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
-            @ApiResponse(responseCode = "404", description = "Authorization range not found", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "200", description = "Authorization range successfully updated",
+                content = @Content(schema = @Schema(implementation = AuthRangeDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request data or ID format",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "404", description = "Authorization range not found",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @PutMapping
     public ResponseEntity<AuthRangeDTO> updateAuthRange(@RequestParam(required = true) Long authRangeId,

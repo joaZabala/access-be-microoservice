@@ -36,17 +36,21 @@ public class QRController {
 
     /**
      * Endpoint to generate a QR code for a visitor based on their document number.
-     * 
+     *
      * @param docNumber The document number of the visitor
      *                  for whom the QR code should be generated.
      * @return A ResponseEntity containing the QR code image in byte format,
      *         or an error response in case of failure.
      */
-    @Operation(summary = "Generate QR code for visitor", description = "Generates a QR code image containing visitor information based on their document number")
+    @Operation(summary = "Generate QR code for visitor",
+        description = "Generates a QR code image containing visitor information based on their document number")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "QR code successfully generated", content = @Content(mediaType = MediaType.IMAGE_PNG_VALUE, schema = @Schema(type = "string", format = "binary"))),
-            @ApiResponse(responseCode = "404", description = "Visitor not found", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
-            @ApiResponse(responseCode = "500", description = "Error generating QR code", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "200", description = "QR code successfully generated",
+                content = @Content(mediaType = MediaType.IMAGE_PNG_VALUE, schema = @Schema(type = "string", format = "binary"))),
+            @ApiResponse(responseCode = "404", description = "Visitor not found",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "500", description = "Error generating QR code",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @GetMapping("/{docNumber}")
     public ResponseEntity<byte[]> generateQr(@PathVariable Long docNumber) throws IOException {

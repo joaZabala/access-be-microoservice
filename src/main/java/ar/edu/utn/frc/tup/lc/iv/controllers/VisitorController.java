@@ -16,7 +16,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller class for managing authorized persons.
@@ -36,7 +44,7 @@ public class VisitorController {
 
     /**
      * Retrieves a list of all visitors.
-     * 
+     *
      * @param page   the page number for pagination
      * @param size   the size of the page
      * @param filter dto with filters
@@ -44,7 +52,8 @@ public class VisitorController {
      */
     @Operation(summary = "Get all visitors", description = "Retrieves a paginated list of visitors with optional filtering")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved visitors list", content = @Content(schema = @Schema(implementation = PaginatedResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved visitors list",
+                content = @Content(schema = @Schema(implementation = PaginatedResponse.class))),
     })
     @GetMapping()
     public PaginatedResponse<VisitorDTO> getAllVisitors(
@@ -63,8 +72,10 @@ public class VisitorController {
      */
     @Operation(summary = "Get visitor by document number", description = "Retrieves a specific visitor using their document number")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved visitor", content = @Content(schema = @Schema(implementation = VisitorDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Visitor not found", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved visitor",
+                content = @Content(schema = @Schema(implementation = VisitorDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Visitor not found",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @GetMapping("/by-doc-number/{docNumber}")
     public ResponseEntity<VisitorDTO> getVisitorByDocNumber(
@@ -74,17 +85,20 @@ public class VisitorController {
 
     /**
      * Updates an existing visitor or create a new visitor.
-     * 
+     *
      * @param visitorRequest The DTO containing the details
      *                       to create or update Visitor.
      * @param visitorId      id of visitor
      * @param userId         The identifier of the user.
      * @return VisitorDto.
      */
-    @Operation(summary = "Create or update visitor", description = "Creates a new visitor or updates an existing one based on the provided data")
+    @Operation(summary = "Create or update visitor",
+        description = "Creates a new visitor or updates an existing one based on the provided data")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Visitor successfully created/updated", content = @Content(schema = @Schema(implementation = VisitorDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "200", description = "Visitor successfully created/updated",
+                content = @Content(schema = @Schema(implementation = VisitorDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request data",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @PutMapping()
     public ResponseEntity<VisitorDTO> generateVisitor(
@@ -103,8 +117,10 @@ public class VisitorController {
      */
     @Operation(summary = "Delete visitor", description = "Deactivates a visitor by their ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Visitor successfully deactivated", content = @Content(schema = @Schema(implementation = VisitorDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Visitor not found", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "200", description = "Visitor successfully deactivated",
+                content = @Content(schema = @Schema(implementation = VisitorDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Visitor not found",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @DeleteMapping("/{visitorId}")
     public ResponseEntity<VisitorDTO> deleteVisitor(
@@ -121,8 +137,10 @@ public class VisitorController {
      */
     @Operation(summary = "Get visitor by ID", description = "Retrieves a specific visitor using their unique identifier")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved visitor", content = @Content(schema = @Schema(implementation = VisitorDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Visitor not found", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved visitor",
+                content = @Content(schema = @Schema(implementation = VisitorDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Visitor not found",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @GetMapping("/{visitorId}")
     public ResponseEntity<VisitorDTO> getVisitorById(

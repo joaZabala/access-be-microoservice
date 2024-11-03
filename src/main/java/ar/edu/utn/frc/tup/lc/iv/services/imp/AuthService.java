@@ -162,7 +162,7 @@ public class AuthService implements IAuthService {
         VisitorEntity visitorEntity = visitorRepository.findByDocNumber(docNumber);
 
 
-        if(Objects.isNull(visitorEntity)){
+        if (Objects.isNull(visitorEntity)) {
             throw new EntityNotFoundException("No se encontró el visitante con el documento " + docNumber);
         }
 
@@ -446,7 +446,7 @@ public class AuthService implements IAuthService {
      * @return ResponseEntity containing the activated {@link AuthDTO}
      */
     @Override
-    public AuthDTO  activateAuthorization(Long authId) {
+    public AuthDTO activateAuthorization(Long authId) {
         AuthEntity authEntity = authRepository.findByAuthId(authId);
         if (authEntity != null) {
             authEntity.setActive(true);

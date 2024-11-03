@@ -53,8 +53,10 @@ public class AccessController {
      */
     @Operation(summary = "Authorize visitor access", description = "Register a new access for a visitor to enter or exit the neighborhood")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Access authorization successfully created", content = @Content(schema = @Schema(implementation = AccessDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Vehicle or authorization details not found", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "200", description = "Access authorization successfully created",
+                content = @Content(schema = @Schema(implementation = AccessDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Vehicle or authorization details not found",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @PostMapping("/authorize")
     public ResponseEntity<AccessDTO> authorizeVisitor(@RequestBody AccessDTO accessDTO,
@@ -66,17 +68,20 @@ public class AccessController {
     /**
      * Retrieves all access records, optionally filtered
      * by criteria specified in the filter object.
-     * 
+     *
      * @param filter The filtering criteria
      * @param page   The page number for pagination (default is 0).
      * @param size   The number of records per page (default is 10).
      * @return A list of {@link AccessDTO} containing access records.
      */
 
-    @Operation(summary = "Get all access records", description = "Retrieves a paginated list of visitor accesses records with optional filtering")
+    @Operation(summary = "Get all access records",
+        description = "Retrieves a paginated list of visitor accesses records with optional filtering")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved access records", content = @Content(schema = @Schema(implementation = PaginatedResponse.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid filter parameters provided", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved access records",
+                content = @Content(schema = @Schema(implementation = PaginatedResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid filter parameters provided",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @GetMapping
     public PaginatedResponse<AccessDTO> getAllAccess(@Valid AccessesFilter filter,
@@ -88,13 +93,14 @@ public class AccessController {
 
     /**
      * Retrieves all access entries.
-     * 
+     *
      * @return List of AccessDTOs representing entries.
      */
 
     @Operation(summary = "Get all entry records", description = "Retrieves a list of all visitor entries into the neighborhood")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved entry records", content = @Content(schema = @Schema(implementation = AccessDTO.class)))
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved entry records",
+                content = @Content(schema = @Schema(implementation = AccessDTO.class)))
     })
     @GetMapping("/entries")
     public List<AccessDTO> getAllEntries() {
@@ -103,13 +109,14 @@ public class AccessController {
 
     /**
      * Retrieves all access exits.
-     * 
+     *
      * @return List of AccessDTOs representing exits.
      */
 
     @Operation(summary = "Get all exit records", description = "Retrieves a list of all visitor exits from the neighborhood")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved exit records", content = @Content(schema = @Schema(implementation = AccessDTO.class)))
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved exit records",
+                content = @Content(schema = @Schema(implementation = AccessDTO.class)))
     })
     @GetMapping("/exits")
     public List<AccessDTO> getAllExits() {
@@ -118,16 +125,19 @@ public class AccessController {
 
     /**
      * Check if visitor can do an action.
-     * 
+     *
      * @param carPlate car plate
      * @param action   action
      * @return boolean.
      */
 
-    @Operation(summary = "Check visitor access permission", description = "Verifies if a visitor is permitted to perform a specific action (entry/exit) based on its license plate")
+    @Operation(summary = "Check visitor access permission",
+        description = "Verifies if a visitor is permitted to perform a specific action (entry/exit) based on its license plate")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Access check completed successfully", content = @Content(schema = @Schema(implementation = Boolean.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid car plate or action type", content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "200", description = "Access check completed successfully",
+                content = @Content(schema = @Schema(implementation = Boolean.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid car plate or action type",
+                content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @GetMapping("/check-access")
     public Boolean checkAccess(@RequestParam String carPlate, @RequestParam ActionTypes action) {
