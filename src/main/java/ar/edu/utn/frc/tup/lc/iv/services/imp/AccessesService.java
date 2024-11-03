@@ -237,7 +237,7 @@ public class AccessesService implements IAccessesService {
             hourlyAccessMap.put(hour, count);
         }
         return hourlyAccessMap.entrySet().stream()
-                .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue()))
+                .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue(), 0L))
                 .collect(Collectors.toList());
     }
     /**
@@ -251,24 +251,25 @@ public class AccessesService implements IAccessesService {
     public List<DashboardDTO> getDayOfWeekInfo(LocalDateTime from, LocalDateTime to) {
         List<Object[]> results = accessesRepository.findAccessCountsByDayOfWeekNative(from, to);
 
-        Map<String, Long> dayOfWeekAccessMap = new LinkedHashMap<>();
+        Map<String, Long[]> dayOfWeekAccessMap = new LinkedHashMap<>();
         for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
-            dayOfWeekAccessMap.put(dayOfWeek
-                    .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase(Locale.ENGLISH), 0L);
+            String dayName = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase(Locale.ENGLISH);
+            dayOfWeekAccessMap.put(dayName, new Long[]{0L, 0L});
         }
 
         for (Object[] row : results) {
             Integer dayOfWeekValue = ((Number) row[0]).intValue();
-            Long count = ((Number) row[1]).longValue();
+            Long entriesCount = ((Number) row[1]).longValue();
+            Long exitsCount = ((Number) row[2]).longValue();
 
             DayOfWeek dayOfWeek = DayOfWeek.of(dayOfWeekValue);
-            String dayName = dayOfWeek
-                    .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase(Locale.ENGLISH);
-            dayOfWeekAccessMap.put(dayName, count);
+            String dayName = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase(Locale.ENGLISH);
+
+            dayOfWeekAccessMap.put(dayName, new Long[]{entriesCount, exitsCount});
         }
 
         return dayOfWeekAccessMap.entrySet().stream()
-                .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue()))
+                .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue()[0], entry.getValue()[1])) // entradas y salidas
                 .collect(Collectors.toList());
     }
 }
