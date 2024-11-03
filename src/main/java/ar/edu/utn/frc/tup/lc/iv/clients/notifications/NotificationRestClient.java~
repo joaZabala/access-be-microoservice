@@ -5,6 +5,7 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.services.imp.AuthService;
 import ar.edu.utn.frc.tup.lc.iv.services.imp.VisitorService;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
