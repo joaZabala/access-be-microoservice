@@ -1,13 +1,12 @@
 package ar.edu.utn.frc.tup.lc.iv.controllers;
 
+import ar.edu.utn.frc.tup.lc.iv.clients.notifications.NotificationRestClient;
+import ar.edu.utn.frc.tup.lc.iv.clients.notifications.QrEmailRequest;
 import ar.edu.utn.frc.tup.lc.iv.services.IQRService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 import java.io.IOException;
@@ -25,6 +24,9 @@ public class QRController {
      */
     @Autowired
     private IQRService qrService;
+
+    @Autowired
+    private NotificationRestClient notificationRestClient;
     /**
      * Const for a APIERROR 500.
      */
@@ -47,6 +49,36 @@ public class QRController {
             return ResponseEntity.badRequest().body(null);
         } catch (IOException e) {
             return ResponseEntity.status(NUMBER).body(null);
+        }
+    }
+
+    @PostMapping("/initialize-template")
+
+    public ResponseEntity<String> initializeTemplate(@RequestHeader ("x-user-id") Long id) {
+        try {
+            notificationRestClient.initializeTemplate();
+            return ResponseEntity.ok("Plantilla inicializada correctamente");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body("Error al inicializar la plantilla: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/send")
+    public ResponseEntity<String> sendQREmail(@RequestBody QrEmailRequest request , @RequestHeader ("x-user-id") Long id) {
+        try {
+            notificationRestClient.sendQRCodeEmail(
+                    request.getEmail(),
+                    request.getName(),
+                    request.getDocNumber()
+            );
+            return ResponseEntity.ok("Email con QR enviado correctamente a " + request.getEmail());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body("Error en los datos proporcionados: " + e.getMessage());
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError()
+                    .body("Error al generar o enviar el QR: " + e.getMessage());
         }
     }
 }

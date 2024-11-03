@@ -16,7 +16,7 @@ public class RestTemplateConfig {
     /**
      * Timeout duration in milliseconds.
      */
-    private static final int TIMEOUT_MILLISECONDS = 1000;
+    private static final int TIMEOUT_MILLISECONDS = 10000;
 
     /**
      * Creates and configures a RestTemplate bean.

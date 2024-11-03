@@ -1,0 +1,12 @@
+package ar.edu.utn.frc.tup.lc.iv.clients.notifications;
+
+import lombok.Data;
+
+@Data
+public class EmailTemplateRequest {
+    private String name;
+    private String base64body;
+    // Getters y setters
+    public void setName(String name) { this.name = name; }
+    public void setBase64body(String base64body) { this.base64body = base64body; }
+}

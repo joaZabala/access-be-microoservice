@@ -14,4 +14,6 @@ public interface IQRService {
      * @throws IOException If there is an issue while generating the QR code.
      */
     byte[] generateQrForVisitor(Long docNumber) throws IOException;
+
+    String generateQRBase64(Long docNumber) throws IOException;
 }

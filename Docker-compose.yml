@@ -16,6 +16,7 @@ services:
       - mysql-data:/var/lib/mysql
     networks:
       service-net-app:
+      back-end-network:
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       start_period: 10s
@@ -34,14 +35,18 @@ services:
       - SPRING_DATASOURCE_PASSWORD=utn
       - TZ=America/Argentina/Buenos_Aires
       - USERS_API_URL=http://host.docker.internal:8283/users #usar así si se levantan dos compose por separado
+      - NOTIFICATION_SERVICE_URL=http://host.docker.internal:8011  # Agregamos la URL del servicio de notificaciones
     ports:
       - "8001:8081"
     networks:
       service-net-app:
+      back-end-network:
     restart: on-failure
 
 networks:
   service-net-app:
+  back-end-network:
+      external: true  # Indicamos que esta red es externa
 
 volumes:
   mysql-data:
