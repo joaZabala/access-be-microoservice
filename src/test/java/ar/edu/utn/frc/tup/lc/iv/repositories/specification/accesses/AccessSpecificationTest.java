@@ -43,6 +43,11 @@ class AccessSpecificationTest {
     @Mock
     private Predicate predicate;
 
+    /**
+     * lenient() es un modificador en Mockito que hace
+     * que el framework sea más permisivo con los stubs
+     * que no se utilizan en una prueba específica.
+     */
     private void setupMocksForTest() {
         lenient().when(root.join(anyString())).thenReturn(authJoin);
         lenient().when(authJoin.join(anyString())).thenReturn(visitorJoin);
