@@ -7,9 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class EmailVariable {
     private String key;
     private String value;
+
+    public EmailVariable(String keyValue, String initialValue) {
+        this.key = keyValue;
+        this.value = initialValue;
+    }
 
 }

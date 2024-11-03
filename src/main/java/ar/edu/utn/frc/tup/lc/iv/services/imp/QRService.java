@@ -67,29 +67,29 @@ public class QRService implements IQRService {
         }
     }
 
-    @Override
-    public String generateQRBase64(Long docNumber) throws IOException {
-        VisitorEntity visitor = visitorsRepository.findByDocNumber(docNumber);
-
-        if (visitor == null) {
-            throw new IllegalArgumentException("No se encontró un visitante con el número de documento proporcionado.");
-        }
-
-        String qrData = "Name: " + visitor.getName() + ", "
-                + "Last name: " + visitor.getLastName() + ", "
-                + "Document: " + visitor.getDocNumber();
-
-        try {
-            QRCodeWriter qrCodeWriter = new QRCodeWriter();
-            BitMatrix bitMatrix = qrCodeWriter.encode(qrData, BarcodeFormat.QR_CODE, WH, WH);
-
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
-
-            // Convierte el byte array a Base64
-            return Base64.getEncoder().encodeToString(outputStream.toByteArray());
-        } catch (WriterException e) {
-            throw new IOException("Error generating QR code.", e); // Preserve the stack trace
-        }
-    }
+//    @Override
+//    public String generateQRBase64(Long docNumber) throws IOException {
+//        VisitorEntity visitor = visitorsRepository.findByDocNumber(docNumber);
+//
+//        if (visitor == null) {
+//            throw new IllegalArgumentException("No se encontró un visitante con el número de documento proporcionado.");
+//        }
+//
+//        String qrData = "Name: " + visitor.getName() + ", "
+//                + "Last name: " + visitor.getLastName() + ", "
+//                + "Document: " + visitor.getDocNumber();
+//
+//        try {
+//            QRCodeWriter qrCodeWriter = new QRCodeWriter();
+//            BitMatrix bitMatrix = qrCodeWriter.encode(qrData, BarcodeFormat.QR_CODE, WH, WH);
+//
+//            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//            MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
+//
+//            // Convierte el byte array a Base64
+//            return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+//        } catch (WriterException e) {
+//            throw new IOException("Error generating QR code.", e); // Preserve the stack trace
+//        }
+//    }
 }
