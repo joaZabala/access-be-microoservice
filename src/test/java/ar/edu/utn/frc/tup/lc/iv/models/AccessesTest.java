@@ -113,15 +113,12 @@ class AccessesTest {
 
     @Test
     void testToString() {
-        // Given
         LocalDateTime now = LocalDateTime.now();
         Accesses access = new Accesses(1L, 2L, now, now.plusHours(2),
                 VehicleTypes.CAR, "ABC123", "Red Toyota", 3L, "Test comments");
 
-        // When
         String toString = access.toString();
 
-        // Then
         assertTrue(toString.contains("accessId=1"));
         assertTrue(toString.contains("authRangeId=2"));
         assertTrue(toString.contains("vehicleType=CAR"));
