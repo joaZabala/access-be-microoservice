@@ -36,7 +36,7 @@ class AuthSpecificationTest {
 
     @Mock
     private Predicate predicate;
-    
+
     /**
      * lenient() es un modificador en Mockito que hace
      * que el framework sea más permisivo con los stubs
@@ -56,49 +56,40 @@ class AuthSpecificationTest {
     }
 
     @Test
-    void withFilters_NoFilters() {
-        // Setup
+    void withFiltersNoFilters() {
         setupMocksForTest();
         AuthFilter filter = new AuthFilter();
 
-        // Execute
         Specification<AuthEntity> spec = AuthSpecification.withFilters(filter);
         Predicate result = spec.toPredicate(root, query, criteriaBuilder);
 
-        // Verify
         assertNotNull(result);
         verify(criteriaBuilder).and(any(Predicate[].class));
     }
 
     @Test
-    void withFilters_Id() {
-        // Setup
+    void withFiltersId() {
         setupMocksForTest();
         AuthFilter filter = new AuthFilter();
         filter.setId(1L);
 
-        // Execute
         Specification<AuthEntity> spec = AuthSpecification.withFilters(filter);
         Predicate result = spec.toPredicate(root, query, criteriaBuilder);
 
-        // Verify
         assertNotNull(result);
         verify(root).get("authId");
         verify(criteriaBuilder).equal(any(), eq(1L));
     }
 
     @Test
-    void withFilters_TextFilter() {
-        // Setup
+    void withFiltersTextFilter() {
         setupMocksForTest();
         AuthFilter filter = new AuthFilter();
         filter.setTextFilter("test");
 
-        // Execute
         Specification<AuthEntity> spec = AuthSpecification.withFilters(filter);
         Predicate result = spec.toPredicate(root, query, criteriaBuilder);
 
-        // Verify
         assertNotNull(result);
         verify(criteriaBuilder, times(3)).lower(any());
         verify(criteriaBuilder, times(3)).like(any(), anyString());
@@ -106,17 +97,14 @@ class AuthSpecificationTest {
     }
 
     @Test
-    void withFilters_DocumentType() {
-        // Setup
+    void withFiltersDocumentType() {
         setupMocksForTest();
         AuthFilter filter = new AuthFilter();
         filter.setDocumentType(DocumentType.DNI);
 
-        // Execute
         Specification<AuthEntity> spec = AuthSpecification.withFilters(filter);
         Predicate result = spec.toPredicate(root, query, criteriaBuilder);
 
-        // Verify
         assertNotNull(result);
         verify(root).get("visitor");
         verify(visitorPath).get("documentType");
@@ -124,45 +112,17 @@ class AuthSpecificationTest {
     }
 
     @Test
-    void withFilters_VisitorType() {
-        // Setup
+    void withFiltersVisitorType() {
         setupMocksForTest();
         AuthFilter filter = new AuthFilter();
         filter.setVisitorType(VisitorType.OWNER);
 
-        // Execute
         Specification<AuthEntity> spec = AuthSpecification.withFilters(filter);
         Predicate result = spec.toPredicate(root, query, criteriaBuilder);
 
-        // Verify
         assertNotNull(result);
         verify(root).get("visitorType");
         verify(criteriaBuilder).equal(any(), eq(VisitorType.OWNER));
     }
 
-//    @Test
-//    void withFilters_AllFilters() {
-//        // Setup
-//        setupMocksForTest();
-//        AuthFilter filter = new AuthFilter();
-//        filter.setId(1L);
-//        filter.setTextFilter("test");
-//        filter.setDocumentType(DocumentType.DNI);
-//        filter.setVisitorType(VisitorType.OWNER);
-//
-//        // Execute
-//        Specification<AuthEntity> spec = AuthSpecification.withFilters(filter);
-//        Predicate result = spec.toPredicate(root, query, criteriaBuilder);
-//
-//        // Verify
-//        assertNotNull(result);
-//        verify(root).get("authId");
-//        verify(root).get("visitor");
-//        verify(root).get("visitorType");
-//        verify(criteriaBuilder).or(any(Predicate[].class));
-//        verify(criteriaBuilder).and(any(Predicate[].class));
-//        verify(criteriaBuilder).equal(any(), eq(DocumentType.DNI));
-//        verify(criteriaBuilder).equal(any(), eq(VisitorType.OWNER));
-//        verify(criteriaBuilder).equal(any(), eq(1L));
-//    }
 }
