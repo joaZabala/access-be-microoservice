@@ -47,7 +47,6 @@ services:
 networks:
   service-net-app:
   back-end-network:
-      external: true  # Indicamos que esta red es externa
 
 volumes:
   mysql-data:

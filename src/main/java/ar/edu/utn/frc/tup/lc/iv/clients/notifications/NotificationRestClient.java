@@ -46,7 +46,6 @@ public class NotificationRestClient {
                 "            margin: 0;\n" +
                 "            padding: 20px;\n" +
                 "            background-color: #f7f7f7;\n" +
-                "            color:#ffffff\n" +
                 "        }\n" +
                 "        .container {\n" +
                 "            max-width: 600px;\n" +
@@ -55,13 +54,25 @@ public class NotificationRestClient {
                 "            border-radius: 5px;\n" +
                 "            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n" +
                 "            padding: 20px;\n" +
+                "            color: #ffffff;\n" +
                 "        }\n" +
                 "        .logo {\n" +
                 "            text-align: center;\n" +
                 "            margin-bottom: 20px;\n" +
                 "        }\n" +
+                "        .invitation-details {\n" +
+                "            background-color: #495057;\n" +
+                "            padding: 15px;\n" +
+                "            border-radius: 8px;\n" +
+                "            margin: 20px 0;\n" +
+                "            text-align: center;\n" +
+                "        }\n" +
                 "        .qr-code {\n" +
                 "            text-align: center;\n" +
+                "            margin-top: 20px;\n" +
+                "        }\n" +
+                "        h2, p {\n" +
+                "            margin: 5px 0;\n" +
                 "        }\n" +
                 "    </style>\n" +
                 "</head>\n" +
@@ -70,12 +81,18 @@ public class NotificationRestClient {
                 "        <div class=\"logo\">\n" +
                 "            <img src=\"https://www.villadelcondor.com/imagenes/villa_del_condor.png\" alt=\"Logo de la Empresa\" style=\"max-width: 100%; height: auto;\">\n" +
                 "        </div>\n" +
-                "        <h2 style=\"text-align: center; color: #ffffff;\"></h2>\n" +
-                "        <div class=\"qr-code\">\n" +
-                "            <img src=\"{QR_SERVICE_BASE_URL}Name:fede,%20LastName:%20Tahan,%20Document:%C2%A02043673720\" alt=\"Código QR\" style=\"max-width: 100%; height: auto;\">\n" +
+                "        <div class=\"invitation-details\">\n" +
+                "            <h2>¡Federico Tahan te ha invitado!</h2>\n" +
+                "            <p><strong>Desde:</strong> 23/02/2024</p>\n" +
+                "            <p><strong>Hasta:</strong> 01/12/2024</p>\n" +
+                "            <p><strong>Hora:</strong> 10:30 AM - 3:40 PM</p>\n" +
+                "            <p><strong>Día:</strong> Lunes</p>\n" +
                 "        </div>\n" +
-                "        <p style=\"text-align: center; margin-top: 20px; color: #ffffff;\">\n" +
-                "            Presentá este QR en la entrada del complejo.\n" +
+                "        <div class=\"qr-code\">\n" +
+                "            <img src=\"http://api.qrserver.com/v1/create-qr-code/?size=200x200&format=png&data=Name:fede,%20LastName:%20Tahan,%20Document:%C2%A02043673720\" alt=\"Código QR\" style=\"max-width: 100%; height: auto;\">\n" +
+                "        </div>\n" +
+                "        <p style=\"text-align: center; margin-top: 20px;\">\n" +
+                "            Escanea el código QR para más información.\n" +
                 "        </p>\n" +
                 "    </div>\n" +
                 "</body>\n" +
@@ -110,7 +127,6 @@ public class NotificationRestClient {
 
         // Crear la lista de variables para la plantilla
         List<EmailVariable> variables = new ArrayList<>();
-        variables.add((new EmailVariable("name", recipientName)));
 
         // Crear la solicitud de envío de email
         var emailRequest = new EmailRequest();
