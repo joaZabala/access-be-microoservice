@@ -254,7 +254,7 @@ public class AccessesService implements IAccessesService {
         Map<String, Long> dayOfWeekAccessMap = new LinkedHashMap<>();
         for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
             dayOfWeekAccessMap.put(dayOfWeek
-                    .getDisplayName(TextStyle.FULL, Locale.ENGLISH), 0L);
+                    .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase(Locale.ENGLISH), 0L);
         }
 
         for (Object[] row : results) {
@@ -263,7 +263,7 @@ public class AccessesService implements IAccessesService {
 
             DayOfWeek dayOfWeek = DayOfWeek.of(dayOfWeekValue);
             String dayName = dayOfWeek
-                    .getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+                    .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase(Locale.ENGLISH);
             dayOfWeekAccessMap.put(dayName, count);
         }
 
