@@ -34,10 +34,12 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -253,6 +255,28 @@ class AuthServiceTest {
         assertEquals(VisitorType.OWNER, result.getVisitorType());
     }
 
+    @Test
+    void createNewAuthorizationPROVIDER() {
+        VisitorDTO visitorDTO = new VisitorDTO();
+        visitorDTO.setDocNumber(12345L);
+
+        VisitorAuthRequest visitorAuthRequest = new VisitorAuthRequest();
+        visitorAuthRequest.setVisitorType(VisitorType.PROVIDER);
+        visitorAuthRequest.setPlotId(2L);
+        visitorAuthRequest.setExternalID(1L);
+
+        AuthEntity authEntity = new AuthEntity();
+        authEntity.setVisitorType(VisitorType.PROVIDER);
+        authEntity.setExternalID(1L);
+
+        when(authRepository.save(any(AuthEntity.class))).thenReturn(authEntity);
+        when(modelMapper.map(authEntity, AuthDTO.class)).thenReturn(new AuthDTO());
+
+        AuthDTO result = authService.createNewAuthorization(visitorDTO, visitorAuthRequest);
+
+        assertNotNull(result);
+        assertEquals(VisitorType.PROVIDER, result.getVisitorType());
+    }
 
     @Test
     void testAuthorizeVisitor_NoValidAuths() {
@@ -269,7 +293,6 @@ class AuthServiceTest {
 
         assertEquals("No existen autorizaciones validas para el documento 12345", thrown.getMessage());
     }
-
 
     @Test
     void isAuthorizedTest_False() {
@@ -328,6 +351,7 @@ class AuthServiceTest {
     void updateAuthorizationTest() {
         // Arrange
         VisitorAuthRequest visitorAuthRequest = new VisitorAuthRequest();
+
         visitorAuthRequest.setAuthRangeRequest(new ArrayList<>());
 
         when(authRangeService.registerAuthRanges(anyList(), any(AuthEntity.class), any(VisitorDTO.class)))
@@ -425,6 +449,31 @@ class AuthServiceTest {
         request.setAuthRangeRequest(new ArrayList<>());
         List<AuthRange> authRanges = new ArrayList<>();
 
+        AuthRange authRange1 = new AuthRange(
+                1L,
+                LocalDate.of(2023, 1, 1),
+                LocalDate.of(2023, 12, 31),
+                LocalTime.of(8, 0),
+                LocalTime.of(17, 0),
+                Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY),
+                101L,
+                "Access",
+                true
+        );
+
+        AuthRange authRange2 = new AuthRange(
+                2L,
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 12, 31),
+                LocalTime.of(9, 0),
+                LocalTime.of(18, 0),
+                Arrays.asList(DayOfWeek.TUESDAY, DayOfWeek.THURSDAY),
+                102L,
+                "Access",
+                false
+        );
+        authRanges.add(authRange1);
+        authRanges.add(authRange2);
         when(authRangeService.registerAuthRanges(anyList(), any(), any())).thenReturn(authRanges);
 
         // Execute
