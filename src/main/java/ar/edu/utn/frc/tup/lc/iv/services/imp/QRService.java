@@ -65,4 +65,5 @@ public class QRService implements IQRService {
             throw new IOException("Error generating QR code.", e); // Preserve the stack trace
         }
     }
+
 }

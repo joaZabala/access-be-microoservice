@@ -94,7 +94,7 @@ public class QRController {
             notificationRestClient.sendQRCodeEmail(
                     request.getEmail(),
                     request.getInvitorName(),
-                    request.getDocNumber()
+                    request.getDoc_number()
             );
             return ResponseEntity.ok("Email con QR enviado correctamente a " + request.getEmail());
         } catch (IllegalArgumentException e) {
