@@ -2,6 +2,8 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
+import jakarta.persistence.EntityNotFoundException;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.qrcode.QRCodeWriter;
@@ -56,7 +58,7 @@ public class QRServiceTest {
     public void generateQrForVisitorVisitorNotFound() {
         when(visitorRepository.findByDocNumber(anyLong())).thenReturn(null);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(EntityNotFoundException.class, () -> {
             qrService.generateQrForVisitor(12345678L);
         });
 
