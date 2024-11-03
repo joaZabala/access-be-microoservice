@@ -1,0 +1,62 @@
+package ar.edu.utn.frc.tup.lc.iv.clients.notifications;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+@SpringBootTest
+public class EmailRequestTest {
+
+    @Test
+    void emailRequest() {
+        // Crear una instancia de EmailRequest
+        EmailRequest emailRequest = new EmailRequest();
+
+        // Establecer los valores de los campos
+        emailRequest.setRecipient("test@example.com");
+        emailRequest.setSubject("Test Subject");
+        EmailVariable variable = new EmailVariable();
+        variable.setValue("John");
+        variable.setKey("name");
+        emailRequest.setVariables(List.of(variable));
+        emailRequest.setTemplateId(123L);
+
+        // Verificar los valores de los campos
+        assertEquals("test@example.com", emailRequest.getRecipient());
+        assertEquals("Test Subject", emailRequest.getSubject());
+        assertEquals(1, emailRequest.getVariables().size());
+        assertEquals("name", emailRequest.getVariables().get(0).getValue());
+        assertEquals("John", emailRequest.getVariables().get(0).getKey());
+        assertEquals(123L, emailRequest.getTemplateId());
+    }
+
+    @Test
+    void emailRequest_NoArgsConstructor_ShouldCreateEmptyObject() {
+        // Verificar que el constructor sin argumentos cree un objeto vacío
+        EmailRequest emailRequest = new EmailRequest();
+        assertNull(emailRequest.getRecipient());
+        assertNull(emailRequest.getSubject());
+        assertNull(emailRequest.getVariables());
+        assertNull(emailRequest.getTemplateId());
+    }
+
+    @Test
+    void emailRequestShouldSerialize() throws JsonProcessingException {
+        // Probar que el nombre del campo templateId se serialice correctamente como template_id
+        EmailRequest emailRequest = new EmailRequest();
+        emailRequest.setTemplateId(123L);
+
+        // Serialización usando ObjectMapper de Jackson
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(emailRequest);
+
+        // Verificar que el JSON contiene el campo con el nombre correcto
+        assertTrue(json.contains("\"template_id\":123"));
+    }
+
+}
