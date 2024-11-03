@@ -1,7 +1,10 @@
 package ar.edu.utn.frc.tup.lc.iv.clients.notifications;
 
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
+import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.services.IQRService;
 import ar.edu.utn.frc.tup.lc.iv.services.imp.QRService;
+import ar.edu.utn.frc.tup.lc.iv.services.imp.VisitorService;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +27,9 @@ public class NotificationRestClient {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private VisitorService visitorService;
 
     @Value("${notification.service.url}")
     private String EMAIL_SERVICE_BASE_URL; // Cambiar por la URL real
@@ -82,17 +88,17 @@ public class NotificationRestClient {
                 "            <img src=\"https://www.villadelcondor.com/imagenes/villa_del_condor.png\" alt=\"Logo de la Empresa\" style=\"max-width: 100%; height: auto;\">\n" +
                 "        </div>\n" +
                 "        <div class=\"invitation-details\">\n" +
-                "            <h2>¡Federico Tahan te ha invitado!</h2>\n" +
+                "            <h2>¡{{invitation}} te ha invitado!</h2>\n" +
                 "            <p><strong>Desde:</strong> 23/02/2024</p>\n" +
                 "            <p><strong>Hasta:</strong> 01/12/2024</p>\n" +
                 "            <p><strong>Hora:</strong> 10:30 AM - 3:40 PM</p>\n" +
                 "            <p><strong>Día:</strong> Lunes</p>\n" +
                 "        </div>\n" +
                 "        <div class=\"qr-code\">\n" +
-                "            <img src=\"http://api.qrserver.com/v1/create-qr-code/?size=200x200&format=png&data=Name:fede,%20LastName:%20Tahan,%20Document:%C2%A02043673720\" alt=\"Código QR\" style=\"max-width: 100%; height: auto;\">\n" +
+                "            <img src=\"{{photo_qr}}\" alt=\"Código QR\" style=\"max-width: 100%; height: auto;\">\n" +
                 "        </div>\n" +
                 "        <p style=\"text-align: center; margin-top: 20px;\">\n" +
-                "            Escanea el código QR para más información.\n" +
+                "            Presentá este codigo QR en la entrada al barrio.\n" +
                 "        </p>\n" +
                 "    </div>\n" +
                 "</body>\n" +
@@ -120,13 +126,19 @@ public class NotificationRestClient {
         this.templateId = Objects.requireNonNull(response.getBody()).getId();
     }
 
-    public void sendQRCodeEmail(String recipientEmail, String recipientName, Long docNumber) throws IOException {
+    public void sendQRCodeEmail(String recipientEmail, String invitorName, Long docNumber) throws IOException {
         // Generar el QR en base64
         String qrBase64 = qrService.generateQRBase64(docNumber);
-        System.out.println(qrBase64);
+
+        //buscar el vistante por documento
+        VisitorDTO ve = visitorService.getVisitorByDocNumber(docNumber);
 
         // Crear la lista de variables para la plantilla
         List<EmailVariable> variables = new ArrayList<>();
+        variables.add(new EmailVariable("photo_qr",  QR_SERVICE_BASE_URL + "Name:"+ve.getName()
+                +",LastName:"+ve.getLastName()+",Document:"+ ve.getDocNumber()));
+        System.out.println(variables.get(0).getValue());
+        variables.add(new EmailVariable("invitation" , invitorName ));
 
         // Crear la solicitud de envío de email
         var emailRequest = new EmailRequest();

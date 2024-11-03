@@ -75,9 +75,9 @@ public class QRService implements IQRService {
             throw new IllegalArgumentException("No se encontró un visitante con el número de documento proporcionado.");
         }
 
-        String qrData = "name: " + visitor.getName() + ", "
-                + "last_name: " + visitor.getLastName() + ", "
-                + "document: " + visitor.getDocNumber();
+        String qrData = "Name: " + visitor.getName() + ", "
+                + "Last name: " + visitor.getLastName() + ", "
+                + "Document: " + visitor.getDocNumber();
 
         try {
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
