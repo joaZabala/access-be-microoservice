@@ -160,6 +160,12 @@ public class AuthService implements IAuthService {
     public List<AuthDTO> getAuthsByDocNumber(Long docNumber) {
 
         VisitorEntity visitorEntity = visitorRepository.findByDocNumber(docNumber);
+
+
+        if(Objects.isNull(visitorEntity)){
+            throw new EntityNotFoundException("No se encontró el visitante con el documento " + docNumber);
+        }
+
         List<AuthEntity> authEntities = authRepository.findByVisitor(visitorEntity);
         List<AuthDTO> authDTOs = new ArrayList<>();
 
@@ -431,7 +437,7 @@ public class AuthService implements IAuthService {
             authEntity.setActive(false);
             authRepository.save(authEntity);
         }
-        return null;
+        throw new EntityNotFoundException("No se encontró la autorización con el ID " + authId);
     }
     /**
      * Activates the authorization.
