@@ -31,13 +31,52 @@ public class NotificationRestClient {
 
     public void initializeTemplate() {
         // Crear la plantilla HTML base64 para el email con el QR
-        String htmlTemplate = "<html><body>"
-                + "<h2>Tu código QR</h2>"
-                + "<p>Hola {{nombre}},</p>"
-                + "<p>Aquí está tu código QR:</p>"
-                + "<img src='{{qr_code}}' alt='QR Code'/>"
-                + "<p>Por favor, guárdalo de forma segura.</p>"
-                + "</body></html>";
+        String htmlTemplate = "<!DOCTYPE html>\n" +
+                "<html lang=\"es\">\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                "    <title>Email con Código QR y Logo</title>\n" +
+                "    <style>\n" +
+                "        body {\n" +
+                "            font-family: Arial, sans-serif;\n" +
+                "            margin: 0;\n" +
+                "            padding: 20px;\n" +
+                "            background-color: #f7f7f7;\n" +
+                "            color:#ffffff\n" +
+                "        }\n" +
+                "        .container {\n" +
+                "            max-width: 600px;\n" +
+                "            margin: 0 auto;\n" +
+                "            background-color: #343a40;\n" +
+                "            border-radius: 5px;\n" +
+                "            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n" +
+                "            padding: 20px;\n" +
+                "        }\n" +
+                "        .logo {\n" +
+                "            text-align: center;\n" +
+                "            margin-bottom: 20px;\n" +
+                "        }\n" +
+                "        .qr-code {\n" +
+                "            text-align: center;\n" +
+                "        }\n" +
+                "    </style>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "    <div class=\"container\">\n" +
+                "        <div class=\"logo\">\n" +
+                "            <img src=\"https://www.villadelcondor.com/imagenes/villa_del_condor.png\" alt=\"Logo de la Empresa\" style=\"max-width: 100%; height: auto;\">\n" +
+                "        </div>\n" +
+                "        <h2 style=\"text-align: center; color: #ffffff;\">Aquí está tu Código QR</h2>\n" +
+                "        <div class=\"qr-code\">\n" +
+                "            <img src=\"http://api.qrserver.com/v1/create-qr-code/?size=200x200&format=png&data=Name:fede,%20LastName:%20Tahan,%20Document:%C2%A02043673720\" alt=\"Código QR\" style=\"max-width: 100%; height: auto;\">\n" +
+                "        </div>\n" +
+                "        <p style=\"text-align: center; margin-top: 20px; color: #ffffff;\">\n" +
+                "            Escanea el código QR para más información.\n" +
+                "        </p>\n" +
+                "    </div>\n" +
+                "</body>\n" +
+                "</html>\n";
 
         String base64Template = Base64.getEncoder().encodeToString(htmlTemplate.getBytes());
 
@@ -68,8 +107,6 @@ public class NotificationRestClient {
 
         // Crear la lista de variables para la plantilla
         List<EmailVariable> variables = new ArrayList<>();
-        variables.add(new EmailVariable("nombre", recipientName));
-        variables.add(new EmailVariable("qr_code", "http://api.qrserver.com/v1/create-qr-code/?size=400x400&format=png&data=Name:fede, LastName: Tahan, Document: 2043673720"));
 
         // Crear la solicitud de envío de email
         var emailRequest = new EmailRequest();
