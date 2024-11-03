@@ -1,6 +1,5 @@
 package ar.edu.utn.frc.tup.lc.iv.controllers;
 
-import ar.edu.utn.frc.tup.lc.iv.clients.notifications.NotificationRestClient;
 import ar.edu.utn.frc.tup.lc.iv.services.IQRService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ public class QRControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private NotificationRestClient notificationRestClient;
+    private 
 
     @MockBean
     private IQRService qrService;

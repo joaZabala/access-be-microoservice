@@ -66,7 +66,7 @@ class NotificationRestClientTest {
         notificationRestClient.initializeTemplate();
 
         // Verificar que el templateId fue guardado correctamente
-        assertEquals(mockResponse.getId(), 1L);
+        assertEquals(mockResponse.getId(), notificationRestClient.getTemplateId());
 
     }
 

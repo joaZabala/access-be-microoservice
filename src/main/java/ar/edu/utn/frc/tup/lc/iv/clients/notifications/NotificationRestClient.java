@@ -29,7 +29,6 @@ import java.util.Objects;
  */
 @Service
 @NoArgsConstructor
-@Data
 public class NotificationRestClient {
 
     /**
