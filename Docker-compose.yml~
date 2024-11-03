@@ -16,6 +16,7 @@ services:
       - mysql-data:/var/lib/mysql
     networks:
       service-net-app:
+      back-end-network:
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       start_period: 10s

@@ -4,6 +4,7 @@ import ar.edu.utn.frc.tup.lc.iv.clients.UserDto;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -46,30 +48,40 @@ class VisitorServiceTest {
     public void setUp(){
         MockitoAnnotations.openMocks(this);
     }
-//    @Test
-//    void getAllVisitorsTest() {
-//        // Given
-//        VisitorEntity visitorEntity = new VisitorEntity(1L, "juan", "Perez", DocumentType.DNI,40252203L, LocalDate.now(), true);
-//        VisitorEntity visitorEntity1 = new VisitorEntity(2L, "joaquin", "Perez", DocumentType.DNI,40252255L, LocalDate.now(), true);
-//
-//        List<VisitorEntity> visitorEntityList = Arrays.asList(visitorEntity, visitorEntity1);
-//
-//        Pageable pageable = PageRequest.of(0, 10, Sort.by("lastName").and(Sort.by("name")));
-//
-//        Page<VisitorEntity> visitorPage = new PageImpl<>(visitorEntityList, pageable, visitorEntityList.size());
-//
-//        //when
-//        when(visitorRepository.findAllByActive(true, pageable)).thenReturn(visitorPage);
-//
-//        //then
-//        PaginatedResponse<VisitorDTO> listResult = visitorService.getAllVisitors(0, 10 ,"","","");
-//
-//        assertEquals(2, listResult.size());
-//        assertEquals("juan", listResult.get(0).getName());
-//        assertEquals("joaquin", listResult.get(1).getName());
-//
-//        verify(visitorRepository, times(1)).findAllByActive(true, pageable);
-//    }
+
+    @Test
+    void getAllVisitorsTest() {
+        VisitorEntity visitorEntity = new VisitorEntity(
+                1L, "juan", "Perez", DocumentType.DNI, 40252203L, LocalDate.now(), true
+        );
+        VisitorEntity visitorEntity1 = new VisitorEntity(
+                2L, "joaquin", "Perez", DocumentType.DNI, 40252255L, LocalDate.now(), true
+        );
+        List<VisitorEntity> visitorList = Arrays.asList(visitorEntity, visitorEntity1);
+
+        Page<VisitorEntity> page = new PageImpl<>(visitorList);
+
+        when(visitorRepository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(page);
+
+        PaginatedResponse<VisitorDTO> result = visitorService.getAllVisitors(0, 10, new VisitorFilter());
+
+        assertNotNull(result);
+        assertEquals(2, result.getTotalElements());
+    }
+
+    @Test
+    void getAllVisitorsEmptyTest() {
+        Page<VisitorEntity> emptyPage = new PageImpl<>(new ArrayList<>());
+        when(visitorRepository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(emptyPage);
+
+        PaginatedResponse<VisitorDTO> result = visitorService.getAllVisitors(0, 10, new VisitorFilter());
+
+        assertNotNull(result);
+        assertEquals(0, result.getTotalElements());
+    }
+
 
     @Test
     void saverOrUpdateVisitorExistingVisitorTest() {
@@ -193,5 +205,97 @@ class VisitorServiceTest {
 
         assertEquals("No existe el visitante con el id 1", exception.getMessage());
 
+    }
+
+    @Test
+    void saveOrUpdateVisitorWithExistingId() {
+        Long visitorId = 1L;
+        VisitorRequest visitorRequest = new VisitorRequest(
+                "joaquin",
+                "zabala",
+                DocumentType.DNI,
+                12345678L,
+                LocalDate.of(2005,3,17)
+        );
+
+        VisitorEntity existingVisitor = new VisitorEntity(
+                visitorId,
+                "old name",
+                "old lastname",
+                DocumentType.DNI,
+                12345678L,
+                LocalDate.now(),
+                true
+        );
+
+        when(visitorRepository.findById(visitorId)).thenReturn(Optional.of(existingVisitor));
+        when(visitorRepository.save(any(VisitorEntity.class))).thenReturn(existingVisitor);
+
+        VisitorDTO result = visitorService.saveOrUpdateVisitor(visitorRequest, visitorId);
+
+        assertNotNull(result);
+        assertEquals(visitorRequest.getName(), existingVisitor.getName());
+        assertEquals(visitorRequest.getLastName(), existingVisitor.getLastName());
+    }
+
+    @Test
+    void saveOrUpdateVisitorWithInvalidId() {
+        Long invalidId = 999L;
+        VisitorRequest visitorRequest = new VisitorRequest(
+                "joaquin",
+                "zabala",
+                DocumentType.DNI,
+                12345678L,
+                LocalDate.of(2005,3,17)
+        );
+
+        when(visitorRepository.findById(invalidId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () ->
+                visitorService.saveOrUpdateVisitor(visitorRequest, invalidId)
+        );
+    }
+
+    @Test
+    void updateExistingVisitorKeepingActiveStatus() {
+        Long visitorId = 1L;
+        VisitorRequest visitorRequest = new VisitorRequest(
+                "new name",
+                "new lastname",
+                DocumentType.DNI,
+                12345678L,
+                LocalDate.of(2005,3,17)
+        );
+
+        VisitorEntity existingVisitor = new VisitorEntity(
+                visitorId,
+                "old name",
+                "old lastname",
+                DocumentType.DNI,
+                12345678L,
+                LocalDate.now(),
+                true
+        );
+
+        when(visitorRepository.findById(visitorId)).thenReturn(Optional.of(existingVisitor));
+        when(visitorRepository.save(any(VisitorEntity.class))).thenReturn(existingVisitor);
+
+        VisitorDTO result = visitorService.saveOrUpdateVisitor(visitorRequest, visitorId);
+
+        assertNotNull(result);
+        assertTrue(result.isActive());
+        assertEquals("new name", existingVisitor.getName());
+        assertEquals("new lastname", existingVisitor.getLastName());
+    }
+
+    @Test
+    void getVisitorByDocNumberWithNonExistentDoc() {
+        Long nonExistentDoc = 99999999L;
+        when(visitorRepository.findByDocNumber(nonExistentDoc)).thenReturn(null);
+
+        VisitorDTO result = visitorService.getVisitorByDocNumber(nonExistentDoc);
+
+        assertNull(result);
+        verify(visitorRepository).findByDocNumber(nonExistentDoc);
     }
 }
