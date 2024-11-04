@@ -46,6 +46,11 @@ public class AuthController {
     private IAuthService authService;
 
     /**
+     * name of the header that contains the user id.
+     */
+    private static final String USER_ID_HEADER = "x-user-id";
+
+    /**
      * Retrieve authorizations for authorized persons by document number.
      *
      * @param filter object with filters.
@@ -91,7 +96,7 @@ public class AuthController {
      * Authorize visitor with authorized ranges.
      *
      * @param visitorAuthRequest request.
-     * @param userId             request.
+     * @param userId request.
      * @return authorization created.
      */
 
@@ -105,8 +110,8 @@ public class AuthController {
     })
     @PostMapping("/authorization")
     public ResponseEntity<AuthDTO> createAuthorization(@RequestBody VisitorAuthRequest visitorAuthRequest,
-            @RequestHeader("x-user-id") Long userId) {
-        return ResponseEntity.ok(authService.createAuthorization(visitorAuthRequest, userId));
+            @RequestHeader(USER_ID_HEADER) Long userId) {
+        return ResponseEntity.ok(authService.createAuthorization(visitorAuthRequest));
     }
 
     /**
@@ -147,7 +152,7 @@ public class AuthController {
     })
     @DeleteMapping("/authorization")
     public ResponseEntity<AuthDTO> deleteAuthorization(@RequestHeader("auth-id") Long authId,
-            @RequestHeader("x-user-id") Long userId) {
+                                                       @RequestHeader(USER_ID_HEADER) Long userId) {
         return ResponseEntity.ok(authService.deleteAuthorization(authId));
     }
 
@@ -160,8 +165,21 @@ public class AuthController {
      */
     @PutMapping("/authorization/activate")
     public ResponseEntity<AuthDTO> activateAuthorization(@RequestHeader("auth-id") Long authId,
+
+                                                         @RequestHeader(USER_ID_HEADER) Long userId) {
             @RequestHeader("x-user-id") Long userId) {
         return ResponseEntity.ok(authService.activateAuthorization(authId));
+    }
+    /**
+     * Update authorization list with new authorized ranges.
+     * @param visitorAuthRequest new authorization details.
+     * @param userId the ID of the user requesting the activation
+     * @return the updated {@link AuthDTO} authorization.
+     */
+    @PutMapping("/authorization")
+    public ResponseEntity<AuthDTO> updateAuthorization(@RequestBody VisitorAuthRequest visitorAuthRequest,
+                                                       @RequestHeader(USER_ID_HEADER) Long userId) {
+        return ResponseEntity.ok(authService.updateAuthorizationByAuthid(visitorAuthRequest));
     }
 
 }

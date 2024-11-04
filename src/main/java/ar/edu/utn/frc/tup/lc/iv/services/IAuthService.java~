@@ -57,6 +57,7 @@ public interface IAuthService {
      * Authorize visitor with authorized ranges.
      * @param visitorAuthRequest the request containing
      *                           visitor authorization details.
+     * @param creatorID the ID of the creator of the authorization.
      * @return the created {@link AuthDTO} authorization.
      */
     AuthDTO createAuthorization(VisitorAuthRequest visitorAuthRequest);
