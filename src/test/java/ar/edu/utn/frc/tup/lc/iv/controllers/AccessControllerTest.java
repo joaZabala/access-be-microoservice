@@ -1,8 +1,10 @@
 package ar.edu.utn.frc.tup.lc.iv.controllers;
 
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.EntryReport.EntryReport;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.services.IAccessesService;
 import ar.edu.utn.frc.tup.lc.iv.services.imp.AuthService;
@@ -15,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +31,6 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class AccessControllerTest {
-
     @Mock
     private IAccessesService accessesService;
 
@@ -147,43 +150,179 @@ class AccessControllerTest {
     }
 
     @Test
-    void getAllAccessWithCustomPagination() {
-        AccessesFilter filter = new AccessesFilter();
-        int page = 2;
-        int size = 5;
-        PaginatedResponse<AccessDTO> expectedResponse = new PaginatedResponse<>();
-        expectedResponse.setItems(Collections.emptyList());
-        expectedResponse.setTotalElements(0L);
+    void getHourlyAccessesSuccess() {
+        LocalDate from = LocalDate.of(2024, 1, 1);
+        LocalDate to = LocalDate.of(2024, 1, 2);
+        List<DashboardDTO> expectedData = Arrays.asList(
+                new DashboardDTO("00:00", 5L, 2L),
+                new DashboardDTO("01:00", 3L, 1L)
+        );
 
-        when(accessesService.getAllAccess(filter, page, size))
-                .thenReturn(expectedResponse);
+        when(accessesService.getHourlyInfo(
+                from.atStartOfDay(),
+                to.atTime(LocalTime.MAX)
+        )).thenReturn(expectedData);
 
-        PaginatedResponse<AccessDTO> response = accessController.getAllAccess(filter, page, size);
+        List<DashboardDTO> result = accessController.getHourlyAccesses(from, to);
 
-        assertNotNull(response);
-        assertEquals(expectedResponse.getTotalElements(), response.getTotalElements());
-        assertEquals(expectedResponse.getItems(), response.getItems());
-        verify(accessesService).getAllAccess(filter, page, size);
+        assertNotNull(result);
+        assertEquals(expectedData, result);
+        assertEquals(2L, result.get(0).getSecondaryValue());
+        verify(accessesService).getHourlyInfo(
+                from.atStartOfDay(),
+                to.atTime(LocalTime.MAX)
+        );
     }
 
     @Test
-    void getAllAccess_WithFilter() {
-        AccessesFilter filter = new AccessesFilter();
-        //filter.setDocNumber(123456L);
-        filter.setActionType(ActionTypes.ENTRY);
+    void getDayOfWeekAccessesSuccess() {
+        LocalDate from = LocalDate.of(2024, 1, 1);
+        LocalDate to = LocalDate.of(2024, 1, 7);
+        List<DashboardDTO> expectedData = Arrays.asList(
+                new DashboardDTO("MONDAY", 10L, 5L),
+                new DashboardDTO("TUESDAY", 8L, 4L)
+        );
 
+        when(accessesService.getDayOfWeekInfo(
+                from.atStartOfDay(),
+                to.atTime(LocalTime.MAX)
+        )).thenReturn(expectedData);
+
+        List<DashboardDTO> result = accessController.getDayOfWeekAccesses(from, to);
+
+        assertNotNull(result);
+        assertEquals(expectedData, result);
+        assertEquals(5L, result.get(0).getSecondaryValue());
+        assertEquals(4L, result.get(1).getSecondaryValue());
+        verify(accessesService).getDayOfWeekInfo(
+                from.atStartOfDay(),
+                to.atTime(LocalTime.MAX)
+        );
+    }
+
+    @Test
+    void getAccessByDateSuccess() {
+        LocalDate from = LocalDate.of(2024, 1, 1);
+        LocalDate to = LocalDate.of(2024, 1, 31);
+        EntryReport expectedReport = new EntryReport();
+        expectedReport.setEntryCount(100L);
+        expectedReport.setExitCount(90L);
+
+        when(accessesService.getAccessByDate(from, to)).thenReturn(expectedReport);
+
+        EntryReport result = accessController.getAccessByDate(from, to);
+
+        assertNotNull(result);
+        assertEquals(expectedReport, result);
+        verify(accessesService).getAccessByDate(from, to);
+    }
+
+    @Test
+    void getAccessByDateInvalidDateRange() {
+        LocalDate from = LocalDate.of(2024, 2, 1);
+        LocalDate to = LocalDate.of(2024, 1, 1); // from is after to
+
+        assertThrows(IllegalArgumentException.class, () ->
+                accessController.getAccessByDate(from, to)
+        );
+    }
+
+    @Test
+    void getAccessesVisitorTypeSuccess() {
+        LocalDate from = LocalDate.of(2024, 1, 1);
+        LocalDate to = LocalDate.of(2024, 1, 31);
+        List<DashboardDTO> expectedData = Arrays.asList(
+                new DashboardDTO("RESIDENT", 50L, 25L),
+                new DashboardDTO("VISITOR", 30L, 15L)
+        );
+
+        when(accessesService.getAccessesByVisitor(from, to)).thenReturn(expectedData);
+
+        List<DashboardDTO> result = accessController.getAccessesVisitorType(from, to);
+
+        assertNotNull(result);
+        assertEquals(expectedData, result);
+        assertEquals(25L, result.get(0).getSecondaryValue());
+        assertEquals(15L, result.get(1).getSecondaryValue());
+        verify(accessesService).getAccessesByVisitor(from, to);
+    }
+
+    @Test
+    void getAccessesVisitorTypeInvalidDateRange() {
+        LocalDate from = LocalDate.of(2024, 2, 1);
+        LocalDate to = LocalDate.of(2024, 1, 1); // from is after to
+
+        assertThrows(IllegalArgumentException.class, () ->
+                accessController.getAccessesVisitorType(from, to)
+        );
+    }
+
+    @Test
+    void getAllAccessEmptyResponse() {
+        AccessesFilter filter = new AccessesFilter();
         PaginatedResponse<AccessDTO> expectedResponse = new PaginatedResponse<>();
-        expectedResponse.setItems(Arrays.asList(accessDTO));
-        expectedResponse.setTotalElements(1L);
+        expectedResponse.setItems(Collections.emptyList());
+        expectedResponse.setTotalElements(0L);
 
         when(accessesService.getAllAccess(filter, 0, 10))
                 .thenReturn(expectedResponse);
 
         PaginatedResponse<AccessDTO> response = accessController.getAllAccess(filter, 0, 10);
-        
+
         assertNotNull(response);
-        assertEquals(expectedResponse.getTotalElements(), response.getTotalElements());
-        assertEquals(expectedResponse.getItems(), response.getItems());
-        verify(accessesService).getAllAccess(filter, 0, 10);
+        assertTrue(response.getItems().isEmpty());
+        assertEquals(0L, response.getTotalElements());
+    }
+
+    @Test
+    void getAllEntriesEmptyList() {
+        when(accessesService.getAllEntries()).thenReturn(Collections.emptyList());
+
+        List<AccessDTO> response = accessController.getAllEntries();
+
+        assertNotNull(response);
+        assertTrue(response.isEmpty());
+    }
+
+    @Test
+    void getAllExitsEmptyList() {
+        when(accessesService.getAllExits()).thenReturn(Collections.emptyList());
+
+        List<AccessDTO> response = accessController.getAllExits();
+
+        assertNotNull(response);
+        assertTrue(response.isEmpty());
+    }
+
+    @Test
+    void getHourlyAccessesEmptyResult() {
+        LocalDate from = LocalDate.of(2024, 1, 1);
+        LocalDate to = LocalDate.of(2024, 1, 2);
+
+        when(accessesService.getHourlyInfo(
+                from.atStartOfDay(),
+                to.atTime(LocalTime.MAX)
+        )).thenReturn(Collections.emptyList());
+
+        List<DashboardDTO> result = accessController.getHourlyAccesses(from, to);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void getDayOfWeekAccessesEmptyResult() {
+        LocalDate from = LocalDate.of(2024, 1, 1);
+        LocalDate to = LocalDate.of(2024, 1, 7);
+
+        when(accessesService.getDayOfWeekInfo(
+                from.atStartOfDay(),
+                to.atTime(LocalTime.MAX)
+        )).thenReturn(Collections.emptyList());
+
+        List<DashboardDTO> result = accessController.getDayOfWeekAccesses(from, to);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
     }
 }
