@@ -63,7 +63,6 @@ public class AuthService implements IAuthService {
     @Autowired
     private AuthRangeService authRangeService;
 
-
     /**
      * repository of authorization ranges.
      */
@@ -94,15 +93,17 @@ public class AuthService implements IAuthService {
     @Autowired
     private AccessesService accessesService;
     /**
-     userRestclient.
+     * userRestclient.
      */
     @Autowired
     private UserRestClient userRestClient;
+
     /**
      * Get all authorizations.
+     *
      * @param filter object with fitlers
-     * @param page      The page number for pagination (default is 0).
-     * @param size      The number of records per page (default is 10).
+     * @param page   The page number for pagination (default is 0).
+     * @param size   The number of records per page (default is 10).
      * @return List<AuthDTO>
      */
     @Override
@@ -149,7 +150,6 @@ public class AuthService implements IAuthService {
         return authDTOs;
     }
 
-
     /**
      * Retrieves a list of individual authorizations
      * by document number.
@@ -161,6 +161,11 @@ public class AuthService implements IAuthService {
     public List<AuthDTO> getAuthsByDocNumber(Long docNumber) {
 
         VisitorEntity visitorEntity = visitorRepository.findByDocNumber(docNumber);
+
+        if (Objects.isNull(visitorEntity)) {
+            throw new EntityNotFoundException("No se encontró el visitante con el documento " + docNumber);
+        }
+
         List<AuthEntity> authEntities = authRepository.findByVisitor(visitorEntity);
         List<AuthDTO> authDTOs = new ArrayList<>();
 
@@ -210,10 +215,10 @@ public class AuthService implements IAuthService {
                 .map(authEntity -> modelMapper.map(authEntity, AuthDTO.class)).collect(Collectors.toList());
     }
 
-
     /**
      * Retrieves a list of valid authorizations
      * by document number.
+     *
      * @param docNumber document number.
      * @return list of valid authorizations.
      */
@@ -227,7 +232,8 @@ public class AuthService implements IAuthService {
 
         for (AuthDTO authDTO : dtos) {
             if (authDTO.isActive()) {
-                List<AuthRangeDTO> validAuthRanges = authRangeService.getValidAuthRanges(authDTO.getAuthRanges(), currentDate,
+                List<AuthRangeDTO> validAuthRanges = authRangeService.getValidAuthRanges(authDTO.getAuthRanges(),
+                        currentDate,
                         currentTime);
                 if (!validAuthRanges.isEmpty()) {
                     authDTO.setAuthRanges(validAuthRanges);
@@ -248,8 +254,10 @@ public class AuthService implements IAuthService {
      * @return updated authorization.
      */
     @Override
-    public AuthDTO updateAuthorization(AuthDTO existingAuth, VisitorDTO visitorDTO, VisitorAuthRequest visitorAuthRequest) {
-        List<AuthRange> newAuthorizedRanges = authRangeService.registerAuthRanges(visitorAuthRequest.getAuthRangeRequest(),
+    public AuthDTO updateAuthorization(AuthDTO existingAuth, VisitorDTO visitorDTO,
+            VisitorAuthRequest visitorAuthRequest) {
+        List<AuthRange> newAuthorizedRanges = authRangeService.registerAuthRanges(
+                visitorAuthRequest.getAuthRangeRequest(),
                 modelMapper.map(existingAuth, AuthEntity.class), visitorDTO);
 
         for (AuthRange range : newAuthorizedRanges) {
@@ -321,9 +329,8 @@ public class AuthService implements IAuthService {
         VisitorDTO visitorDTO;
 
         // verifica si ya existe el visitante en la base de datos
-        VisitorDTO visitorDTOAlreadyExist =
-                visitorService.getVisitorByDocNumber(visitorAuthRequest.getVisitorRequest().getDocNumber());
-
+        VisitorDTO visitorDTOAlreadyExist = visitorService
+                .getVisitorByDocNumber(visitorAuthRequest.getVisitorRequest().getDocNumber());
 
         if (visitorDTOAlreadyExist != null) {
             visitorDTO = visitorDTOAlreadyExist;
@@ -368,23 +375,24 @@ public class AuthService implements IAuthService {
         authDTO.setAuthorizerId(authEntity.getCreatedUser());
         authDTO.setExternalID(authEntity.getExternalID());
 
-
         if (visitorAuthRequest.getVisitorType() == VisitorType.PROVIDER) {
             // Verifica si el proveedor ya tiene autorizaciones en el plot
             List<AuthRangeDTO> authRangeDTOs = authRangeService.getAuthRangesByAuthExternalIdAndPlot(authEntity);
 
             List<AuthRangeRequestDTO> authRangeRequestDTOs = authRangeDTOs.stream()
-                    .map(authRangeDTO -> modelMapper.map(authRangeDTO, AuthRangeRequestDTO.class)).collect(Collectors.toList());
+                    .map(authRangeDTO -> modelMapper.map(authRangeDTO, AuthRangeRequestDTO.class))
+                    .collect(Collectors.toList());
 
-            List<AuthRange> authorizedRangesList =
-                    authRangeService.registerAuthRanges(authRangeRequestDTOs, authEntity, visitorDTO);
+            List<AuthRange> authorizedRangesList = authRangeService.registerAuthRanges(authRangeRequestDTOs, authEntity,
+                    visitorDTO);
             authDTO.setAuthRanges(authorizedRangesList.stream()
                     .filter(Objects::nonNull)
                     .map(auth -> modelMapper.map(auth, AuthRangeDTO.class))
                     .collect(Collectors.toList()));
 
         } else {
-            List<AuthRange> authorizedRangesList = authRangeService.registerAuthRanges(visitorAuthRequest.getAuthRangeRequest(),
+            List<AuthRange> authorizedRangesList = authRangeService.registerAuthRanges(
+                    visitorAuthRequest.getAuthRangeRequest(),
                     authEntity, visitorDTO);
             authDTO.setAuthRanges(authorizedRangesList.stream()
                     .filter(Objects::nonNull)
@@ -395,11 +403,11 @@ public class AuthService implements IAuthService {
         return authDTO;
     }
 
-
     /**
      * Authorize visitor.
+     *
      * @param accessDTO accessDto.
-     * @param guardID guardId.
+     * @param guardID   guardId.
      * @return AccessDto
      */
     @Override
@@ -407,7 +415,8 @@ public class AuthService implements IAuthService {
         List<AuthDTO> authDTOs = getValidAuthsByDocNumber(accessDTO.getDocNumber());
 
         if (authDTOs.isEmpty()) {
-            throw new EntityNotFoundException("No existen autorizaciones validas para el documento " + accessDTO.getDocNumber());
+            throw new EntityNotFoundException(
+                    "No existen autorizaciones validas para el documento " + accessDTO.getDocNumber());
         }
 
         AuthEntity authEntity = authRepository.findById(authDTOs.get(0).getAuthId()).get();
@@ -431,10 +440,11 @@ public class AuthService implements IAuthService {
 
     /**
      * Checks if a person is authorized.
+     *
      * @param documentNumber The person's
      *                       identification number.
      * @return {@code true} if a
-     * valid invitation exists, {@code false} otherwise.
+     *         valid invitation exists, {@code false} otherwise.
      */
     @Override
     public Boolean isAuthorized(Long documentNumber) {
@@ -444,6 +454,7 @@ public class AuthService implements IAuthService {
     /**
      * Retrieves an authorization if exists
      * with the same visitorType.
+     *
      * @param visitorAuthRequest request
      * @return optional authorization
      */
@@ -456,6 +467,7 @@ public class AuthService implements IAuthService {
                         && Objects.equals(auth.getPlotId(), visitorAuthRequest.getPlotId()))
                 .findFirst();
     }
+
     /**
      * Deletes the authorization.
      *
@@ -468,9 +480,12 @@ public class AuthService implements IAuthService {
         if (authEntity != null) {
             authEntity.setActive(false);
             authRepository.save(authEntity);
+            return modelMapper.map(authEntity, AuthDTO.class);
+        } else {
+            throw new EntityNotFoundException("No se encontró la autorización con el ID " + authId);
         }
-        return null;
     }
+
     /**
      * Activates the authorization.
      *
@@ -478,7 +493,7 @@ public class AuthService implements IAuthService {
      * @return ResponseEntity containing the activated {@link AuthDTO}
      */
     @Override
-    public AuthDTO  activateAuthorization(Long authId) {
+    public AuthDTO activateAuthorization(Long authId) {
         AuthEntity authEntity = authRepository.findByAuthId(authId);
         if (authEntity != null) {
             authEntity.setActive(true);

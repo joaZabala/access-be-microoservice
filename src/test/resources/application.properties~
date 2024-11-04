@@ -34,8 +34,6 @@ spring.jpa.defer-datasource-initialization=true
 
 # URLS
 user.service.url=http://host.docker.internal:8283/users
-notification.service.url=http://host.docker.internal:8011
-qr.url =http://api.qrserver.com/v1/create-qr-code/?size=200x200&format=png&data=
 
 # Resiliece4j Configuration
 management.endpoint.health.show-details=always

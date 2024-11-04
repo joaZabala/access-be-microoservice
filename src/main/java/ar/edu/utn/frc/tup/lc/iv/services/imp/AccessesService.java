@@ -2,6 +2,7 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import ar.edu.utn.frc.tup.lc.iv.clients.UserDetailDto;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.EntryReport.EntryReport;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
@@ -22,6 +23,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
@@ -237,9 +239,12 @@ public class AccessesService implements IAccessesService {
             hourlyAccessMap.put(hour, count);
         }
         return hourlyAccessMap.entrySet().stream()
-                .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue()))
+                .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue(), 0L))
                 .collect(Collectors.toList());
     }
+
+
+
     /**
      * Retrieves hourly access information within a specified date range.
      * @param from the start date and time (inclusive) of the range
@@ -251,24 +256,40 @@ public class AccessesService implements IAccessesService {
     public List<DashboardDTO> getDayOfWeekInfo(LocalDateTime from, LocalDateTime to) {
         List<Object[]> results = accessesRepository.findAccessCountsByDayOfWeekNative(from, to);
 
-        Map<String, Long> dayOfWeekAccessMap = new LinkedHashMap<>();
+        Map<String, Long[]> dayOfWeekAccessMap = new LinkedHashMap<>();
         for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
-            dayOfWeekAccessMap.put(dayOfWeek
-                    .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase(Locale.ENGLISH), 0L);
+            String dayName = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase(Locale.ENGLISH);
+            dayOfWeekAccessMap.put(dayName, new Long[]{0L, 0L});
         }
 
         for (Object[] row : results) {
             Integer dayOfWeekValue = ((Number) row[0]).intValue();
-            Long count = ((Number) row[1]).longValue();
+            Long entriesCount = ((Number) row[1]).longValue();
+            Long exitsCount = ((Number) row[2]).longValue();
 
             DayOfWeek dayOfWeek = DayOfWeek.of(dayOfWeekValue);
-            String dayName = dayOfWeek
-                    .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase(Locale.ENGLISH);
-            dayOfWeekAccessMap.put(dayName, count);
+            String dayName = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase(Locale.ENGLISH);
+
+            dayOfWeekAccessMap.put(dayName, new Long[]{entriesCount, exitsCount});
         }
 
         return dayOfWeekAccessMap.entrySet().stream()
-                .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue()))
+                .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue()[0], entry.getValue()[1])) // entradas y salidas
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Retrieves access information within a specified date range.
+     * @param dateFrom date from
+     * @param dateTo local to
+     * @return access report.
+     */
+    @Override
+    public EntryReport getAccessByDate(LocalDate dateFrom, LocalDate dateTo) {
+
+        LocalDateTime startDate = dateFrom.atStartOfDay();
+        LocalDateTime endDate = dateTo.atTime(LocalTime.MAX);
+
+        return accessesRepository.countEntriesAndExitsBetweenDates(startDate, endDate);
     }
 }

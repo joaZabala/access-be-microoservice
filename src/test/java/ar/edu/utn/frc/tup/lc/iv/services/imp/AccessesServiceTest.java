@@ -304,8 +304,8 @@ public class AccessesServiceTest {
         LocalDateTime from = LocalDateTime.of(2024, 11, 1, 0, 0);
         LocalDateTime to = LocalDateTime.of(2024, 11, 2, 23, 59);
         List<Object[]> mockResults = Arrays.asList(
-                new Object[]{"00:00", 10L},
-                new Object[]{"01:00", 5L}
+                new Object[]{"00:00", 10L, 0L},
+                new Object[]{"01:00", 5L, 0L}
         );
         when(accessesRepository.findAccessCountsByHourNative(from, to)).thenReturn(mockResults);
 
@@ -331,8 +331,8 @@ public class AccessesServiceTest {
         LocalDateTime to = LocalDateTime.of(2024, 11, 2, 23, 59);
 
         List<Object[]> mockResults = Arrays.asList(
-                new Object[]{5, 10L},
-                new Object[]{6, 5L}
+                new Object[]{5, 10L, 0L},
+                new Object[]{6, 5L, 0L}
         );
 
         when(accessesRepository.findAccessCountsByDayOfWeekNative(from, to)).thenReturn(mockResults);

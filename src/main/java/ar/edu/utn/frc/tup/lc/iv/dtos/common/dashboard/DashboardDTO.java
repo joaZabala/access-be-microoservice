@@ -1,5 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 /**
@@ -19,4 +20,11 @@ public class DashboardDTO {
      * representing a quantifiable metric.
      */
     private Long value;
+    /**
+     * The secondary value associated
+     * with the key, representing a
+     * quantifiable metric.
+     */
+    @JsonProperty("secondary_value")
+    private Long secondaryValue;
 }
