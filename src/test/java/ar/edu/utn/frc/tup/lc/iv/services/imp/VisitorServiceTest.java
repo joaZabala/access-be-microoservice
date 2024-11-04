@@ -145,10 +145,8 @@ class VisitorServiceTest {
 
     @Test
     void getBydocNumberNoExistTest() {
-        // when
         when(visitorRepository.findByDocNumber(40252203L)).thenReturn(null);
 
-        // then
         VisitorDTO result = visitorService.getVisitorByDocNumber(40252203L);
         assertNull(result);
         verify(visitorRepository).findByDocNumber(40252203L);
@@ -295,13 +293,10 @@ class VisitorServiceTest {
 
     @Test
     void getVisitorByDocNumberWithNonExistentDoc() {
-        // given
         Long nonExistentDoc = 99999999L;
 
-        // when
         when(visitorRepository.findByDocNumber(nonExistentDoc)).thenReturn(null);
 
-        // then
         VisitorDTO result = visitorService.getVisitorByDocNumber(nonExistentDoc);
         assertNull(result);
         verify(visitorRepository).findByDocNumber(nonExistentDoc);
