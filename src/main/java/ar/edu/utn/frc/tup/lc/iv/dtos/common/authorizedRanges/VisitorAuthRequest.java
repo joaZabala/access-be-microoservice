@@ -61,4 +61,8 @@ public class VisitorAuthRequest implements Serializable {
     @JsonProperty("auth_range_request")
     @NotNull(message = "Authorized range request cant be null")
     private List<AuthRangeRequestDTO> authRangeRequest;
+    @JsonProperty("auth_id")
+    private Long authId;
+    @JsonProperty("is_active")
+    private boolean isActive;
 }

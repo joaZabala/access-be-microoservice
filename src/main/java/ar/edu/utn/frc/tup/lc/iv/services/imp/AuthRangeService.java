@@ -285,13 +285,13 @@ public class AuthRangeService implements IAuthRangeService {
     /**
      * Updates an existing authorization range.
      *
-     * @param authId  the unique identifier.
+     * @param authRangeId  the unique identifier.
      * @param request containing the new values for range.
      * @return an {@link AuthRangeDTO}  updated  range data.
      * @throws RuntimeException if not found.
      */
-    public AuthRangeDTO updateAuthRange(Long authId, AuthRangeRequestDTO request) {
-        AuthRangeEntity authRangeEntity = authRangeRepository.findById(authId)
+    public AuthRangeDTO updateAuthRange(Long authRangeId, AuthRangeRequestDTO request) {
+        AuthRangeEntity authRangeEntity = authRangeRepository.findById(authRangeId)
                 .orElseThrow(() -> new RuntimeException("AuthRange id not found"));
 
         authRangeEntity.setDateFrom(request.getDateFrom());
@@ -306,4 +306,46 @@ public class AuthRangeService implements IAuthRangeService {
 
     }
 
+    /**
+     * Updates an existing authorization range.
+     *
+     * @param authId  the unique identifier.
+     * @param request containing the new values for range.
+     * @return an {@link AuthRangeDTO}  updated  range data.
+     * @throws RuntimeException if not found.
+     */
+    public AuthRangeDTO[] updateAuthRangeByAuthId(Long authId, List<AuthRangeRequestDTO> request) {
+
+        AuthEntity auth = authRepository.findByAuthId(authId);
+        VisitorDTO visitor = new VisitorDTO();
+        visitor.setVisitorId(auth.getVisitor().getVisitorId());
+        List<AuthRangeEntity> authRangeEntities = new ArrayList<>();
+
+        for (AuthRangeRequestDTO rangeDTO : request) {
+            Optional<AuthRangeEntity> authRangeEntity = authRangeRepository.findById(rangeDTO.getAuth_range_id());
+
+            if(authRangeEntity.isPresent()) {
+                authRangeEntity.get().setDateFrom(rangeDTO.getDateFrom());
+                authRangeEntity.get().setDateTo(rangeDTO.getDateTo());
+                authRangeEntity.get().setHourFrom(rangeDTO.getHourFrom());
+                authRangeEntity.get().setHourTo(rangeDTO.getHourTo());
+                authRangeEntity.get().setDaysOfWeek(rangeDTO.getDaysOfWeek().stream().map(DayOfWeek::name).collect(Collectors.joining(",")));
+                authRangeRepository.save(authRangeEntity.get());
+                authRangeEntities.add(authRangeEntity.get());
+            }else {
+                AuthRangeEntity newAuthRangeEntity = new AuthRangeEntity();
+                newAuthRangeEntity.setDateFrom(rangeDTO.getDateFrom());
+                newAuthRangeEntity.setDateTo(rangeDTO.getDateTo());
+                newAuthRangeEntity.setHourFrom(rangeDTO.getHourFrom());
+                newAuthRangeEntity.setHourTo(rangeDTO.getHourTo());
+                newAuthRangeEntity.setDaysOfWeek(rangeDTO.getDaysOfWeek().stream().map(DayOfWeek::name).collect(Collectors.joining(",")));
+                newAuthRangeEntity.setAuthId(auth);
+                newAuthRangeEntity.setComment(rangeDTO.getComment());
+                newAuthRangeEntity.setActive(true);
+                authRangeEntities.add(authRangeRepository.save(newAuthRangeEntity));
+            }
+        }
+        return modelMapper.map(authRangeEntities, AuthRangeDTO[].class);
+
+    }
 }

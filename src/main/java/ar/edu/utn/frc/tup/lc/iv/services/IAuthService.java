@@ -112,4 +112,10 @@ public interface IAuthService {
      * @return the activated {@link AuthDTO}
      */
     AuthDTO activateAuthorization(Long authId);
+    /**
+     * Update authorization list with new authorized ranges.
+     * @param visitorAuthRequest new authorization details.
+     * @return the updated {@link AuthDTO} authorization.
+     */
+    AuthDTO updateAuthorizationByAuthid(VisitorAuthRequest visitorAuthRequest);
 }

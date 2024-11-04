@@ -107,6 +107,17 @@ public class AuthController {
                                                          @RequestHeader("x-user-id") Long userId) {
         return ResponseEntity.ok(authService.activateAuthorization(authId));
     }
+    /**
+     * Update authorization list with new authorized ranges.
+     * @param visitorAuthRequest new authorization details.
+     * @param userId the ID of the user requesting the activation
+     * @return the updated {@link AuthDTO} authorization.
+     */
+    @PutMapping("/authorization")
+    public ResponseEntity<AuthDTO> updateAuthorization(@RequestBody VisitorAuthRequest visitorAuthRequest,
+                                                       @RequestHeader("x-user-id") Long userId) {
+        return ResponseEntity.ok(authService.updateAuthorizationByAuthid(visitorAuthRequest));
+    }
 
 }
 

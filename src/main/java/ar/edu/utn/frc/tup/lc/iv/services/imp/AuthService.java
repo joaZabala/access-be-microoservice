@@ -1,6 +1,8 @@
 package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
+import java.sql.Array;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import ar.edu.utn.frc.tup.lc.iv.clients.UserDetailDto;
@@ -268,7 +270,44 @@ public class AuthService implements IAuthService {
 
         return existingAuth; // Devuelve la autorización actualizada
     }
+    /**
+     * update authorization authorized ranges.
+     * @param visitorAuthRequest request
+     * @return updated authorization.
+     */
+    @Override
+    public AuthDTO updateAuthorizationByAuthid(VisitorAuthRequest visitorAuthRequest) {
 
+        AuthEntity authEntity = authRepository.findByAuthId(visitorAuthRequest.getAuthId());
+        authEntity.setVisitorType(visitorAuthRequest.getVisitorType());
+        authEntity.setActive(visitorAuthRequest.isActive());
+        authEntity.setPlotId(visitorAuthRequest.getPlotId());
+        authEntity.setExternalID(visitorAuthRequest.getExternalID());
+        authEntity = authRepository.save(authEntity);
+
+        AuthDTO authDTO = new AuthDTO();
+        authDTO.setPlotId(authEntity.getPlotId());
+        authDTO.setAuthId(authEntity.getAuthId());
+        authDTO.setVisitorType(authEntity.getVisitorType());
+        authDTO.setVisitor(modelMapper.map(authEntity.getVisitor(), VisitorDTO.class));
+        authDTO.setActive(authEntity.isActive());
+
+        AuthRangeDTO[] rangelist = new AuthRangeDTO[0];
+        if (visitorAuthRequest.getVisitorType() == VisitorType.PROVIDER || visitorAuthRequest.getVisitorType() == VisitorType.WORKER) {
+            authDTO.setAuthRanges(authRangeService.getAuthRangesByAuthExternalID(visitorAuthRequest.getExternalID()));
+        } else {
+
+            rangelist = authRangeService.updateAuthRangeByAuthId(authEntity.getAuthId(),
+                        visitorAuthRequest.getAuthRangeRequest());
+
+            authDTO.setAuthRanges(Arrays.stream(rangelist)
+                    .filter(Objects::nonNull)
+                    .map(auth -> modelMapper.map(auth, AuthRangeDTO.class))
+                    .collect(Collectors.toList()));
+        }
+
+        return authDTO;
+    }
     /**
      * Create a new authorization.
      *
