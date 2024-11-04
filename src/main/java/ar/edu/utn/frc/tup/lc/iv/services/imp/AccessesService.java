@@ -2,9 +2,11 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import ar.edu.utn.frc.tup.lc.iv.clients.UserDetailDto;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.EntryReport.EntryReport;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
@@ -20,11 +22,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Comparator;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +61,10 @@ public class AccessesService implements IAccessesService {
      */
     @Autowired
     private UserRestClient userRestClient;
+    /**
+     * Constant for the 24 Hours.
+     */
+    private static final int HOUR = 24;
     /**
      * Retrieves all access records from the repository.
      * @return List of AccessDTO representing access records.
@@ -196,7 +208,7 @@ public class AccessesService implements IAccessesService {
     public AccessDTO mapToAccessDTO(AccessEntity accessEntity) {
         AccessDTO accessDTO = modelMapper.map(accessEntity, AccessDTO.class);
 
-        accessDTO.setAuthorizerId(accessEntity.getAuth().getCreatedUser());
+        accessDTO.setAuthorizerId(accessEntity.getCreatedUser());
         accessDTO.setDocType(accessEntity.getAuth().getVisitor().getDocumentType());
         accessDTO.setName(accessEntity.getAuth().getVisitor().getName());
         accessDTO.setLastName(accessEntity.getAuth().getVisitor().getLastName());
@@ -204,5 +216,106 @@ public class AccessesService implements IAccessesService {
         accessDTO.setVisitorType(accessEntity.getAuth().getVisitorType());
 
         return accessDTO;
+    }
+    /**
+     * Retrieves hourly access information within a specified date range.
+     * @param from the start date and time (inclusive) of the range
+     * @param to   the end date and time (inclusive) of the range
+     * @return a list of {@link DashboardDTO} objects representing
+     * access counts per hour
+     */
+    @Override
+    public List<DashboardDTO> getHourlyInfo(LocalDateTime from, LocalDateTime to) {
+        List<Object[]> results = accessesRepository.findAccessCountsByHourNative(from, to);
+
+        Map<String, Long> hourlyAccessMap = new LinkedHashMap<>();
+        for (int hour = 0; hour < HOUR; hour++) {
+            String hourString = String.format("%02d:00", hour);
+            hourlyAccessMap.put(hourString, 0L);
+        }
+
+        for (Object[] row : results) {
+            String hour = (String) row[0];
+            Long count = ((Number) row[1]).longValue();
+            hourlyAccessMap.put(hour, count);
+        }
+        return hourlyAccessMap.entrySet().stream()
+                .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue(), 0L))
+                .collect(Collectors.toList());
+    }
+
+
+
+    /**
+     * Retrieves hourly access information within a specified date range.
+     * @param from the start date and time (inclusive) of the range
+     * @param to   the end date and time (inclusive) of the range
+     * @return a list of {@link DashboardDTO} objects representing
+     * access counts per day of week
+     */
+    @Override
+    public List<DashboardDTO> getDayOfWeekInfo(LocalDateTime from, LocalDateTime to) {
+        List<Object[]> results = accessesRepository.findAccessCountsByDayOfWeekNative(from, to);
+
+        Map<String, Long[]> dayOfWeekAccessMap = new LinkedHashMap<>();
+        for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
+            String dayName = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase(Locale.ENGLISH);
+            dayOfWeekAccessMap.put(dayName, new Long[]{0L, 0L});
+        }
+
+        for (Object[] row : results) {
+            Integer dayOfWeekValue = ((Number) row[0]).intValue();
+            Long entriesCount = ((Number) row[1]).longValue();
+            Long exitsCount = ((Number) row[2]).longValue();
+
+            DayOfWeek dayOfWeek = DayOfWeek.of(dayOfWeekValue);
+            String dayName = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase(Locale.ENGLISH);
+
+            dayOfWeekAccessMap.put(dayName, new Long[]{entriesCount, exitsCount});
+        }
+
+        return dayOfWeekAccessMap.entrySet().stream()
+                .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue()[0], entry.getValue()[1])) // entradas y salidas
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Retrieves access information within a specified date range.
+     * @param dateFrom date from
+     * @param dateTo local to
+     * @return access report.
+     */
+    @Override
+    public EntryReport getAccessByDate(LocalDate dateFrom, LocalDate dateTo) {
+
+        LocalDateTime startDate = dateFrom.atStartOfDay();
+        LocalDateTime endDate = dateTo.atTime(LocalTime.MAX);
+
+        return accessesRepository.countEntriesAndExitsBetweenDates(startDate, endDate);
+    }
+    /**
+     * Retrieves access information by visitor type within a specified date range.
+     * @param from the start date and time (inclusive) of the range
+     * @param to   the end date and time (inclusive) of the range
+     * @return a list of {@link DashboardDTO} objects representing
+     * access counts per visitor type
+     */
+    @Override
+    public List<DashboardDTO> getAccessesByVisitor(LocalDate from, LocalDate to) {
+        List<Object[]> results = accessesRepository.findAccessCountsByVisitorType(from, to);
+
+        Map<String, Long[]> visitorTypeAccessMap = new HashMap<>();
+
+        for (Object[] row : results) {
+            String visitorType = (String) row[0];
+            Long entryCount = ((Number) row[1]).longValue();
+            Long exitCount = ((Number) row[2]).longValue();
+
+            visitorTypeAccessMap.put(visitorType, new Long[]{entryCount, exitCount});
+        }
+
+        return visitorTypeAccessMap.entrySet().stream()
+                .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue()[0], entry.getValue()[1])) // entradas y salidas
+                .collect(Collectors.toList());
     }
 }

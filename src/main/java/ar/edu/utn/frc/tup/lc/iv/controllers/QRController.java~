@@ -23,9 +23,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Controller for handling QR code-related requests.
@@ -97,22 +94,20 @@ public class QRController {
                     content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @PostMapping("/send")
-    public ResponseEntity<Map<String , String>> sendQREmail(@RequestBody QrEmailRequest request, @RequestHeader("x-user-id") Long id) {
+    public ResponseEntity<String> sendQREmail(@RequestBody QrEmailRequest request, @RequestHeader("x-user-id") Long id) {
         try {
             notificationRestClient.sendQRCodeEmail(
                     request.getEmail(),
                     request.getInvitorName(),
                     request.getDocNumber()
             );
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Email con QR enviado correctamente a " + request.getEmail());
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok("Email con QR enviado correctamente a " + request.getEmail());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
-                    .body(Collections.singletonMap("error", "Error en los datos proporcionados: " + e.getMessage()));
+                    .body("Error en los datos proporcionados: " + e.getMessage());
         } catch (IOException e) {
             return ResponseEntity.internalServerError()
-                    .body(Collections.singletonMap("error", "Error al generar o enviar el QR: " + e.getMessage()));
+                    .body("Error al generar o enviar el QR: " + e.getMessage());
         }
     }
 }
