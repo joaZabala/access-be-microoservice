@@ -199,4 +199,19 @@ public class AccessController {
         }
         return accessesService.getAccessByDate(from, to);
     }
+    /**
+     * Retrieves access counts by date range.
+     * @param from date from.
+     * @param to date to.
+     * @return entry report.
+     */
+    @GetMapping("/visitor/type")
+    public List<DashboardDTO> getAccessesVisitorType(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+                                                     @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+
+        if (from.isAfter(to)) {
+            throw new IllegalArgumentException("La fecha 'desde' no puede ser posterior a la fecha 'hasta'");
+        }
+        return accessesService.getAccessesByVisitor(from, to);
+    }
 }

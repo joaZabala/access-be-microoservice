@@ -27,11 +27,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -291,5 +292,30 @@ public class AccessesService implements IAccessesService {
         LocalDateTime endDate = dateTo.atTime(LocalTime.MAX);
 
         return accessesRepository.countEntriesAndExitsBetweenDates(startDate, endDate);
+    }
+    /**
+     * Retrieves access information by visitor type within a specified date range.
+     * @param from the start date and time (inclusive) of the range
+     * @param to   the end date and time (inclusive) of the range
+     * @return a list of {@link DashboardDTO} objects representing
+     * access counts per visitor type
+     */
+    @Override
+    public List<DashboardDTO> getAccessesByVisitor(LocalDate from, LocalDate to) {
+        List<Object[]> results = accessesRepository.findAccessCountsByVisitorType(from, to);
+
+        Map<String, Long[]> visitorTypeAccessMap = new HashMap<>();
+
+        for (Object[] row : results) {
+            String visitorType = (String) row[0];
+            Long entryCount = ((Number) row[1]).longValue();
+            Long exitCount = ((Number) row[2]).longValue();
+
+            visitorTypeAccessMap.put(visitorType, new Long[]{entryCount, exitCount});
+        }
+
+        return visitorTypeAccessMap.entrySet().stream()
+                .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue()[0], entry.getValue()[1])) // entradas y salidas
+                .collect(Collectors.toList());
     }
 }

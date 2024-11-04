@@ -99,4 +99,11 @@ public interface IAccessesService {
      * @return a list of {@link DashboardDTO} objects
      */
     EntryReport getAccessByDate(LocalDate from, LocalDate localTo);
+    /**
+     * Retrieves access information by visitor type within a specified date range.
+     * @param from the start date and time (inclusive) of the range
+     * @param to   the end date and time (inclusive) of the range
+     * @return a list of {@link DashboardDTO}  access counts per visitor type
+     */
+    List<DashboardDTO> getAccessesByVisitor(LocalDate from, LocalDate to);
 }

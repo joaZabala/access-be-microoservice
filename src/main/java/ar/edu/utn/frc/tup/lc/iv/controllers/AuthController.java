@@ -165,8 +165,7 @@ public class AuthController {
      */
     @PutMapping("/authorization/activate")
     public ResponseEntity<AuthDTO> activateAuthorization(@RequestHeader("auth-id") Long authId,
-
-                                                         @RequestHeader(USER_ID_HEADER) Long userId){
+                                                         @RequestHeader(USER_ID_HEADER) Long userId) {
         return ResponseEntity.ok(authService.activateAuthorization(authId));
     }
     /**
