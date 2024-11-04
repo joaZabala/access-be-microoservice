@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -127,6 +128,22 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
             + "FROM AccessEntity a WHERE a.actionDate BETWEEN :startDate AND :endDate")
     EntryReport countEntriesAndExitsBetweenDates(@Param("startDate") LocalDateTime startDate,
                                               @Param("endDate") LocalDateTime endDate);
-
+    /**
+     * Retrieves access counts grouped by hour within the specified date range.
+     * @param fromDate the start date and time (inclusive).
+     * @param toDate   the end date and time (inclusive).
+     * @return a list of Object arrays where each array contains:
+     * String: formatted hour - Long: count of accesses during that hour.
+     */
+    @Query(value = "SELECT auth.visitor_type AS visitorType, "
+            + "SUM(CASE WHEN a.action = 'ENTRY' THEN 1 ELSE 0 END) AS entryCount, "
+            + "SUM(CASE WHEN a.action = 'EXIT' THEN 1 ELSE 0 END) AS exitCount "
+            + "FROM accesses a "
+            + "JOIN auths as auth ON a.auth_id = auth.id "
+            + "WHERE a.action_date BETWEEN :fromDate AND :toDate "
+            + "GROUP BY auth.visitor_type "
+            + "ORDER BY visitorType", nativeQuery = true)
+    List<Object[]> findAccessCountsByVisitorType(@Param("fromDate") LocalDate fromDate,
+                                                 @Param("toDate") LocalDate toDate);
 }
 
