@@ -278,11 +278,17 @@ public class AccessesService implements IAccessesService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves access information within a specified date range.
+     * @param dateFrom date from
+     * @param dateTo local to
+     * @return access report.
+     */
     @Override
-    public EntryReport getAccessByDate(LocalDate from, LocalDate localTo) {
+    public EntryReport getAccessByDate(LocalDate dateFrom, LocalDate dateTo) {
 
-        LocalDateTime startDate = from.atStartOfDay();
-        LocalDateTime endDate = localTo.atTime(LocalTime.MAX);
+        LocalDateTime startDate = dateFrom.atStartOfDay();
+        LocalDateTime endDate = dateTo.atTime(LocalTime.MAX);
 
         return accessesRepository.countEntriesAndExitsBetweenDates(startDate, endDate);
     }

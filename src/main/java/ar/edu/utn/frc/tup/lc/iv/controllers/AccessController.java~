@@ -187,6 +187,10 @@ public class AccessController {
     @GetMapping("/getAccessCounts")
     public EntryReport getAccessByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+
+        if (from.isAfter(to)) {
+            throw new IllegalArgumentException("La fecha 'desde' no puede ser posterior a la fecha 'hasta'");
+        }
         return accessesService.getAccessByDate(from, to);
     }
 }

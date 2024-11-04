@@ -13,9 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -117,10 +115,16 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
     List<Object[]> findAccessCountsByDayOfWeekNative(@Param("fromDate") LocalDateTime fromDate,
                                                      @Param("toDate") LocalDateTime toDate);
 
-    @Query("SELECT new ar.edu.utn.frc.tup.lc.iv.dtos.common.EntryReport.EntryReport(" +
-            "SUM(CASE WHEN a.action = 'ENTRY' THEN 1 ELSE 0 END), " +
-            "SUM(CASE WHEN a.action = 'EXIT' THEN 1 ELSE 0 END)) " +
-            "FROM AccessEntity a WHERE a.actionDate BETWEEN :startDate AND :endDate")
+    /**
+     * Counts entries and exits between two dates.
+     * @param startDate date to start counting from.
+     * @param endDate date to end counting.
+     * @return a {@link EntryReport} the count of entries and exits.
+     */
+    @Query("SELECT new ar.edu.utn.frc.tup.lc.iv.dtos.common.EntryReport.EntryReport("
+            + "SUM(CASE WHEN a.action = 'ENTRY' THEN 1 ELSE 0 END), "
+            + "SUM(CASE WHEN a.action = 'EXIT' THEN 1 ELSE 0 END)) "
+            + "FROM AccessEntity a WHERE a.actionDate BETWEEN :startDate AND :endDate")
     EntryReport countEntriesAndExitsBetweenDates(@Param("startDate") LocalDateTime startDate,
                                               @Param("endDate") LocalDateTime endDate);
 

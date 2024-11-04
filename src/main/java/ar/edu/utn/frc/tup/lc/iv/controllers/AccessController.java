@@ -184,6 +184,12 @@ public class AccessController {
         return accessesService.getDayOfWeekInfo(fromDateTime, toDateTime);
     }
 
+    /**
+     * Retrieves access counts by date range.
+     * @param from date from.
+     * @param to date to.
+     * @return entry report.
+     */
     @GetMapping("/getAccessCounts")
     public EntryReport getAccessByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
