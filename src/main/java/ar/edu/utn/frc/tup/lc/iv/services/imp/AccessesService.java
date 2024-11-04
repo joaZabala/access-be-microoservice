@@ -2,6 +2,7 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import ar.edu.utn.frc.tup.lc.iv.clients.UserDetailDto;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.EntryReport.EntryReport;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
@@ -22,6 +23,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
@@ -240,6 +242,9 @@ public class AccessesService implements IAccessesService {
                 .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue(), 0L))
                 .collect(Collectors.toList());
     }
+
+
+
     /**
      * Retrieves hourly access information within a specified date range.
      * @param from the start date and time (inclusive) of the range
@@ -271,5 +276,14 @@ public class AccessesService implements IAccessesService {
         return dayOfWeekAccessMap.entrySet().stream()
                 .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue()[0], entry.getValue()[1])) // entradas y salidas
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public EntryReport getAccessByDate(LocalDate from, LocalDate localTo) {
+
+        LocalDateTime startDate = from.atStartOfDay();
+        LocalDateTime endDate = localTo.atTime(LocalTime.MAX);
+
+        return accessesRepository.countEntriesAndExitsBetweenDates(startDate, endDate);
     }
 }

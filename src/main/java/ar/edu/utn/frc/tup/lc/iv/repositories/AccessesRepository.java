@@ -1,5 +1,6 @@
 package ar.edu.utn.frc.tup.lc.iv.repositories;
 
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.EntryReport.EntryReport;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
@@ -12,7 +13,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -113,6 +116,13 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
             + "ORDER BY dayOfWeek", nativeQuery = true)
     List<Object[]> findAccessCountsByDayOfWeekNative(@Param("fromDate") LocalDateTime fromDate,
                                                      @Param("toDate") LocalDateTime toDate);
+
+    @Query("SELECT new ar.edu.utn.frc.tup.lc.iv.dtos.common.EntryReport.EntryReport(" +
+            "SUM(CASE WHEN a.action = 'ENTRY' THEN 1 ELSE 0 END), " +
+            "SUM(CASE WHEN a.action = 'EXIT' THEN 1 ELSE 0 END)) " +
+            "FROM AccessEntity a WHERE a.actionDate BETWEEN :startDate AND :endDate")
+    EntryReport countEntriesAndExitsBetweenDates(@Param("startDate") LocalDateTime startDate,
+                                              @Param("endDate") LocalDateTime endDate);
 
 }
 
