@@ -9,7 +9,6 @@ import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -98,5 +97,5 @@ public interface IAccessesService {
      * @param localTo local to
      * @return a list of {@link DashboardDTO} objects
      */
-    EntryReport getAccessByDate(LocalDate from, LocalDate localTo);
+    EntryReport getAccessByDate(LocalDateTime from, LocalDateTime localTo);
 }
