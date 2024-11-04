@@ -36,6 +36,9 @@ import java.util.List;
 @Tag(name = "Authorization Management", description = "APIs for managing visitor access authorizations")
 public class AuthController {
 
+    /** Response code for successful operations. */
+    private static final String HTTP_OK = "200";
+
     /**
      * Service for managing authorized persons.
      */
@@ -53,8 +56,7 @@ public class AuthController {
     @Operation(summary = "Get all neighborhood access authorizations",
         description = "Retrieves a paginated list of visitor access authorizations based on specified filters")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                description = "Successfully retrieved access authorizations",
+            @ApiResponse(responseCode = HTTP_OK, description = "Successfully retrieved access authorizations",
                 content = @Content(schema = @Schema(implementation = AuthDTO.class))),
     })
     @GetMapping
@@ -75,7 +77,7 @@ public class AuthController {
     @Operation(summary = "Get valid neighborhood access authorizations by document number",
         description = "Retrieves all active and valid access permits for a visitor identified by their document number")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved valid access authorizations",
+            @ApiResponse(responseCode = HTTP_OK, description = "Successfully retrieved valid access authorizations",
                 content = @Content(schema = @Schema(implementation = AuthDTO.class))),
             @ApiResponse(responseCode = "404", description = "Visitor with document number not found",
                 content = @Content(schema = @Schema(implementation = ErrorApi.class))),
@@ -96,7 +98,7 @@ public class AuthController {
     @Operation(summary = "Create new neighborhood access authorization",
         description = "Creates a new authorization for a visitor to enter the private neighborhood during specified time ranges")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Access authorization successfully created",
+            @ApiResponse(responseCode = HTTP_OK, description = "Access authorization successfully created",
                 content = @Content(schema = @Schema(implementation = AuthDTO.class))),
             @ApiResponse(responseCode = "400", description = "Invalid request parameters or time ranges",
                 content = @Content(schema = @Schema(implementation = ErrorApi.class))),
@@ -117,7 +119,7 @@ public class AuthController {
     @Operation(summary = "Verify visitor's access permission",
         description = "Checks if a visitor has current valid authorization to enter the private neighborhood")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Access verification completed successfully",
+            @ApiResponse(responseCode = HTTP_OK, description = "Access verification completed successfully",
                 content = @Content(schema = @Schema(implementation = Boolean.class))),
             @ApiResponse(responseCode = "404", description = "Document number not found in the system",
                 content = @Content(schema = @Schema(implementation = ErrorApi.class))),
@@ -138,7 +140,7 @@ public class AuthController {
     @Operation(summary = "Delete a neighborhood access authorization",
         description = "Revokes and removes an existing access authorization for a visitor")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Access authorization successfully deleted",
+            @ApiResponse(responseCode = HTTP_OK, description = "Access authorization successfully deleted",
                 content = @Content(schema = @Schema(implementation = AuthDTO.class))),
             @ApiResponse(responseCode = "404", description = "Authorization not found",
                 content = @Content(schema = @Schema(implementation = ErrorApi.class))),

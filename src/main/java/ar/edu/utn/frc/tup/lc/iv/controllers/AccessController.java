@@ -48,6 +48,15 @@ public class AccessController {
     @Autowired
     private AuthService authService;
 
+    /** Response code for successful operations. */
+    private static final String SUCCESS_CODE = "200";
+
+    /** Response code for not found errors. */
+    private static final String NOT_FOUND_CODE = "404";
+
+    /** Response code for bad request errors. */
+    private static final String BAD_REQUEST_CODE = "400";
+
     /**
      * Authorize visitor with authorized ranges.
      *
@@ -57,9 +66,9 @@ public class AccessController {
      */
     @Operation(summary = "Authorize visitor access", description = "Register a new access for a visitor to enter or exit the neighborhood")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Access authorization successfully created",
+            @ApiResponse(responseCode = SUCCESS_CODE, description = "Access authorization successfully created",
                 content = @Content(schema = @Schema(implementation = AccessDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Vehicle or authorization details not found",
+            @ApiResponse(responseCode = NOT_FOUND_CODE, description = "Vehicle or authorization details not found",
                 content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @PostMapping("/authorize")
@@ -70,28 +79,24 @@ public class AccessController {
     }
 
     /**
-     * Retrieves all access records, optionally filtered
-     * by criteria specified in the filter object.
-     *
+     * Retrieves all access records based on filtering criteria.
      * @param filter The filtering criteria
      * @param page   The page number for pagination (default is 0).
      * @param size   The number of records per page (default is 10).
      * @return A list of {@link AccessDTO} containing access records.
      */
-
     @Operation(summary = "Get all access records",
         description = "Retrieves a paginated list of visitor accesses records with optional filtering")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved access records",
+            @ApiResponse(responseCode = SUCCESS_CODE, description = "Successfully retrieved access records",
                 content = @Content(schema = @Schema(implementation = PaginatedResponse.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid filter parameters provided",
+            @ApiResponse(responseCode = BAD_REQUEST_CODE, description = "Invalid filter parameters provided",
                 content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @GetMapping
     public PaginatedResponse<AccessDTO> getAllAccess(@Valid AccessesFilter filter,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
         return accessesService.getAllAccess(filter, page, size);
     }
 
@@ -100,10 +105,9 @@ public class AccessController {
      *
      * @return List of AccessDTOs representing entries.
      */
-
     @Operation(summary = "Get all entry records", description = "Retrieves a list of all visitor entries into the neighborhood")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved entry records",
+            @ApiResponse(responseCode = SUCCESS_CODE, description = "Successfully retrieved entry records",
                 content = @Content(schema = @Schema(implementation = AccessDTO.class)))
     })
     @GetMapping("/entries")
@@ -116,10 +120,9 @@ public class AccessController {
      *
      * @return List of AccessDTOs representing exits.
      */
-
     @Operation(summary = "Get all exit records", description = "Retrieves a list of all visitor exits from the neighborhood")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved exit records",
+            @ApiResponse(responseCode = SUCCESS_CODE, description = "Successfully retrieved exit records",
                 content = @Content(schema = @Schema(implementation = AccessDTO.class)))
     })
     @GetMapping("/exits")
@@ -134,13 +137,12 @@ public class AccessController {
      * @param action   action
      * @return boolean.
      */
-
     @Operation(summary = "Check visitor access permission",
         description = "Verifies if a visitor is permitted to perform a specific action (entry/exit) based on its license plate")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Access check completed successfully",
+            @ApiResponse(responseCode = SUCCESS_CODE, description = "Access check completed successfully",
                 content = @Content(schema = @Schema(implementation = Boolean.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid car plate or action type",
+            @ApiResponse(responseCode = BAD_REQUEST_CODE, description = "Invalid car plate or action type",
                 content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @GetMapping("/check-access")
@@ -150,10 +152,11 @@ public class AccessController {
 
     /**
      * Retrieves hourly access counts within a specified date range.
+     *
      * @param from the start date of the range (inclusive)
      * @param to   the end date of the range (inclusive)
      * @return a list of {@link DashboardDTO} objects
-     * containing access counts per hour
+     *         containing access counts per hour
      */
     @GetMapping("/hourly")
     public List<DashboardDTO> getHourlyAccesses(@RequestParam LocalDate from, @RequestParam LocalDate to) {
@@ -165,10 +168,11 @@ public class AccessController {
 
     /**
      * Retrieves day of week access counts within a specified date range.
+     *
      * @param from the start date of the range (inclusive)
      * @param to   the end date of the range (inclusive)
      * @return a list of {@link DashboardDTO} objects
-     * containing access counts per day of week
+     *         containing access counts per day of week
      */
     @GetMapping("/weekly")
     public List<DashboardDTO> getDayOfWeekAccesses(@RequestParam LocalDate from, @RequestParam LocalDate to) {
