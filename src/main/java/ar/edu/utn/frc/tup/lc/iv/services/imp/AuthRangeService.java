@@ -330,6 +330,8 @@ public class AuthRangeService implements IAuthRangeService {
                 authRangeEntity.get().setHourFrom(rangeDTO.getHourFrom());
                 authRangeEntity.get().setHourTo(rangeDTO.getHourTo());
                 authRangeEntity.get().setDaysOfWeek(rangeDTO.getDaysOfWeek().stream().map(DayOfWeek::name).collect(Collectors.joining(",")));
+                authRangeEntity.get().setActive(rangeDTO.isActive());
+                authRangeEntity.get().setComment(rangeDTO.getComment());
                 authRangeRepository.save(authRangeEntity.get());
                 authRangeEntities.add(authRangeEntity.get());
             }else {
