@@ -120,7 +120,7 @@ class AuthControllerTest {
 
         visitorAuthRequest.setAuthRangeRequest(rangeRequest);
 
-        when(authService.createAuthorization(any(VisitorAuthRequest.class), any(Long.class))).thenReturn(authDTO);
+        when(authService.createAuthorization(any(VisitorAuthRequest.class))).thenReturn(authDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/auths/authorization")
                         .contentType(MediaType.APPLICATION_JSON)

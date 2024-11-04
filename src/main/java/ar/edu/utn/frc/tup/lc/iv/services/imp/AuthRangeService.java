@@ -322,19 +322,20 @@ public class AuthRangeService implements IAuthRangeService {
         List<AuthRangeEntity> authRangeEntities = new ArrayList<>();
 
         for (AuthRangeRequestDTO rangeDTO : request) {
-            Optional<AuthRangeEntity> authRangeEntity = authRangeRepository.findById(rangeDTO.getAuth_range_id());
+            Optional<AuthRangeEntity> authRangeEntity = authRangeRepository.findById(rangeDTO.getAuthRangeId());
 
-            if(authRangeEntity.isPresent()) {
+            if (authRangeEntity.isPresent()) {
                 authRangeEntity.get().setDateFrom(rangeDTO.getDateFrom());
                 authRangeEntity.get().setDateTo(rangeDTO.getDateTo());
                 authRangeEntity.get().setHourFrom(rangeDTO.getHourFrom());
                 authRangeEntity.get().setHourTo(rangeDTO.getHourTo());
-                authRangeEntity.get().setDaysOfWeek(rangeDTO.getDaysOfWeek().stream().map(DayOfWeek::name).collect(Collectors.joining(",")));
+                authRangeEntity.get().setDaysOfWeek(rangeDTO.getDaysOfWeek().stream().map(DayOfWeek::name)
+                        .collect(Collectors.joining(",")));
                 authRangeEntity.get().setActive(rangeDTO.isActive());
                 authRangeEntity.get().setComment(rangeDTO.getComment());
                 authRangeRepository.save(authRangeEntity.get());
                 authRangeEntities.add(authRangeEntity.get());
-            }else {
+            } else {
                 AuthRangeEntity newAuthRangeEntity = new AuthRangeEntity();
                 newAuthRangeEntity.setDateFrom(rangeDTO.getDateFrom());
                 newAuthRangeEntity.setDateTo(rangeDTO.getDateTo());

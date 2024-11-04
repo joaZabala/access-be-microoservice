@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
@@ -61,8 +62,14 @@ public class VisitorAuthRequest implements Serializable {
     @JsonProperty("auth_range_request")
     @NotNull(message = "Authorized range request cant be null")
     private List<AuthRangeRequestDTO> authRangeRequest;
+    /**
+     * Unique identifier of the authorized range.
+     */
     @JsonProperty("auth_id")
     private Long authId;
+    /**
+     * If the authorized range is active.
+     */
     @JsonProperty("is_active")
     private boolean isActive;
 }
