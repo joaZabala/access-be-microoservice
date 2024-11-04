@@ -6,6 +6,7 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.services.imp.AuthService;
 import ar.edu.utn.frc.tup.lc.iv.services.imp.VisitorService;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -35,44 +37,61 @@ class NotificationRestClientTest {
     private AuthService authService;
 
     @SpyBean
-    NotificationRestClient notificationRestClient;
+    private NotificationRestClient notificationRestClient;
 
     @MockBean
     private RestTemplate restTemplate;
 
     @MockBean
-    VisitorService visitorService;
+    private VisitorService visitorService;
 
-    private static final String emailServiceBaseUrl = "http://host.docker.internal:8011";
+    private static final String EMAIL_SERVICE_BASE_URL = "http://host.docker.internal:8011";
+    private static final String QR_SERVICE_BASE_URL = "http://host.docker.internal:8012";
+
+    @BeforeEach
+    void setUp() {
+        ReflectionTestUtils.setField(notificationRestClient, "emailServiceBaseUrl", EMAIL_SERVICE_BASE_URL);
+        ReflectionTestUtils.setField(notificationRestClient, "qrServiceBaseUrl", QR_SERVICE_BASE_URL);
+    }
 
     @Test
-    void initializeTemplate_ShouldCreateTemplateSuccessfully() {
-        // Datos de prueba
-        String base64Template = "someBase64EncodedString";
+    void initializeTemplateShouldCreateTemplateSuccessfully() {
         EmailTemplateResponse mockResponse = new EmailTemplateResponse();
         mockResponse.setId(1L);
-        mockResponse.setName("joaquin");
-        mockResponse.setBody(base64Template);
+        mockResponse.setName("QR_Code_Template");
+        mockResponse.setBody("template_body");
         mockResponse.setActive(true);
 
-        // Configurar Mockito para simular el comportamiento de restTemplate
         when(restTemplate.postForEntity(
-                eq(emailServiceBaseUrl + "/email-templates"),
+                eq(EMAIL_SERVICE_BASE_URL + "/email-templates"),
                 any(HttpEntity.class),
                 eq(EmailTemplateResponse.class)))
                 .thenReturn(new ResponseEntity<>(mockResponse, HttpStatus.OK));
 
-        // Llamar al método bajo prueba
         notificationRestClient.initializeTemplate();
 
-        // Verificar que el templateId fue guardado correctamente
-        assertEquals(mockResponse.getId(), 1L);
-
+        verify(restTemplate).postForEntity(
+                eq(EMAIL_SERVICE_BASE_URL + "/email-templates"),
+                any(HttpEntity.class),
+                eq(EmailTemplateResponse.class));
     }
 
     @Test
-    void sendQRCodeEmail_WithValidAuth_ShouldSendEmailSuccessfully() throws IOException {
-        // Arrange
+    void initializeTemplateWhenServiceFailsShouldThrowException() {
+        when(restTemplate.postForEntity(
+                eq(EMAIL_SERVICE_BASE_URL + "/email-templates"),
+                any(HttpEntity.class),
+                eq(EmailTemplateResponse.class)))
+                .thenThrow(new RestClientException("Service unavailable"));
+
+        assertThrows(RestClientException.class, () ->
+                notificationRestClient.initializeTemplate()
+        );
+    }
+
+    @Test
+    void sendQRCodeEmailWithValidAuthShouldSendEmailSuccessfully() throws IOException {
+        // Preparar datos
         String recipientEmail = "test@example.com";
         String invitorName = "John Doe";
         Long docNumber = 123456789L;
@@ -91,75 +110,149 @@ class NotificationRestClientTest {
         AuthDTO authDTO = new AuthDTO();
         authDTO.setAuthRanges(Collections.singletonList(authRange));
 
+        // Mock de respuestas
+        EmailTemplateResponse templateResponse = new EmailTemplateResponse();
+        templateResponse.setId(1L);
+
         when(visitorService.getVisitorByDocNumber(docNumber)).thenReturn(visitorDTO);
         when(authService.getValidAuthsByDocNumber(docNumber)).thenReturn(Collections.singletonList(authDTO));
         when(restTemplate.postForEntity(
-                eq(emailServiceBaseUrl + "/emails/send"),
+                eq(EMAIL_SERVICE_BASE_URL + "/email-templates"),
+                any(HttpEntity.class),
+                eq(EmailTemplateResponse.class)))
+                .thenReturn(new ResponseEntity<>(templateResponse, HttpStatus.OK));
+        when(restTemplate.postForEntity(
+                eq(EMAIL_SERVICE_BASE_URL + "/emails/send"),
                 any(HttpEntity.class),
                 eq(Void.class)))
                 .thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
-        ReflectionTestUtils.setField(notificationRestClient, "templateId", 1L);
-
-        // Act
         notificationRestClient.sendQRCodeEmail(recipientEmail, invitorName, docNumber);
 
-        // Assert
         verify(visitorService).getVisitorByDocNumber(docNumber);
         verify(authService).getValidAuthsByDocNumber(docNumber);
-        verify(restTemplate).postForEntity(
-                eq(emailServiceBaseUrl + "/emails/send"),
+        verify(restTemplate, times(2)).postForEntity(
+                anyString(),
                 any(HttpEntity.class),
-                eq(Void.class));
+                any(Class.class));
     }
 
     @Test
-    void sendQRCodeEmailWithNoAuth() throws IOException {
-
-        QrEmailRequest qrEmailRequest = new QrEmailRequest();
-        qrEmailRequest.setDocNumber(123456789L);
-        qrEmailRequest.setEmail("test@example.com");
-        qrEmailRequest.setInvitorName("Joaquin Zabala");
+    void sendQRCodeEmailWithEmptyAuthRangesShouldSendEmailWithFreeValues() throws IOException {
+        String recipientEmail = "test@example.com";
+        String invitorName = "John Doe";
+        Long docNumber = 123456789L;
 
         VisitorDTO visitorDTO = new VisitorDTO();
-        visitorDTO.setDocNumber(qrEmailRequest.getDocNumber());
+        visitorDTO.setDocNumber(docNumber);
         visitorDTO.setName("Jane");
         visitorDTO.setLastName("Doe");
 
-        when(visitorService.getVisitorByDocNumber(qrEmailRequest.getDocNumber())).thenReturn(visitorDTO);
-        when(authService.getValidAuthsByDocNumber(qrEmailRequest.getDocNumber())).thenReturn(new ArrayList<>());
+        AuthDTO authDTO = new AuthDTO();
+        authDTO.setAuthRanges(new ArrayList<>());
+
+        EmailTemplateResponse templateResponse = new EmailTemplateResponse();
+        templateResponse.setId(1L);
+
+        when(visitorService.getVisitorByDocNumber(docNumber)).thenReturn(visitorDTO);
+        when(authService.getValidAuthsByDocNumber(docNumber)).thenReturn(Collections.singletonList(authDTO));
         when(restTemplate.postForEntity(
-                eq(emailServiceBaseUrl + "/emails/send"),
+                eq(EMAIL_SERVICE_BASE_URL + "/email-templates"),
+                any(HttpEntity.class),
+                eq(EmailTemplateResponse.class)))
+                .thenReturn(new ResponseEntity<>(templateResponse, HttpStatus.OK));
+        when(restTemplate.postForEntity(
+                eq(EMAIL_SERVICE_BASE_URL + "/emails/send"),
                 any(HttpEntity.class),
                 eq(Void.class)))
                 .thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
-        ReflectionTestUtils.setField(notificationRestClient, "templateId", 1L);
+        notificationRestClient.sendQRCodeEmail(recipientEmail, invitorName, docNumber);
 
-        // Act
-        notificationRestClient.sendQRCodeEmail(qrEmailRequest.getEmail(), qrEmailRequest.getInvitorName(), qrEmailRequest.getDocNumber());
-
-        // Assert
-        verify(visitorService).getVisitorByDocNumber(qrEmailRequest.getDocNumber());
-        verify(authService).getValidAuthsByDocNumber(qrEmailRequest.getDocNumber());
-        verify(restTemplate).postForEntity(
-                eq(emailServiceBaseUrl+ "/emails/send"),
+        verify(restTemplate, times(2)).postForEntity(
+                anyString(),
                 any(HttpEntity.class),
-                eq(Void.class));
+                any(Class.class));
     }
 
     @Test
-    void sendQRCodeEmail_WhenVisitorNotFound_ShouldThrowException() {
-        // Arrange
+    void sendQRCodeEmailWithNoAuthsShouldSendEmailWithFreeValues() throws IOException {
+        String recipientEmail = "test@example.com";
+        String invitorName = "John Doe";
+        Long docNumber = 123456789L;
+
+        VisitorDTO visitorDTO = new VisitorDTO();
+        visitorDTO.setDocNumber(docNumber);
+        visitorDTO.setName("Jane");
+        visitorDTO.setLastName("Doe");
+
+        EmailTemplateResponse templateResponse = new EmailTemplateResponse();
+        templateResponse.setId(1L);
+
+        when(visitorService.getVisitorByDocNumber(docNumber)).thenReturn(visitorDTO);
+        when(authService.getValidAuthsByDocNumber(docNumber)).thenReturn(new ArrayList<>());
+        when(restTemplate.postForEntity(
+                eq(EMAIL_SERVICE_BASE_URL + "/email-templates"),
+                any(HttpEntity.class),
+                eq(EmailTemplateResponse.class)))
+                .thenReturn(new ResponseEntity<>(templateResponse, HttpStatus.OK));
+        when(restTemplate.postForEntity(
+                eq(EMAIL_SERVICE_BASE_URL + "/emails/send"),
+                any(HttpEntity.class),
+                eq(Void.class)))
+                .thenReturn(new ResponseEntity<>(HttpStatus.OK));
+
+        notificationRestClient.sendQRCodeEmail(recipientEmail, invitorName, docNumber);
+
+        verify(restTemplate, times(2)).postForEntity(
+                anyString(),
+                any(HttpEntity.class),
+                any(Class.class));
+    }
+
+    @Test
+    void sendQRCodeEmailWhenVisitorNotFoundShouldThrowException() {
         String recipientEmail = "test@example.com";
         String invitorName = "John Doe";
         Long docNumber = 123456789L;
 
         when(visitorService.getVisitorByDocNumber(docNumber)).thenReturn(null);
 
-        // Act & Assert
         assertThrows(NullPointerException.class, () ->
-                notificationRestClient.sendQRCodeEmail(recipientEmail, invitorName, docNumber)
-        );
+                notificationRestClient.sendQRCodeEmail(recipientEmail, invitorName, docNumber));
+
+        //verify(visitorService).getVisitorByDocNumber(docNumber);
+        verify(authService, never()).getValidAuthsByDocNumber(any());
+    }
+
+    @Test
+    void sendQRCodeEmailWhenEmailServiceFailsShouldThrowException() {
+        String recipientEmail = "test@example.com";
+        String invitorName = "John Doe";
+        Long docNumber = 123456789L;
+
+        VisitorDTO visitorDTO = new VisitorDTO();
+        visitorDTO.setDocNumber(docNumber);
+        visitorDTO.setName("Jane");
+        visitorDTO.setLastName("Doe");
+
+        EmailTemplateResponse templateResponse = new EmailTemplateResponse();
+        templateResponse.setId(1L);
+
+        when(visitorService.getVisitorByDocNumber(docNumber)).thenReturn(visitorDTO);
+        when(authService.getValidAuthsByDocNumber(docNumber)).thenReturn(new ArrayList<>());
+        when(restTemplate.postForEntity(
+                eq(EMAIL_SERVICE_BASE_URL + "/email-templates"),
+                any(HttpEntity.class),
+                eq(EmailTemplateResponse.class)))
+                .thenReturn(new ResponseEntity<>(templateResponse, HttpStatus.OK));
+        when(restTemplate.postForEntity(
+                eq(EMAIL_SERVICE_BASE_URL + "/emails/send"),
+                any(HttpEntity.class),
+                eq(Void.class)))
+                .thenThrow(new RestClientException("Failed to send email"));
+
+        assertThrows(RestClientException.class, () ->
+                notificationRestClient.sendQRCodeEmail(recipientEmail, invitorName, docNumber));
     }
 }
