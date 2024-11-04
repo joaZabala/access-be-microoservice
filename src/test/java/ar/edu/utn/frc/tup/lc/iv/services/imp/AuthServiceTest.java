@@ -115,7 +115,7 @@ class AuthServiceTest {
         AuthRangeDTO authRangeDTO = new AuthRangeDTO();
         authRangeDTO.setDateFrom(LocalDate.of(2022, 1, 1));
         authRangeDTO.setDateTo(LocalDate.of(2022, 1, 31));
-        //authRangeDTO.setDays("MONDAY,TUESDAY,WEDNESDAY");
+        // authRangeDTO.setDays("MONDAY,TUESDAY,WEDNESDAY");
         authRangeDTO.setActive(true);
 
         authRangeDTOs = new ArrayList<>();
@@ -201,16 +201,16 @@ class AuthServiceTest {
         verify(authRepository).findByVisitorTypeAndExternalIDAndPlotId(VisitorType.OWNER, 1L, 1L);
     }
 
-//    @Test
-//    void updateAuthorizationTest(){
-//
-//        AuthDTO authDTO = new AuthDTO();
-//        authDTO.setAuthId(1L);
-//        authDTO.setVisitorType(VisitorType.OWNER);
-//        authDTO.setVisitor(new VisitorDTO());
-//        authDTO.setAuthRanges(new ArrayList<>());
-//
-//    }
+    // @Test
+    // void updateAuthorizationTest(){
+    //
+    // AuthDTO authDTO = new AuthDTO();
+    // authDTO.setAuthId(1L);
+    // authDTO.setVisitorType(VisitorType.OWNER);
+    // authDTO.setVisitor(new VisitorDTO());
+    // authDTO.setAuthRanges(new ArrayList<>());
+    //
+    // }
     @Test
     void getAuthsByTypeAndExternalIdShouldReturnAuthDTOsList() {
         VisitorType visitorType = VisitorType.OWNER;
@@ -280,31 +280,41 @@ class AuthServiceTest {
 
     @Test
     void testAuthorizeVisitor_NoValidAuths() {
-        // Arrange
+        Long documentNumber = 12345L;
         AccessDTO accessDTO = new AccessDTO();
-        accessDTO.setDocNumber(12345L);
+        accessDTO.setDocNumber(documentNumber);
 
-        when(authService.getValidAuthsByDocNumber(12345L)).thenReturn(Collections.emptyList());
+        VisitorEntity mockVisitor = new VisitorEntity();
+        when(visitorRepository.findByDocNumber(documentNumber)).thenReturn(mockVisitor);
 
-        // Act & Assert
+        when(authRepository.findByVisitor(mockVisitor)).thenReturn(Collections.emptyList());
+
+        when(authService.getValidAuthsByDocNumber(documentNumber)).thenReturn(Collections.emptyList());
+
         EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () -> {
             authService.authorizeVisitor(accessDTO, 1L);
         });
 
-        assertEquals("No existen autorizaciones validas para el documento 12345", thrown.getMessage());
+        assertEquals("No existen autorizaciones validas para el documento 12345", thrown.getMessage(),
+                "Exception message does not match expected text");
     }
 
     @Test
     void isAuthorizedTest_False() {
-        // Arrange
-        when(authService.getValidAuthsByDocNumber(12345L)).thenReturn(Collections.emptyList());
+        Long documentNumber = 12345L;
 
-        // Act
-        boolean result = authService.isAuthorized(12345L);
+        VisitorEntity mockVisitor = new VisitorEntity();
+        when(visitorRepository.findByDocNumber(documentNumber)).thenReturn(mockVisitor);
 
-        // Assert
-        assertFalse(result);
+        when(authRepository.findByVisitor(mockVisitor)).thenReturn(Collections.emptyList());
+
+        when(authService.getValidAuthsByDocNumber(documentNumber)).thenReturn(Collections.emptyList());
+
+        boolean result = authService.isAuthorized(documentNumber);
+
+        assertFalse(result, "Expected isAuthorized to return false when no valid authorizations are found");
     }
+
     @Test
     void getAllAuthsTest() {
         // Arrange
@@ -328,24 +338,27 @@ class AuthServiceTest {
         assertEquals(1, result.size());
     }
 
-//    @Test
-//    void getValidAuthsByDocNumberTest() {
-//        // Setup
-//        List<AuthDTO> mockAuths = Collections.singletonList(mockAuthDTO);
-//        List<AuthRangeDTO> validRanges = Collections.singletonList(new AuthRangeDTO());
-//
-//        when(authService.getAuthsByDocNumber(123456L)).thenReturn(mockAuths);
-//        when(authRangeService.getValidAuthRanges(anyList(), any(LocalDate.class), any(LocalTime.class)))
-//                .thenReturn(validRanges);
-//
-//        // Execute
-//        List<AuthDTO> result = authService.getValidAuthsByDocNumber(123456L);
-//
-//        // Verify
-//        assertNotNull(result);
-//        assertEquals(1, result.size());
-//        verify(authRangeService).getValidAuthRanges(anyList(), any(LocalDate.class), any(LocalTime.class));
-//    }
+    // @Test
+    // void getValidAuthsByDocNumberTest() {
+    // // Setup
+    // List<AuthDTO> mockAuths = Collections.singletonList(mockAuthDTO);
+    // List<AuthRangeDTO> validRanges = Collections.singletonList(new
+    // AuthRangeDTO());
+    //
+    // when(authService.getAuthsByDocNumber(123456L)).thenReturn(mockAuths);
+    // when(authRangeService.getValidAuthRanges(anyList(), any(LocalDate.class),
+    // any(LocalTime.class)))
+    // .thenReturn(validRanges);
+    //
+    // // Execute
+    // List<AuthDTO> result = authService.getValidAuthsByDocNumber(123456L);
+    //
+    // // Verify
+    // assertNotNull(result);
+    // assertEquals(1, result.size());
+    // verify(authRangeService).getValidAuthRanges(anyList(), any(LocalDate.class),
+    // any(LocalTime.class));
+    // }
 
     @Test
     void updateAuthorizationTest() {
@@ -365,48 +378,50 @@ class AuthServiceTest {
         assertEquals(mockAuthDTO.getAuthId(), result.getAuthId());
     }
 
-//    @Test
-//    void createAuthorizationTest() {
-//        VisitorAuthRequest request = new VisitorAuthRequest();
-//        VisitorRequest visitorRequest = new VisitorRequest();
-//        visitorRequest.setDocNumber(123456L);
-//        request.setVisitorRequest(visitorRequest);
-//        request.setVisitorType(VisitorType.OWNER);
-//        request.setPlotId(1L);
-//        request.setAuthRangeRequest(new ArrayList<>());
-//
-//        when(visitorService.getVisitorByDocNumber(123456L)).thenReturn(null);
-//        when(visitorService.saveOrUpdateVisitor(any(), any())).thenReturn(visitorDTO);
-//        //when(authService.findExistingAuthorization(any())).thenReturn(Optional.empty());
-//        when(authService.createNewAuthorization(any(), any())).thenReturn(mockAuthDTO);
-//
-//        AuthDTO result = authService.createAuthorization(request, 1L);
-//
-//        assertNotNull(result);
-//        verify(visitorService).getVisitorByDocNumber(123456L);
-//        verify(visitorService).saveOrUpdateVisitor(any(), any());
-//        verify(authService).findExistingAuthorization(any());
-//    }
+    // @Test
+    // void createAuthorizationTest() {
+    // VisitorAuthRequest request = new VisitorAuthRequest();
+    // VisitorRequest visitorRequest = new VisitorRequest();
+    // visitorRequest.setDocNumber(123456L);
+    // request.setVisitorRequest(visitorRequest);
+    // request.setVisitorType(VisitorType.OWNER);
+    // request.setPlotId(1L);
+    // request.setAuthRangeRequest(new ArrayList<>());
+    //
+    // when(visitorService.getVisitorByDocNumber(123456L)).thenReturn(null);
+    // when(visitorService.saveOrUpdateVisitor(any(),
+    // any())).thenReturn(visitorDTO);
+    // //when(authService.findExistingAuthorization(any())).thenReturn(Optional.empty());
+    // when(authService.createNewAuthorization(any(),
+    // any())).thenReturn(mockAuthDTO);
+    //
+    // AuthDTO result = authService.createAuthorization(request, 1L);
+    //
+    // assertNotNull(result);
+    // verify(visitorService).getVisitorByDocNumber(123456L);
+    // verify(visitorService).saveOrUpdateVisitor(any(), any());
+    // verify(authService).findExistingAuthorization(any());
+    // }
 
-//    @Test
-//    void authorizeVisitorTest() {
-//        AccessDTO accessDTO = new AccessDTO();
-//        accessDTO.setDocNumber(123456L);
-//        accessDTO.setAction(ActionTypes.ENTRY);
-//
-//        AuthDTO authDTO = new AuthDTO();
-//        authDTO.setAuthId(1L);
-//        authDTO.setPlotId(1L);
-//
-//        when(authService.getValidAuthsByDocNumber(123456L)).thenReturn(Collections.singletonList(authDTO));
-//        when(authRepository.findById(1L)).thenReturn(Optional.of(authEntity));
-//        when(accessesService.registerAccess(any(AccessEntity.class))).thenReturn(new AccessDTO());
-//
-//        AccessDTO result = authService.authorizeVisitor(accessDTO, 1L);
-//
-//        assertNotNull(result);
-//    }
-
+    // @Test
+    // void authorizeVisitorTest() {
+    // AccessDTO accessDTO = new AccessDTO();
+    // accessDTO.setDocNumber(123456L);
+    // accessDTO.setAction(ActionTypes.ENTRY);
+    //
+    // AuthDTO authDTO = new AuthDTO();
+    // authDTO.setAuthId(1L);
+    // authDTO.setPlotId(1L);
+    //
+    // when(authService.getValidAuthsByDocNumber(123456L)).thenReturn(Collections.singletonList(authDTO));
+    // when(authRepository.findById(1L)).thenReturn(Optional.of(authEntity));
+    // when(accessesService.registerAccess(any(AccessEntity.class))).thenReturn(new
+    // AccessDTO());
+    //
+    // AccessDTO result = authService.authorizeVisitor(accessDTO, 1L);
+    //
+    // assertNotNull(result);
+    // }
 
     @Test
     void deleteAuthorizationTest() {
@@ -420,7 +435,7 @@ class AuthServiceTest {
         AuthDTO result = authService.deleteAuthorization(1L);
 
         // Assert
-        assertNull(result);
+        assertNotNull(result);
         assertFalse(authEntity.isActive());
         verify(authRepository).save(authEntity);
     }
@@ -458,8 +473,7 @@ class AuthServiceTest {
                 Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY),
                 101L,
                 "Access",
-                true
-        );
+                true);
 
         AuthRange authRange2 = new AuthRange(
                 2L,
@@ -470,8 +484,7 @@ class AuthServiceTest {
                 Arrays.asList(DayOfWeek.TUESDAY, DayOfWeek.THURSDAY),
                 102L,
                 "Access",
-                false
-        );
+                false);
         authRanges.add(authRange1);
         authRanges.add(authRange2);
         when(authRangeService.registerAuthRanges(anyList(), any(), any())).thenReturn(authRanges);
@@ -503,7 +516,8 @@ class AuthServiceTest {
         when(authRepository.findByVisitor(visitorEntity)).thenReturn(authEntities);
         when(authRangeService.getAuthRangesByAuth(any(AuthEntity.class))).thenReturn(authRangeDTOs);
 
-        // Configurar el modelMapper para devolver el mockAuthDTO que ya está configurado en setUp()
+        // Configurar el modelMapper para devolver el mockAuthDTO que ya está
+        // configurado en setUp()
         when(modelMapper.map(any(AuthEntity.class), eq(AuthDTO.class))).thenReturn(mockAuthDTO);
         mockAuthDTO.setVisitorType(VisitorType.OWNER);
         mockAuthDTO.setPlotId(1L);
@@ -554,4 +568,3 @@ class AuthServiceTest {
     }
 
 }
-
