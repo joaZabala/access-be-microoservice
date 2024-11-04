@@ -301,8 +301,10 @@ public class AuthService implements IAuthService {
 
         AuthRangeDTO[] rangelist = new AuthRangeDTO[0];
         /*
-        if (visitorAuthRequest.getVisitorType() == VisitorType.PROVIDER || visitorAuthRequest.getVisitorType() == VisitorType.WORKER) {
-            authDTO.setAuthRanges(authRangeService.getAuthRangesByAuthExternalID(visitorAuthRequest.getExternalID()));
+        if (visitorAuthRequest.getVisitorType() == VisitorType.PROVIDER
+        || visitorAuthRequest.getVisitorType() == VisitorType.WORKER) {
+            authDTO.setAuthRanges(authRangeService.
+            getAuthRangesByAuthExternalID(visitorAuthRequest.getExternalID()));
         } else {
         */
             rangelist = authRangeService.updateAuthRangeByAuthId(authEntity.getAuthId(),
