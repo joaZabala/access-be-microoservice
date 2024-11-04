@@ -182,6 +182,7 @@ public class NotificationRestClient {
      */
     public void sendQRCodeEmail(String recipientEmail, String invitorName, Long docNumber) throws IOException {
 
+        initializeTemplate();
         //buscar el vistante por documento
         VisitorDTO ve = visitorService.getVisitorByDocNumber(docNumber);
 

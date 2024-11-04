@@ -74,23 +74,6 @@ public class QRController {
                 .body(qrImage);
     }
 
-    /**
-     * Endpoint to generate a QR code for a visitor based on their document number.
-     *
-     * @param id id of the user making the request.
-     * @return a message indicating the status of the request.
-     */
-    @PostMapping("/initialize-template")
-
-    public ResponseEntity<String> initializeTemplate(@RequestHeader("x-user-id") Long id) {
-        try {
-            notificationRestClient.initializeTemplate();
-            return ResponseEntity.ok("Plantilla inicializada correctamente");
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error al inicializar la plantilla: " + e.getMessage());
-        }
-    }
 
     /**
      * Endpoint to send a QR code email to a visitor.
@@ -100,6 +83,17 @@ public class QRController {
      * @param id      id of the user making the request.
      * @return a message indicating the status of the request.
      */
+
+    @Operation(summary = "Generate QR code for visitor and send email",
+            description = "Send a QR code image by email containing visitor information based on their document number")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "QR code successfully generated and email sent",
+                    content = @Content(mediaType = MediaType.IMAGE_PNG_VALUE, schema = @Schema(type = "string", format = "binary"))),
+            @ApiResponse(responseCode = "404", description = "Visitor not found",
+                    content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "500", description = "Error generating QR code",
+                    content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+    })
     @PostMapping("/send")
     public ResponseEntity<String> sendQREmail(@RequestBody QrEmailRequest request, @RequestHeader("x-user-id") Long id) {
         try {
