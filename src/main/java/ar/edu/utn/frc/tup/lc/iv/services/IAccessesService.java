@@ -1,12 +1,16 @@
 package ar.edu.utn.frc.tup.lc.iv.services;
 
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.EntryReport.EntryReport;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -71,4 +75,35 @@ public interface IAccessesService {
      * @return true if the visitor can do the action, false otherwise.
      */
     Boolean canDoAction(String carPlate, ActionTypes action);
+    /**
+     * Retrieves hourly access information within a specified date range.
+     * @param from the start date and time (inclusive) of the range
+     * @param to   the end date and time (inclusive) of the range
+     * @return a list of {@link DashboardDTO} objects representing
+     * access counts per hour
+     */
+    List<DashboardDTO> getHourlyInfo(LocalDateTime from, LocalDateTime to);
+    /**
+     * Retrieves hourly access information within a specified date range.
+     * @param from the start date and time (inclusive) of the range
+     * @param to   the end date and time (inclusive) of the range
+     * @return a list of {@link DashboardDTO} objects representing
+     * access counts per day of week
+     */
+    List<DashboardDTO> getDayOfWeekInfo(LocalDateTime from, LocalDateTime to);
+
+    /**
+     * Retrieves access records filtered by visitor type and external ID.
+     * @param from date from
+     * @param localTo local to
+     * @return a list of {@link DashboardDTO} objects
+     */
+    EntryReport getAccessByDate(LocalDate from, LocalDate localTo);
+    /**
+     * Retrieves access information by visitor type within a specified date range.
+     * @param from the start date and time (inclusive) of the range
+     * @param to   the end date and time (inclusive) of the range
+     * @return a list of {@link DashboardDTO}  access counts per visitor type
+     */
+    List<DashboardDTO> getAccessesByVisitor(LocalDate from, LocalDate to);
 }

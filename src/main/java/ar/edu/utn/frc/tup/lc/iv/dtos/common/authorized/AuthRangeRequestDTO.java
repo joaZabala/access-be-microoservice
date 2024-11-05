@@ -86,4 +86,14 @@ public class AuthRangeRequestDTO implements Serializable {
      */
     @JsonProperty("comment")
     private String comment;
+    /**
+     * ID of the authorized range.
+     */
+    @JsonProperty("auth_range_id")
+    private Long authRangeId;
+    /**
+     * Status of the authorized range.
+     */
+    @JsonProperty("is_active")
+    private boolean isActive;
 }

@@ -147,7 +147,9 @@ class VisitorServiceTest {
     void getBydocNumberNoExistTest() {
         when(visitorRepository.findByDocNumber(40252203L)).thenReturn(null);
 
-       assertNull(visitorService.getVisitorByDocNumber(40252203L));
+        VisitorDTO result = visitorService.getVisitorByDocNumber(40252203L);
+        assertNull(result);
+        verify(visitorRepository).findByDocNumber(40252203L);
     }
 
     @Test
@@ -288,13 +290,14 @@ class VisitorServiceTest {
         assertEquals("new lastname", existingVisitor.getLastName());
     }
 
+
     @Test
     void getVisitorByDocNumberWithNonExistentDoc() {
         Long nonExistentDoc = 99999999L;
+
         when(visitorRepository.findByDocNumber(nonExistentDoc)).thenReturn(null);
 
         VisitorDTO result = visitorService.getVisitorByDocNumber(nonExistentDoc);
-
         assertNull(result);
         verify(visitorRepository).findByDocNumber(nonExistentDoc);
     }

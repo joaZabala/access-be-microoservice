@@ -3,6 +3,8 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
 import ar.edu.utn.frc.tup.lc.iv.services.IQRService;
+import jakarta.persistence.EntityNotFoundException;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
@@ -47,7 +49,7 @@ public class QRService implements IQRService {
         VisitorEntity visitor = visitorsRepository.findByDocNumber(docNumber);
 
         if (visitor == null) {
-            throw new IllegalArgumentException("No se encontró un visitante con el número de documento proporcionado.");
+            throw new EntityNotFoundException("No se encontró un visitante con el número de documento proporcionado.");
         }
 
         String qrData = "Name: " + visitor.getName() + ", "
@@ -65,4 +67,5 @@ public class QRService implements IQRService {
             throw new IOException("Error generating QR code.", e); // Preserve the stack trace
         }
     }
+
 }

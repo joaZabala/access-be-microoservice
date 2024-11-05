@@ -138,7 +138,7 @@ public class VisitorService implements IVisitorService {
         VisitorEntity visitorEntity = visitorRepository.findByDocNumber(docNumber);
 
         if (Objects.isNull(visitorEntity)) {
-            return null;
+           return null;
         } else {
             return modelMapper.map(visitorEntity, VisitorDTO.class);
         }
