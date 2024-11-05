@@ -63,7 +63,8 @@ public class QRController {
         description = "Generates a QR code image containing visitor information based on their document number")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "QR code successfully generated",
-                content = @Content(mediaType = MediaType.IMAGE_PNG_VALUE, schema = @Schema(type = "string", format = "binary"))),
+                content = @Content(mediaType = MediaType.IMAGE_PNG_VALUE,
+                        schema = @Schema(type = "string", format = "binary"))),
             @ApiResponse(responseCode = "404", description = "Visitor not found",
                 content = @Content(schema = @Schema(implementation = ErrorApi.class))),
             @ApiResponse(responseCode = "500", description = "Error generating QR code",
@@ -97,7 +98,8 @@ public class QRController {
                     content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @PostMapping("/send")
-    public ResponseEntity<Map<String , String>> sendQREmail(@RequestBody QrEmailRequest request, @RequestHeader("x-user-id") Long id) {
+    public ResponseEntity<Map<String, String>> sendQREmail(@RequestBody QrEmailRequest request,
+                                                           @RequestHeader("x-user-id") Long id) {
         try {
             notificationRestClient.sendQRCodeEmail(
                     request.getEmail(),
