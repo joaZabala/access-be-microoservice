@@ -161,7 +161,23 @@ public class VisitorService implements IVisitorService {
         visitorEntity.get().setActive(false);
         return modelMapper.map(visitorRepository.save(visitorEntity.get()), VisitorDTO.class);
     }
+    /**
+     * Activate visitor by docNumber.
+     *
+     * @param visitorId document number of the visitor.
+     * @return VisitorDTO.
+     */
+    @Override
+    public VisitorDTO activateVisitor(Long visitorId) {
+        Optional<VisitorEntity> visitorEntity = visitorRepository.findById(visitorId);
 
+        if (visitorEntity.isEmpty()) {
+            throw new EntityNotFoundException("No existe el visitante con el id " + visitorId);
+        }
+
+        visitorEntity.get().setActive(true);
+        return modelMapper.map(visitorRepository.save(visitorEntity.get()), VisitorDTO.class);
+    }
     /**
      * fetch visitor by id.
      *

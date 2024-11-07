@@ -25,5 +25,5 @@ public class VisitorFilter {
     /**
      * active filter the access records.
      */
-    private Boolean active = true;
+    private Boolean active;
 }
