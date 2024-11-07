@@ -196,6 +196,26 @@ class VisitorServiceTest {
     }
 
     @Test
+    void activateVisitorTest() {
+
+        VisitorEntity visitorEntity =
+                new VisitorEntity(1L, "juan", "perez", DocumentType.DNI,40252203L, LocalDate.now(), false);
+
+
+
+        when(visitorRepository.findById(1L)).thenReturn(Optional.of(visitorEntity));
+
+        VisitorEntity visitorEntitySave =
+                new VisitorEntity(1L, "juan", "perez", DocumentType.DNI,40252203L, LocalDate.now(), true);
+        when(visitorRepository.save(any(VisitorEntity.class))).thenReturn(visitorEntitySave);
+
+        VisitorDTO visitorDTO = visitorService.activateVisitor(1L);
+
+        assertEquals(visitorEntity.getDocNumber(), visitorDTO.getDocNumber());
+        assertTrue(visitorDTO.isActive());
+    }
+
+    @Test
     void deleteVisitorNoExistTest() {
 
         when(visitorRepository.findById(1L)).thenReturn(Optional.empty());

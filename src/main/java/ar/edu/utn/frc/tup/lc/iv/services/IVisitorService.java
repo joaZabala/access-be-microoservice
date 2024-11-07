@@ -44,7 +44,12 @@ public interface IVisitorService {
      * @return VisitorDTO representing the deactivated visitor.
      */
     VisitorDTO deleteVisitor(Long docNumber);
-
+    /**
+     * Activates a visitor by their document number.
+     * @param docNumber The document number of the visitor.
+     * @return VisitorDTO representing the activated visitor.
+     */
+    VisitorDTO activateVisitor(Long docNumber);
     /**
      * Get visitor by id.
      * @param id unique identifier of the visitor
