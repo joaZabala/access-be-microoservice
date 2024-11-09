@@ -21,6 +21,8 @@ import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 
 import java.time.LocalDateTime;
 
@@ -39,6 +41,8 @@ import java.time.LocalDateTime;
 @Table(name = "accesses")
 @Getter
 @Setter
+@Audited
+@AuditTable("access_audit")
 public class AccessEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Accesses.

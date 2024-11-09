@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,6 +34,8 @@ import java.time.LocalTime;
 @Table(name = "auth_ranges")
 @Getter
 @Setter
+@Audited
+@AuditTable("auth_ranges_audit")
 public class AuthRangeEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Acceses.
