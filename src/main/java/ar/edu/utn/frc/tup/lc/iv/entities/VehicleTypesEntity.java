@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 
 /**
  * Entity class representing the types of vehicles.
@@ -24,6 +26,8 @@ import lombok.Setter;
 @Table(name = "vehicle_types")
 @Getter
 @Setter
+@Audited
+@AuditTable("vehicle_types_audit")
 public class VehicleTypesEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Authorized Types.

@@ -14,6 +14,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
+
 import java.time.LocalDate;
 
 /**
@@ -27,6 +30,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "visitors")
+@Audited
+@AuditTable("visitors_audit")
 public class VisitorEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Authorized.

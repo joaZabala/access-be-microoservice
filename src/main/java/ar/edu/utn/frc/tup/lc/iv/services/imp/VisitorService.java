@@ -35,6 +35,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Service
 public class VisitorService implements IVisitorService {
+    /** Response visitor not found error. */
+    private static final String VISITOR_NOT_FOUND = "No existe el visitante con el id ";
     /**
      * Repository to access Authorized entities from the database.
      */
@@ -103,7 +105,7 @@ public class VisitorService implements IVisitorService {
             Optional<VisitorEntity> optionalVisitorEntity = visitorRepository.findById(visitorId);
 
             if (optionalVisitorEntity.isEmpty()) {
-                throw new EntityNotFoundException("No existe el visitante con el id " + visitorId);
+                throw new EntityNotFoundException(VISITOR_NOT_FOUND + visitorId);
             }
 
             visitorEntity = optionalVisitorEntity.get();
@@ -149,7 +151,7 @@ public class VisitorService implements IVisitorService {
         Optional<VisitorEntity> visitorEntity = visitorRepository.findById(visitorId);
 
         if (visitorEntity.isEmpty()) {
-            throw new EntityNotFoundException("No existe el visitante con el id " + visitorId);
+            throw new EntityNotFoundException(VISITOR_NOT_FOUND + visitorId);
         }
 
         visitorEntity.get().setActive(false);
@@ -166,7 +168,7 @@ public class VisitorService implements IVisitorService {
         Optional<VisitorEntity> visitorEntity = visitorRepository.findById(visitorId);
 
         if (visitorEntity.isEmpty()) {
-            throw new EntityNotFoundException("No existe el visitante con el id " + visitorId);
+            throw new EntityNotFoundException(VISITOR_NOT_FOUND + visitorId);
         }
 
         visitorEntity.get().setActive(true);
@@ -182,7 +184,7 @@ public class VisitorService implements IVisitorService {
     public VisitorDTO getVisitorById(Long id) {
         Optional<VisitorEntity> visitorEntity = visitorRepository.findById(id);
         if (visitorEntity.isEmpty()) {
-            throw new EntityNotFoundException("No existe el visitante con el id " + id);
+            throw new EntityNotFoundException(VISITOR_NOT_FOUND + id);
         }
         return modelMapper.map(visitorEntity.get(), VisitorDTO.class);
     }
