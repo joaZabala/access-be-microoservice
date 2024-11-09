@@ -76,6 +76,7 @@ class VisitorControllerTest {
                 VisitorFilter filter = new VisitorFilter();
                 PaginatedResponse<VisitorDTO> paginatedResponse = new PaginatedResponse<>(List.of(visitor1, visitor2),
                                 2);
+                filter.setActive(true);
                 when(visitorService.getAllVisitors(0, 10, filter)).thenReturn(paginatedResponse);
 
                 mockMvc.perform(MockMvcRequestBuilders.get("/visitors")
@@ -166,5 +167,25 @@ class VisitorControllerTest {
                                 .andExpect(MockMvcResultMatchers.jsonPath("$.doc_number").value(12345678L))
                                 .andExpect(MockMvcResultMatchers.jsonPath("$.birth_date").value("01-01-1990"))
                                 .andExpect(MockMvcResultMatchers.jsonPath("$.is_active").value(false));
+        }
+
+        @Test
+        void activateVisitorTest() throws Exception {
+                VisitorDTO visitorDTO = new VisitorDTO(1L, "Mario", "Cenna", DocumentType.PASSPORT, 12345678L,
+                        LocalDate.of(1990, 1, 1), new ArrayList<>(), true);
+
+                when(visitorService.activateVisitor(12345678L)).thenReturn(visitorDTO);
+
+                mockMvc.perform(MockMvcRequestBuilders.put("/visitors/12345678/activate")
+                                .header("x-user-id", "1")
+                                .contentType(MediaType.APPLICATION_JSON))
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.visitor_id").value(1L))
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Mario"))
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.last_name").value("Cenna"))
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.doc_number").value(12345678L))
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.birth_date").value("01-01-1990"))
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.is_active").value(true));
         }
 }

@@ -20,6 +20,8 @@ import lombok.Setter;
 
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 
 /**
  * Entity class representing the authorized ranges.
@@ -36,6 +38,8 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "auths")
 @Getter
 @Setter
+@Audited
+@AuditTable("auths_audit")
 public class AuthEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Acceses.

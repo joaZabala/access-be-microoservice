@@ -37,7 +37,9 @@ public class VisitorSpecification {
                 predicates.add(criteriaBuilder.equal(root.get("documentType"), filter.getDocumentType()));
             }
 
-            predicates.add(criteriaBuilder.equal(root.get("isActive"), filter.getActive()));
+            if (filter.getActive() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("isActive"), filter.getActive()));
+            }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };

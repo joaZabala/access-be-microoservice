@@ -35,6 +35,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Service
 public class VisitorService implements IVisitorService {
+    /** Response visitor not found error. */
+    private static final String VISITOR_NOT_FOUND = "No existe el visitante con el id ";
     /**
      * Repository to access Authorized entities from the database.
      */
@@ -97,25 +99,18 @@ public class VisitorService implements IVisitorService {
     @Override
     public VisitorDTO saveOrUpdateVisitor(VisitorRequest visitorRequest, Long visitorId) {
 
-        VisitorEntity existVisitorEntity = null;
+        VisitorEntity visitorEntity;
 
         if (visitorId != null) {
-            Optional<VisitorEntity> visitorEntity = visitorRepository.findById(visitorId);
+            Optional<VisitorEntity> optionalVisitorEntity = visitorRepository.findById(visitorId);
 
-            if (visitorEntity.isEmpty()) {
-                throw new EntityNotFoundException("No existe el visitante con el id " + visitorId);
+            if (optionalVisitorEntity.isEmpty()) {
+                throw new EntityNotFoundException(VISITOR_NOT_FOUND + visitorId);
             }
 
-            existVisitorEntity = visitorEntity.get();
-        }
-
-        VisitorEntity visitorEntity;
-        if (Objects.nonNull(existVisitorEntity)) {
-
-            visitorEntity = existVisitorEntity;
+            visitorEntity = optionalVisitorEntity.get();
         } else {
             visitorEntity = new VisitorEntity();
-
         }
 
         visitorEntity.setName(visitorRequest.getName());
@@ -124,6 +119,7 @@ public class VisitorService implements IVisitorService {
         visitorEntity.setDocNumber(visitorRequest.getDocNumber());
         visitorEntity.setBirthDate(visitorRequest.getBirthDate());
         visitorEntity.setActive(true);
+
         return modelMapper.map(visitorRepository.save(visitorEntity), VisitorDTO.class);
     }
 
@@ -155,13 +151,29 @@ public class VisitorService implements IVisitorService {
         Optional<VisitorEntity> visitorEntity = visitorRepository.findById(visitorId);
 
         if (visitorEntity.isEmpty()) {
-            throw new EntityNotFoundException("No existe el visitante con el id " + visitorId);
+            throw new EntityNotFoundException(VISITOR_NOT_FOUND + visitorId);
         }
 
         visitorEntity.get().setActive(false);
         return modelMapper.map(visitorRepository.save(visitorEntity.get()), VisitorDTO.class);
     }
+    /**
+     * Activate visitor by docNumber.
+     *
+     * @param visitorId document number of the visitor.
+     * @return VisitorDTO.
+     */
+    @Override
+    public VisitorDTO activateVisitor(Long visitorId) {
+        Optional<VisitorEntity> visitorEntity = visitorRepository.findById(visitorId);
 
+        if (visitorEntity.isEmpty()) {
+            throw new EntityNotFoundException(VISITOR_NOT_FOUND + visitorId);
+        }
+
+        visitorEntity.get().setActive(true);
+        return modelMapper.map(visitorRepository.save(visitorEntity.get()), VisitorDTO.class);
+    }
     /**
      * fetch visitor by id.
      *
@@ -172,7 +184,7 @@ public class VisitorService implements IVisitorService {
     public VisitorDTO getVisitorById(Long id) {
         Optional<VisitorEntity> visitorEntity = visitorRepository.findById(id);
         if (visitorEntity.isEmpty()) {
-            throw new EntityNotFoundException("No existe el visitante con el id " + id);
+            throw new EntityNotFoundException(VISITOR_NOT_FOUND + id);
         }
         return modelMapper.map(visitorEntity.get(), VisitorDTO.class);
     }

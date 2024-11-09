@@ -44,7 +44,8 @@ public class VisitorController {
 
     /** Response code for bad request errors. */
     private static final String HTTP_BAD_REQUEST = "400";
-
+    /** Response visitor not found error. */
+    private static final String VISITOR_NOT_FOUND = "Visitor not found";
     /**
      * Authorized Service dependency injection.
      */
@@ -83,7 +84,7 @@ public class VisitorController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = HTTP_OK, description = "Successfully retrieved visitor",
                 content = @Content(schema = @Schema(implementation = VisitorDTO.class))),
-            @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Visitor not found",
+            @ApiResponse(responseCode = HTTP_NOT_FOUND, description = VISITOR_NOT_FOUND,
                 content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @GetMapping("/by-doc-number/{docNumber}")
@@ -127,7 +128,7 @@ public class VisitorController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = HTTP_OK, description = "Visitor successfully deactivated",
                 content = @Content(schema = @Schema(implementation = VisitorDTO.class))),
-            @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Visitor not found",
+            @ApiResponse(responseCode = HTTP_NOT_FOUND, description = VISITOR_NOT_FOUND,
                 content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @DeleteMapping("/{visitorId}")
@@ -135,6 +136,28 @@ public class VisitorController {
             @Parameter(description = "ID of the visitor to delete", required = true) @PathVariable Long visitorId,
             @Parameter(description = "ID of the user making the request", required = true) @RequestHeader("x-user-id") Long userId) {
         return ResponseEntity.ok(visitorService.deleteVisitor(visitorId));
+    }
+    /**
+     * Deactivate visitor by docNumber.
+     *
+     * @param visitorId The identifier of the visitor.
+     * @param userId    The identifier of the user.
+     * @return VisitorDTO.
+     */
+    @Operation(summary = "Activate visitor", description = "Activates a visitor by their ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = HTTP_OK, description = "Visitor successfully activated",
+                    content = @Content(schema = @Schema(implementation = VisitorDTO.class))),
+            @ApiResponse(responseCode = HTTP_NOT_FOUND, description = VISITOR_NOT_FOUND,
+                    content = @Content(schema = @Schema(implementation = ErrorApi.class))),
+    })
+    @PutMapping("/{visitorId}/activate")
+    public ResponseEntity<VisitorDTO> activateVisitor(
+            @Parameter(description = "ID of the visitor to activate",
+                    required = true) @PathVariable Long visitorId,
+            @Parameter(description = "ID of the user making the request",
+                    required = true) @RequestHeader("x-user-id") Long userId) {
+        return ResponseEntity.ok(visitorService.activateVisitor(visitorId));
     }
 
     /**
@@ -147,7 +170,7 @@ public class VisitorController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = HTTP_OK, description = "Successfully retrieved visitor",
                 content = @Content(schema = @Schema(implementation = VisitorDTO.class))),
-            @ApiResponse(responseCode = HTTP_NOT_FOUND, description = "Visitor not found",
+            @ApiResponse(responseCode = HTTP_NOT_FOUND, description = VISITOR_NOT_FOUND,
                 content = @Content(schema = @Schema(implementation = ErrorApi.class))),
     })
     @GetMapping("/{visitorId}")
