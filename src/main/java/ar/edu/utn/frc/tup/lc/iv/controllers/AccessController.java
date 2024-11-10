@@ -4,6 +4,7 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.EntryReport.EntryReport;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.ErrorApi;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.DataType;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
@@ -228,12 +229,13 @@ public class AccessController {
                                                      LocalDateTime to,
                                                      @RequestParam(required = false) VisitorType visitorType,
                                                      @RequestParam(required = false) ActionTypes actionTypes,
-                                                     @RequestParam GroupByPeriod group) {
+                                                     @RequestParam GroupByPeriod group,
+                                                     @RequestParam DataType dataType) {
 
         if (from.isAfter(to)) {
             throw new IllegalArgumentException("La fecha 'desde' no puede ser posterior a la fecha 'hasta'");
         }
-        return accessesService.getAccessGrouped(from, to, visitorType, actionTypes, group);
+        return accessesService.getAccessGrouped(from, to, visitorType, actionTypes, group, dataType);
     }
 
     @GetMapping("/inconsistent")

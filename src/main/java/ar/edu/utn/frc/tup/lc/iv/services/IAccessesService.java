@@ -3,6 +3,7 @@ package ar.edu.utn.frc.tup.lc.iv.services;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.EntryReport.EntryReport;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.DataType;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
@@ -111,7 +112,8 @@ public interface IAccessesService {
                                         LocalDateTime to,
                                         VisitorType visitorType,
                                         ActionTypes actionType,
-                                        GroupByPeriod group
+                                        GroupByPeriod group,
+                                        DataType dataType
     );
 
     Long getInconsistentAccessCount(LocalDateTime from,

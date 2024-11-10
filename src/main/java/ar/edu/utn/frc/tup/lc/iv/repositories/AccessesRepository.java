@@ -167,6 +167,28 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
                                          @Param("action") ActionTypes action,
                                          @Param("dateFormat") String dateFormat);
 
+    /**
+     * Retrieves access counts grouped by day within the specified date range
+     * @param fromDate   the start date and time (inclusive).
+     * @param toDate     the end date and time (inclusive).
+     * @param visitorType the type of visitor to filter by (nullable).
+     * @param action     the action type to filter by (nullable).
+     * @return a list of Object arrays where each array contains:
+     */
+    @Query("SELECT FUNCTION('DATE_FORMAT', a.actionDate, :dateFormat) AS day, COUNT(a) AS count "
+            + "FROM AccessEntity a "
+            + "JOIN a.auth auth "
+            + "WHERE a.actionDate BETWEEN :fromDate AND :toDate and "
+            + "(:visitorType is null or a.auth.visitorType = :visitorType) and "
+            + "(:action is null or a.action = :action) AND a.isInconsistent = true "
+            + "GROUP BY FUNCTION('DATE_FORMAT', a.actionDate, :dateFormat) "
+            + "ORDER BY day")
+    List<Object[]> findInconsistentAccessCountsByGroup(@Param("fromDate") LocalDateTime fromDate,
+                                                       @Param("toDate") LocalDateTime toDate,
+                                                       @Param("visitorType") VisitorType visitorType,
+                                                       @Param("action") ActionTypes action,
+                                                       @Param("dateFormat") String dateFormat);
+
     @Query("SELECT COUNT(a) AS count "
             + "FROM AccessEntity a "
             + "WHERE a.actionDate BETWEEN :fromDate AND :toDate and "

@@ -5,6 +5,7 @@ import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.EntryReport.EntryReport;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.DataType;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
@@ -328,7 +329,8 @@ public class AccessesService implements IAccessesService {
                                                LocalDateTime to,
                                                VisitorType visitorType,
                                                ActionTypes actionType,
-                                               GroupByPeriod group
+                                               GroupByPeriod group,
+                                               DataType dataType
                                                ) {
 
         String dateFormat;
@@ -360,7 +362,17 @@ public class AccessesService implements IAccessesService {
                 throw new IllegalArgumentException("Invalid period for grouping: " + group);
         }
 
-        List<Object[]> results = accessesRepository.findAccessCountsByGroup(from, to, visitorType, actionType, dateFormat);
+        List<Object[]> results = new ArrayList<>();
+        if (dataType == DataType.ALL)
+        {
+            results = accessesRepository.findAccessCountsByGroup(from, to, visitorType, actionType, dateFormat);
+        } else if (dataType == DataType.INCONSISTENCIES) {
+            results = accessesRepository.findInconsistentAccessCountsByGroup(from,
+                                                                            to,
+                                                                            visitorType,
+                                                                            actionType,
+                                                                            dateFormat);
+        }
 
         Map<String, Long> accessMap = new HashMap<>();
         for (Object[] row : results) {
