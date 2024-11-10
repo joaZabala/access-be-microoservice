@@ -379,6 +379,12 @@ public class AccessesService implements IAccessesService {
                                                                             visitorType,
                                                                             actionType,
                                                                             dateFormat);
+        } else if (dataType == DataType.LATE) {
+            results = accessesRepository.findLateAccessCountsByGroup(from,
+                    to,
+                    visitorType,
+                    actionType,
+                    dateFormat);
         }
 
         Map<String, Long> accessMap = new HashMap<>();

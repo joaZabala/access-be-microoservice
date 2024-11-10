@@ -63,6 +63,7 @@ CREATE TABLE accesses (
     vehicle_type ENUM('CAR', 'FOOT', 'MOTORBIKE', 'PICKUP', 'TRUCK') DEFAULT NULL,
     auth_id BIGINT DEFAULT NULL,
     is_inconsistent BIT(1) DEFAULT b'0',
+    notified BIT(1) DEFAULT b'0',
     PRIMARY KEY (id),
     KEY FK_authvisit (auth_id),
     CONSTRAINT FK_authvisit FOREIGN KEY (auth_id) REFERENCES auths(id)
@@ -95,603 +96,5380 @@ INSERT INTO auths (visitor_id, visitor_type, plot_id, is_active) VALUES
 (10, 'VISITOR', 10,TRUE);
 
 
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-24 10:51:08.780853', 12, '2024-05-20 22:36:57.020158', 12, '2024-01-14 05:05:05', 9, 'FOOT', 9, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-02 01:45:10.790979', 12, '2024-09-06 20:19:36.859705', 12, '2024-09-06 00:27:08', 10, 'PICKUP', 10, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-29 13:10:22.392977', 12, '2024-08-09 07:09:22.039921', 12, '2024-05-05 01:35:03', 1, 'TRUCK', 8, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-26 16:40:53.664967', 12, '2024-03-15 12:32:22.019063', 12, '2024-10-15 06:39:26', 7, 'CAR', 6, 'ENTRY', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-13 16:13:01.623515', 12, '2024-06-19 00:55:57.096527', 12, '2024-05-28 18:38:37', 5, 'TRUCK', 7, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-30 08:29:36.970738', 12, '2024-08-18 23:06:06.340032', 12, '2024-02-28 00:18:13', 7, 'PICKUP', 5, 'ENTRY', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-19 15:40:21.187484', 12, '2024-04-28 00:10:14.214086', 12, '2024-10-25 17:37:07', 7, 'MOTORBIKE', 1, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-03 23:31:26.874357', 12, '2024-10-31 19:38:04.749867', 12, '2024-07-14 23:53:32', 6, 'PICKUP', 4, 'ENTRY', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-30 05:07:35.593010', 12, '2024-01-14 09:41:05.885200', 12, '2024-05-26 05:44:34', 8, 'MOTORBIKE', 3, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-26 13:16:19.966972', 12, '2024-06-06 02:23:53.499878', 12, '2024-02-25 13:01:26', 4, 'FOOT', 5, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-11 02:42:35.473798', 12, '2024-07-25 16:44:28.686597', 12, '2024-04-20 16:05:38', 10, 'FOOT', 7, 'ENTRY', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-07 15:04:33.399411', 12, '2024-05-01 07:08:59.482593', 12, '2024-04-28 11:24:22', 9, 'PICKUP', 6, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-21 22:45:41.054969', 12, '2024-09-01 15:34:48.390956', 12, '2024-09-23 13:05:30', 10, 'PICKUP', 3, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-10 22:14:05.833850', 12, '2024-05-22 04:34:00.278565', 12, '2024-03-06 17:50:54', 10, 'CAR', 4, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-08 10:16:45.659030', 12, '2024-02-01 20:09:22.049143', 12, '2024-10-25 20:48:42', 6, 'CAR', 5, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-05 07:04:30.065101', 12, '2024-02-02 12:22:12.880665', 12, '2024-01-10 15:55:09', 4, 'CAR', 8, 'ENTRY', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-13 19:34:06.337027', 12, '2024-08-30 10:29:44.462698', 12, '2024-02-04 06:16:37', 7, 'CAR', 10, 'ENTRY', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-04 06:02:50.817901', 12, '2024-06-17 15:26:07.024509', 12, '2024-11-03 00:51:05', 9, 'FOOT', 1, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-07 02:57:01.355747', 12, '2024-10-16 02:11:46.262768', 12, '2024-07-14 05:47:58', 3, 'FOOT', 9, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-07 14:43:49.062545', 12, '2024-10-13 05:56:41.253612', 12, '2024-06-29 22:49:57', 5, 'CAR', 5, 'ENTRY', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-21 08:42:20.175050', 12, '2024-08-20 10:23:44.856464', 12, '2024-05-09 05:19:14', 5, 'MOTORBIKE', 5, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-05 23:15:58.507242', 12, '2024-09-30 13:37:11.968075', 12, '2024-07-28 03:27:41', 9, 'PICKUP', 2, 'ENTRY', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-22 18:19:05.017339', 12, '2024-04-06 17:47:25.436146', 12, '2024-08-23 18:01:54', 5, 'PICKUP', 5, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-12 06:36:17.150489', 12, '2024-03-28 06:54:33.721726', 12, '2024-08-07 10:03:53', 10, 'PICKUP', 8, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-03 14:36:07.037721', 12, '2024-10-04 02:55:37.555844', 12, '2024-03-13 19:21:20', 8, 'CAR', 10, 'ENTRY', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-14 18:49:26.743550', 12, '2024-03-15 08:07:26.406944', 12, '2024-05-25 05:41:32', 6, 'PICKUP', 3, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-01 09:00:41.688486', 12, '2024-09-08 01:10:46.087274', 12, '2024-05-01 18:06:40', 8, 'CAR', 3, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-16 06:01:24.227612', 12, '2024-10-25 16:41:43.648943', 12, '2024-06-21 01:06:03', 4, 'TRUCK', 5, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-28 00:44:39.178228', 12, '2024-09-14 10:59:34.627461', 12, '2024-08-25 13:52:42', 4, 'PICKUP', 5, 'EXIT', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-17 01:32:55.403455', 12, '2024-03-16 04:01:13.121033', 12, '2024-10-15 22:04:44', 2, 'PICKUP', 3, 'ENTRY', true);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-03 23:52:59.333685', 12, '2024-01-02 13:56:27.185064', 12, '2024-10-07 07:51:12', 8, 'CAR', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-20 15:24:01.848790', 12, '2024-08-13 21:27:00.014139', 12, '2024-05-21 04:19:08', 9, 'TRUCK', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-14 21:01:28.098878', 12, '2024-03-17 12:42:29.750458', 12, '2024-06-14 03:58:22', 9, 'PICKUP', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-31 14:59:14.026779', 12, '2024-10-12 16:14:07.054822', 12, '2024-09-06 08:34:59', 8, 'CAR', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-16 08:33:24.536157', 12, '2024-03-24 01:37:34.595960', 12, '2024-01-09 04:57:29', 7, 'MOTORBIKE', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-12 01:30:19.856936', 12, '2024-01-03 09:19:36.255447', 12, '2024-10-05 16:26:43', 8, 'TRUCK', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-15 20:13:14.785590', 12, '2024-08-17 22:11:13.518281', 12, '2024-09-08 12:24:00', 2, 'MOTORBIKE', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-26 22:39:22.293632', 12, '2024-07-17 03:52:02.756614', 12, '2024-05-30 05:54:12', 9, 'PICKUP', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-22 23:15:13.299571', 12, '2024-04-14 01:00:30.045326', 12, '2024-08-24 19:24:14', 3, 'FOOT', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-31 18:21:53.534593', 12, '2024-02-23 09:38:07.066611', 12, '2024-03-28 13:57:38', 4, 'MOTORBIKE', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-07 22:06:42.853986', 12, '2024-01-25 02:47:23.394492', 12, '2024-02-01 00:57:47', 7, 'MOTORBIKE', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-13 04:46:05.968235', 12, '2024-08-18 01:53:47.858149', 12, '2024-08-29 03:24:00', 9, 'CAR', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-01 03:09:19.137788', 12, '2024-03-24 19:23:02.489906', 12, '2024-06-13 13:56:13', 5, 'FOOT', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-10 18:13:37.381924', 12, '2024-10-14 14:56:59.172954', 12, '2024-04-13 11:27:15', 5, 'TRUCK', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-05 03:09:24.750006', 12, '2024-08-01 17:43:30.597339', 12, '2024-06-02 04:02:14', 3, 'PICKUP', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-13 20:53:29.129760', 12, '2024-08-02 18:09:58.104966', 12, '2024-04-12 13:51:35', 9, 'MOTORBIKE', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-24 08:59:09.089962', 12, '2024-08-05 15:38:15.013780', 12, '2024-01-21 20:56:34', 1, 'MOTORBIKE', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-22 20:58:42.191722', 12, '2024-09-09 22:36:27.883220', 12, '2024-05-12 00:19:39', 4, 'FOOT', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-04 18:25:36.096647', 12, '2024-04-19 18:09:19.174821', 12, '2024-03-28 04:22:01', 5, 'PICKUP', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-25 09:26:30.683438', 12, '2024-08-29 10:46:38.670415', 12, '2024-03-23 01:21:44', 8, 'MOTORBIKE', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-27 02:26:20.262524', 12, '2024-01-16 21:27:29.191496', 12, '2024-04-23 04:45:14', 4, 'MOTORBIKE', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-31 12:50:13.636177', 12, '2024-08-21 07:24:10.690355', 12, '2024-11-03 02:22:03', 10, 'MOTORBIKE', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-03 12:48:54.782605', 12, '2024-06-22 17:50:43.815152', 12, '2024-06-23 01:41:35', 7, 'CAR', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-10 09:31:46.942550', 12, '2024-09-15 04:30:58.606250', 12, '2024-05-12 08:06:41', 4, 'MOTORBIKE', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-02 18:23:33.323858', 12, '2024-08-12 07:35:33.208734', 12, '2024-10-19 06:01:15', 5, 'FOOT', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-08 09:22:08.636862', 12, '2024-09-22 01:22:17.176249', 12, '2024-04-16 04:21:16', 5, 'PICKUP', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-18 08:37:55.996424', 12, '2024-04-28 19:18:58.791951', 12, '2024-05-15 19:42:59', 1, 'CAR', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-13 22:37:06.845881', 12, '2024-09-09 01:19:47.960363', 12, '2024-02-25 01:35:24', 6, 'TRUCK', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-10 05:48:18.682414', 12, '2024-06-14 09:06:37.397625', 12, '2024-06-09 12:01:09', 9, 'PICKUP', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-02 01:58:01.767442', 12, '2024-02-28 04:06:57.679225', 12, '2024-06-24 11:36:39', 4, 'MOTORBIKE', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-11 16:51:11.904477', 12, '2024-02-13 08:08:16.923665', 12, '2024-04-01 04:40:05', 10, 'MOTORBIKE', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-07 11:57:40.711295', 12, '2024-06-30 12:34:21.794283', 12, '2024-03-02 07:00:40', 9, 'TRUCK', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-05 10:05:19.605840', 12, '2024-01-05 07:27:51.335378', 12, '2024-08-04 23:35:58', 1, 'CAR', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-04 17:24:45.746394', 12, '2024-07-12 04:24:56.103433', 12, '2024-03-05 17:46:53', 9, 'CAR', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-11 13:06:53.426919', 12, '2024-04-14 12:44:50.518611', 12, '2024-06-11 04:07:54', 8, 'PICKUP', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-06 17:31:37.297445', 12, '2024-01-09 02:26:58.675514', 12, '2024-08-03 15:11:48', 4, 'FOOT', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-21 12:17:53.018756', 12, '2024-08-17 13:21:38.691530', 12, '2024-09-06 14:40:37', 1, 'TRUCK', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-10 10:01:13.107642', 12, '2024-02-20 09:26:09.831189', 12, '2024-09-27 20:29:51', 4, 'CAR', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-13 02:28:53.179998', 12, '2024-08-23 02:17:04.417497', 12, '2024-07-06 10:49:21', 7, 'MOTORBIKE', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-30 21:48:54.750077', 12, '2024-09-19 21:00:54.349568', 12, '2024-11-02 18:59:57', 9, 'MOTORBIKE', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-16 00:39:00.098063', 12, '2024-10-28 11:52:18.179764', 12, '2024-06-28 09:56:12', 9, 'MOTORBIKE', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-10 08:09:48.940801', 12, '2024-06-24 06:25:23.004825', 12, '2024-06-11 02:00:34', 2, 'FOOT', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-13 09:34:12.484682', 12, '2024-08-26 15:41:50.136067', 12, '2024-10-04 19:31:21', 10, 'MOTORBIKE', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-11 20:52:02.275552', 12, '2024-01-05 06:01:33.594311', 12, '2024-03-07 00:26:18', 7, 'FOOT', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-16 05:00:32.267719', 12, '2024-06-13 16:27:04.112158', 12, '2024-08-31 16:30:56', 9, 'PICKUP', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-15 05:20:39.881986', 12, '2024-02-08 15:08:18.822609', 12, '2024-09-15 17:48:07', 2, 'FOOT', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-17 10:36:43.914753', 12, '2024-07-17 11:11:14.958230', 12, '2024-01-30 10:34:58', 2, 'FOOT', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-20 17:36:16.709703', 12, '2024-09-13 17:33:31.023677', 12, '2024-03-17 10:13:03', 6, 'MOTORBIKE', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-06 16:28:56.301476', 12, '2024-10-17 06:55:49.257164', 12, '2024-09-22 07:05:53', 10, 'FOOT', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-08 12:47:33.265590', 12, '2024-05-30 08:29:14.577585', 12, '2024-09-06 05:55:10', 6, 'FOOT', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-22 01:46:09.813548', 12, '2024-07-27 03:28:20.207996', 12, '2024-05-19 11:34:35', 3, 'MOTORBIKE', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-12 22:42:40.951690', 12, '2024-01-31 14:33:55.801094', 12, '2024-07-24 13:05:15', 9, 'PICKUP', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-25 14:15:06.032478', 12, '2024-06-11 02:31:12.390842', 12, '2024-10-30 05:42:26', 7, 'MOTORBIKE', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-24 14:14:22.916241', 12, '2024-09-15 09:16:45.679943', 12, '2024-10-30 01:38:48', 6, 'CAR', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-04 05:26:28.373915', 12, '2024-01-07 09:14:25.921683', 12, '2024-07-04 02:52:08', 10, 'PICKUP', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-01 18:50:26.964938', 12, '2024-06-19 16:40:19.017424', 12, '2024-05-20 13:30:52', 3, 'MOTORBIKE', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-01 09:46:11.157660', 12, '2024-02-28 10:55:02.619863', 12, '2024-01-10 02:33:58', 3, 'FOOT', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-15 23:13:08.343661', 12, '2024-09-14 16:32:06.245033', 12, '2024-06-18 21:39:27', 5, 'MOTORBIKE', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-07 15:45:31.950521', 12, '2024-08-01 13:05:05.631163', 12, '2024-10-04 02:42:08', 8, 'MOTORBIKE', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-20 22:34:37.613212', 12, '2024-03-31 21:46:04.955080', 12, '2024-09-01 14:20:06', 5, 'CAR', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-29 04:24:53.611677', 12, '2024-08-09 22:49:02.629638', 12, '2024-09-06 04:31:00', 6, 'FOOT', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-20 03:41:38.766084', 12, '2024-08-29 21:17:53.655003', 12, '2024-04-16 07:35:40', 10, 'PICKUP', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-05 19:52:28.388584', 12, '2024-08-29 09:13:38.996716', 12, '2024-01-29 14:55:13', 4, 'PICKUP', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-31 06:09:16.736340', 12, '2024-06-04 08:32:44.942192', 12, '2024-09-16 01:27:27', 4, 'CAR', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-10 22:11:04.059545', 12, '2024-01-04 03:28:30.859356', 12, '2024-09-06 09:24:27', 1, 'TRUCK', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-04 06:06:53.698088', 12, '2024-10-04 11:50:36.921082', 12, '2024-05-01 22:33:15', 1, 'CAR', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-14 21:11:19.214244', 12, '2024-01-27 05:54:36.415134', 12, '2024-04-12 00:30:10', 6, 'CAR', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-15 03:31:15.855381', 12, '2024-09-16 11:36:31.325884', 12, '2024-09-12 11:45:12', 6, 'FOOT', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-11 15:27:28.387418', 12, '2024-08-09 04:13:49.117734', 12, '2024-05-28 15:15:28', 5, 'FOOT', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-24 06:19:25.540127', 12, '2024-05-06 18:54:48.913975', 12, '2024-07-19 20:58:08', 2, 'PICKUP', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-25 10:09:05.398421', 12, '2024-03-03 22:25:04.433546', 12, '2024-03-17 16:20:13', 3, 'FOOT', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-28 05:24:24.605628', 12, '2024-08-06 04:13:24.127794', 12, '2024-03-30 18:03:29', 5, 'FOOT', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-12 02:39:07.793585', 12, '2024-04-22 12:03:43.859968', 12, '2024-05-30 11:35:52', 8, 'PICKUP', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-01 04:56:53.122302', 12, '2024-09-03 17:12:00.915237', 12, '2024-06-22 11:16:52', 1, 'MOTORBIKE', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-28 04:22:26.752393', 12, '2024-07-15 06:34:37.702086', 12, '2024-05-01 01:52:35', 9, 'MOTORBIKE', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-12 08:52:44.882395', 12, '2024-07-08 02:31:27.429759', 12, '2024-06-21 20:20:52', 5, 'PICKUP', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-30 17:00:51.521503', 12, '2024-09-14 23:46:40.638101', 12, '2024-03-26 20:49:56', 2, 'TRUCK', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-15 23:15:19.289962', 12, '2024-07-25 12:11:26.925587', 12, '2024-01-11 14:31:55', 2, 'MOTORBIKE', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-18 16:12:40.944476', 12, '2024-07-18 01:02:23.082555', 12, '2024-01-01 10:43:37', 2, 'TRUCK', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-22 14:59:46.837624', 12, '2024-03-22 23:38:52.053642', 12, '2024-06-10 15:33:29', 8, 'FOOT', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-07 07:46:46.587008', 12, '2024-08-20 22:59:13.222216', 12, '2024-06-20 13:45:36', 8, 'CAR', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-07 14:12:43.799085', 12, '2024-06-07 06:31:43.136428', 12, '2024-04-27 13:25:30', 8, 'PICKUP', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-26 13:38:42.048749', 12, '2024-09-05 03:49:23.993138', 12, '2024-02-09 02:24:10', 9, 'CAR', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-09 11:57:22.593343', 12, '2024-03-02 08:59:20.794110', 12, '2024-05-08 20:18:36', 10, 'TRUCK', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-29 16:11:23.530556', 12, '2024-08-08 07:01:46.017656', 12, '2024-02-26 04:14:28', 5, 'MOTORBIKE', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-25 06:54:06.078962', 12, '2024-04-16 13:21:00.793638', 12, '2024-04-23 23:08:10', 4, 'MOTORBIKE', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-25 01:45:23.424161', 12, '2024-10-17 23:46:23.255193', 12, '2024-09-06 02:26:07', 7, 'TRUCK', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-21 10:43:47.529543', 12, '2024-05-14 07:47:21.544423', 12, '2024-05-09 03:00:03', 6, 'MOTORBIKE', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-04 13:40:35.009674', 12, '2024-04-03 09:35:00.503035', 12, '2024-04-29 20:18:19', 5, 'PICKUP', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-14 17:09:55.338358', 12, '2024-09-07 18:19:20.019822', 12, '2024-08-16 03:01:36', 4, 'PICKUP', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-22 07:12:48.376214', 12, '2024-06-11 20:41:11.418795', 12, '2024-09-17 14:59:20', 8, 'PICKUP', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-12 00:00:17.185814', 12, '2024-10-15 02:21:19.980296', 12, '2024-05-24 01:32:41', 5, 'CAR', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-01 08:53:45.065771', 12, '2024-01-05 22:05:03.011016', 12, '2024-10-26 22:55:37', 8, 'PICKUP', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-05 20:21:40.926820', 12, '2024-10-12 22:12:31.648345', 12, '2024-02-17 05:52:39', 6, 'PICKUP', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-16 06:43:23.020020', 12, '2024-06-19 20:15:11.634651', 12, '2024-01-24 19:41:39', 5, 'MOTORBIKE', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-07 05:55:04.927964', 12, '2024-03-19 10:17:48.705430', 12, '2024-05-29 23:18:56', 7, 'CAR', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-31 20:55:41.153284', 12, '2024-09-30 09:09:45.638887', 12, '2024-03-02 19:57:54', 10, 'PICKUP', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-02 19:52:09.871909', 12, '2024-04-20 03:40:47.976652', 12, '2024-04-28 00:56:59', 6, 'PICKUP', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-09 09:58:13.562014', 12, '2024-04-15 22:26:06.716408', 12, '2024-01-16 02:38:03', 6, 'MOTORBIKE', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-20 15:54:12.291129', 12, '2024-10-27 16:26:08.072737', 12, '2024-03-29 09:11:16', 8, 'TRUCK', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-28 19:06:04.374703', 12, '2024-08-23 12:37:15.506252', 12, '2024-09-21 19:16:50', 7, 'TRUCK', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-06 10:16:17.263098', 12, '2024-03-02 21:02:38.962612', 12, '2024-05-24 19:10:23', 4, 'CAR', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-04 10:30:06.438789', 12, '2024-02-23 21:10:51.424950', 12, '2024-04-06 10:33:15', 5, 'TRUCK', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-31 06:17:37.454173', 12, '2024-08-03 12:08:50.878539', 12, '2024-03-06 12:34:31', 5, 'TRUCK', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-08 04:03:17.068774', 12, '2024-07-23 00:42:51.552143', 12, '2024-09-26 09:36:24', 2, 'MOTORBIKE', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-09 20:58:13.004282', 12, '2024-06-14 12:45:58.940623', 12, '2024-02-14 03:17:35', 9, 'FOOT', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-18 01:34:46.854591', 12, '2024-06-10 14:30:57.627511', 12, '2024-07-29 22:14:31', 7, 'FOOT', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-07 23:28:05.659716', 12, '2024-03-04 15:20:42.298500', 12, '2024-02-27 08:33:52', 9, 'MOTORBIKE', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-10 04:22:37.766289', 12, '2024-03-09 11:19:14.299002', 12, '2024-03-10 23:17:10', 1, 'FOOT', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-24 09:01:46.117038', 12, '2024-06-11 17:16:25.615831', 12, '2024-03-01 07:19:46', 9, 'CAR', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-04 00:28:47.508259', 12, '2024-01-12 14:07:15.659936', 12, '2024-08-27 21:27:27', 5, 'PICKUP', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-26 08:24:26.419823', 12, '2024-07-19 01:02:50.217422', 12, '2024-03-21 11:00:18', 3, 'TRUCK', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-10 21:21:26.905703', 12, '2024-04-25 09:40:10.247775', 12, '2024-07-09 08:58:16', 6, 'CAR', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-07 11:26:45.475533', 12, '2024-03-08 04:06:48.914478', 12, '2024-07-16 22:54:16', 9, 'MOTORBIKE', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-23 00:57:59.905209', 12, '2024-05-15 18:38:00.492101', 12, '2024-06-08 11:41:28', 8, 'MOTORBIKE', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-01 14:01:21.922398', 12, '2024-10-16 20:10:33.360705', 12, '2024-06-11 02:23:47', 1, 'PICKUP', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-11 18:13:28.727840', 12, '2024-08-06 21:47:44.921993', 12, '2024-08-15 18:40:30', 2, 'CAR', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-25 15:49:54.676708', 12, '2024-01-10 09:03:30.373360', 12, '2024-02-25 00:10:33', 7, 'PICKUP', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-31 00:09:05.832039', 12, '2024-02-03 08:28:00.374544', 12, '2024-01-25 02:40:51', 8, 'PICKUP', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-28 05:56:47.096253', 12, '2024-08-17 01:49:48.552074', 12, '2024-02-19 22:39:00', 6, 'MOTORBIKE', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-03 09:32:00.423556', 12, '2024-06-25 12:07:03.924111', 12, '2024-10-08 22:29:23', 5, 'FOOT', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-02 13:42:24.385454', 12, '2024-06-23 02:06:58.966711', 12, '2024-05-25 21:19:31', 8, 'PICKUP', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-12 06:27:12.712168', 12, '2024-01-04 07:17:29.635212', 12, '2024-03-26 20:19:54', 8, 'TRUCK', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-11 09:05:41.653799', 12, '2024-06-17 09:02:12.034027', 12, '2024-03-12 22:03:07', 7, 'PICKUP', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-06 11:31:04.564936', 12, '2024-01-23 13:05:20.168961', 12, '2024-05-21 21:56:40', 4, 'PICKUP', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-09 04:06:06.366849', 12, '2024-01-15 11:22:02.112676', 12, '2024-03-03 04:11:57', 8, 'MOTORBIKE', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-23 12:15:45.705911', 12, '2024-05-21 09:18:39.809570', 12, '2024-03-11 01:26:33', 7, 'FOOT', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-09 01:30:44.812342', 12, '2024-04-22 12:56:34.433551', 12, '2024-09-04 09:11:49', 4, 'MOTORBIKE', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-09 19:41:51.525106', 12, '2024-06-10 19:54:35.836767', 12, '2024-05-02 06:16:19', 9, 'PICKUP', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-08 21:02:29.865927', 12, '2024-08-04 06:28:53.792258', 12, '2024-09-03 07:04:28', 2, 'TRUCK', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-17 17:42:06.438396', 12, '2024-03-30 19:57:20.387453', 12, '2024-10-01 13:59:59', 5, 'PICKUP', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-11 12:16:19.104159', 12, '2024-07-27 21:24:25.712593', 12, '2024-05-09 02:28:20', 8, 'PICKUP', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-17 09:17:21.138462', 12, '2024-05-08 00:27:23.865127', 12, '2024-08-10 06:49:03', 4, 'CAR', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-26 17:06:41.483729', 12, '2024-04-26 18:23:34.016068', 12, '2024-01-02 15:51:35', 10, 'PICKUP', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-06 07:52:41.760527', 12, '2024-07-21 23:20:03.555385', 12, '2024-02-20 08:31:55', 2, 'TRUCK', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-13 17:34:25.947595', 12, '2024-05-18 22:07:06.283387', 12, '2024-03-16 11:08:17', 4, 'CAR', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-31 14:05:27.460235', 12, '2024-01-26 00:43:26.735092', 12, '2024-05-07 02:48:26', 7, 'FOOT', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-17 14:25:56.573632', 12, '2024-02-05 15:41:28.296160', 12, '2024-02-26 01:56:23', 7, 'TRUCK', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-13 19:51:28.087931', 12, '2024-08-12 19:39:37.588673', 12, '2024-08-13 16:44:46', 8, 'TRUCK', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-31 22:58:35.064047', 12, '2024-10-02 03:22:21.720339', 12, '2024-02-04 14:19:32', 4, 'FOOT', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-30 01:50:02.426407', 12, '2024-08-18 12:00:28.498969', 12, '2024-10-15 12:13:11', 8, 'CAR', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-03 08:17:13.075620', 12, '2024-10-25 22:11:18.449301', 12, '2024-10-24 08:43:13', 4, 'TRUCK', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-20 01:08:53.235817', 12, '2024-07-19 15:58:43.090367', 12, '2024-06-29 00:59:30', 10, 'PICKUP', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-03 03:01:12.519250', 12, '2024-04-29 23:23:33.172011', 12, '2024-02-16 19:26:16', 4, 'PICKUP', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-24 02:19:45.469985', 12, '2024-07-26 08:00:26.597101', 12, '2024-10-15 02:21:54', 4, 'FOOT', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-01 03:10:47.680900', 12, '2024-01-30 07:40:57.555001', 12, '2024-05-03 06:10:32', 10, 'MOTORBIKE', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-02 10:21:24.523968', 12, '2024-02-15 07:41:58.983552', 12, '2024-09-25 17:07:45', 7, 'FOOT', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-02 22:28:32.759771', 12, '2024-01-26 19:03:16.833888', 12, '2024-01-04 08:43:06', 4, 'FOOT', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-29 07:10:26.561777', 12, '2024-10-05 03:10:29.629600', 12, '2024-09-23 02:25:12', 3, 'MOTORBIKE', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-06 12:43:00.190821', 12, '2024-04-05 05:53:18.399933', 12, '2024-09-14 05:34:45', 8, 'CAR', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-04 19:18:35.861829', 12, '2024-03-06 13:44:19.040077', 12, '2024-02-09 06:29:17', 8, 'TRUCK', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-02 04:39:03.265686', 12, '2024-01-04 16:36:34.396941', 12, '2024-06-02 04:26:16', 8, 'PICKUP', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-04 04:31:23.986848', 12, '2024-03-13 10:38:52.255839', 12, '2024-02-24 22:24:34', 5, 'CAR', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-09 20:19:12.989607', 12, '2024-01-09 23:02:03.868666', 12, '2024-09-18 06:51:47', 7, 'TRUCK', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-01 20:30:41.555384', 12, '2024-05-06 22:35:40.171532', 12, '2024-03-17 22:52:29', 1, 'PICKUP', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-28 05:22:19.280187', 12, '2024-01-06 14:12:07.840051', 12, '2024-07-24 23:07:18', 10, 'CAR', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-29 11:35:07.219145', 12, '2024-08-29 06:29:36.614245', 12, '2024-01-16 22:36:47', 7, 'FOOT', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-03 04:20:51.732377', 12, '2024-07-07 01:36:28.504435', 12, '2024-03-21 19:47:04', 7, 'MOTORBIKE', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-06 19:14:35.707578', 12, '2024-02-08 00:16:27.180579', 12, '2024-02-25 23:45:53', 10, 'CAR', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-15 07:57:41.691503', 12, '2024-08-13 05:13:04.011424', 12, '2024-01-05 16:36:58', 8, 'FOOT', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-27 16:04:47.608549', 12, '2024-01-13 10:44:01.155065', 12, '2024-09-06 13:25:25', 1, 'FOOT', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-26 07:21:45.708804', 12, '2024-07-31 22:02:31.594215', 12, '2024-09-15 02:27:01', 2, 'PICKUP', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-09 04:44:36.555057', 12, '2024-06-02 03:26:48.772066', 12, '2024-05-01 07:14:02', 9, 'TRUCK', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-13 07:07:10.265765', 12, '2024-01-01 14:13:53.686253', 12, '2024-08-06 14:52:27', 7, 'FOOT', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-18 12:59:21.325117', 12, '2024-06-18 07:21:40.978339', 12, '2024-02-22 08:41:55', 1, 'CAR', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-10 21:54:48.640994', 12, '2024-06-22 12:33:44.641906', 12, '2024-02-19 16:19:05', 5, 'CAR', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-28 12:49:55.123460', 12, '2024-05-31 08:22:33.328837', 12, '2024-01-28 17:15:44', 2, 'FOOT', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-13 04:09:39.131614', 12, '2024-03-27 09:32:31.000471', 12, '2024-10-22 00:28:57', 7, 'MOTORBIKE', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-29 08:33:12.732950', 12, '2024-04-29 20:13:30.356117', 12, '2024-04-22 07:13:52', 10, 'MOTORBIKE', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-21 19:46:57.377146', 12, '2024-10-27 01:52:38.912447', 12, '2024-03-06 16:46:36', 6, 'PICKUP', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-24 00:33:46.684000', 12, '2024-04-26 01:43:26.984541', 12, '2024-01-28 06:48:34', 4, 'FOOT', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-25 03:40:55.153213', 12, '2024-04-05 12:43:39.779767', 12, '2024-05-19 00:57:09', 7, 'PICKUP', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-02 01:57:10.144589', 12, '2024-05-24 18:52:16.625704', 12, '2024-05-26 08:46:19', 4, 'PICKUP', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-01 21:29:00.984295', 12, '2024-10-06 18:15:31.921344', 12, '2024-05-08 12:25:29', 8, 'CAR', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-21 11:44:36.010347', 12, '2024-09-06 17:36:48.417845', 12, '2024-09-26 08:24:08', 4, 'PICKUP', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-07 09:24:57.124374', 12, '2024-05-10 12:49:41.294569', 12, '2024-05-01 12:46:55', 2, 'TRUCK', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-30 14:49:34.523380', 12, '2024-03-01 12:06:29.447347', 12, '2024-03-30 01:16:46', 9, 'CAR', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-14 09:53:43.785001', 12, '2024-06-20 12:11:06.270203', 12, '2024-05-25 15:33:08', 5, 'FOOT', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-11 04:50:57.795705', 12, '2024-06-28 23:52:32.345152', 12, '2024-01-30 17:09:27', 8, 'MOTORBIKE', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-21 08:54:38.183185', 12, '2024-07-02 02:51:21.320289', 12, '2024-05-06 16:23:21', 6, 'TRUCK', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-08 01:25:00.412387', 12, '2024-02-01 16:19:19.767989', 12, '2024-01-15 04:07:06', 3, 'PICKUP', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-29 15:04:57.364782', 12, '2024-09-13 16:13:32.906267', 12, '2024-06-22 17:36:54', 4, 'TRUCK', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-26 12:08:28.404905', 12, '2024-03-07 08:58:38.041800', 12, '2024-04-01 19:05:55', 1, 'TRUCK', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-01 23:10:40.352469', 12, '2024-02-08 13:21:54.818806', 12, '2024-07-06 10:31:47', 5, 'PICKUP', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-07 19:18:50.322096', 12, '2024-10-18 11:59:43.723364', 12, '2024-09-23 15:52:58', 4, 'MOTORBIKE', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-14 15:02:43.520850', 12, '2024-09-07 20:40:29.447040', 12, '2024-02-07 15:54:55', 8, 'FOOT', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-02 07:55:52.430547', 12, '2024-04-11 04:34:57.436621', 12, '2024-02-20 05:13:22', 9, 'FOOT', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-27 02:26:42.848920', 12, '2024-03-07 03:35:36.327835', 12, '2024-02-25 03:09:04', 6, 'TRUCK', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-15 04:33:53.593366', 12, '2024-09-11 22:30:29.707551', 12, '2024-02-29 18:10:11', 7, 'CAR', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-25 20:29:59.321762', 12, '2024-01-06 14:15:26.123737', 12, '2024-02-14 07:39:45', 3, 'FOOT', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-12 12:14:28.720474', 12, '2024-07-15 06:31:04.470923', 12, '2024-09-27 21:55:13', 8, 'CAR', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-13 09:49:16.147832', 12, '2024-07-14 14:40:40.006472', 12, '2024-09-30 10:51:25', 9, 'TRUCK', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-11-01 00:05:07.911013', 12, '2024-06-26 04:09:57.264654', 12, '2024-10-27 18:45:31', 2, 'PICKUP', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-03 01:52:28.346840', 12, '2024-06-15 06:39:24.682365', 12, '2024-10-24 20:40:41', 1, 'FOOT', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-19 19:21:02.489154', 12, '2024-09-01 17:49:03.495389', 12, '2024-01-25 21:39:09', 9, 'TRUCK', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-14 17:25:13.729747', 12, '2024-03-29 14:26:40.932252', 12, '2024-05-03 08:02:56', 2, 'CAR', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-14 11:32:50.249281', 12, '2024-10-05 23:24:44.847091', 12, '2024-06-03 23:43:56', 2, 'FOOT', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-16 22:03:28.303601', 12, '2024-01-28 09:08:01.733198', 12, '2024-08-18 04:47:30', 5, 'PICKUP', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-01 03:53:18.534863', 12, '2024-07-17 20:51:32.694139', 12, '2024-06-11 02:53:58', 2, 'CAR', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-10 08:01:20.644491', 12, '2024-01-20 22:18:43.466204', 12, '2024-07-19 21:21:28', 9, 'CAR', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-06 04:32:21.485056', 12, '2024-02-03 20:31:59.753783', 12, '2024-03-30 14:43:22', 3, 'PICKUP', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-11 01:06:15.302418', 12, '2024-04-24 08:55:14.308804', 12, '2024-08-01 12:51:34', 6, 'TRUCK', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-13 10:41:36.907504', 12, '2024-03-31 13:49:44.631577', 12, '2024-08-25 20:07:00', 8, 'MOTORBIKE', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-20 06:21:56.962395', 12, '2024-06-19 23:44:40.363654', 12, '2024-02-09 22:20:13', 8, 'TRUCK', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-23 20:19:15.844996', 12, '2024-06-18 23:56:49.883282', 12, '2024-05-07 23:05:43', 1, 'PICKUP', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-26 23:42:55.270348', 12, '2024-06-14 04:23:27.402202', 12, '2024-07-16 02:59:13', 10, 'MOTORBIKE', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-18 18:57:38.145879', 12, '2024-06-20 00:53:19.502357', 12, '2024-06-14 19:45:00', 2, 'TRUCK', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-08 14:03:01.470956', 12, '2024-10-30 17:11:33.317943', 12, '2024-09-26 12:34:06', 4, 'TRUCK', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-24 23:01:23.117824', 12, '2024-10-27 06:22:54.925848', 12, '2024-01-21 10:10:39', 1, 'PICKUP', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-24 08:43:24.549256', 12, '2024-02-10 19:43:26.473086', 12, '2024-03-18 08:57:17', 5, 'MOTORBIKE', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-24 07:49:02.021655', 12, '2024-02-24 05:03:16.070762', 12, '2024-01-07 04:12:24', 5, 'MOTORBIKE', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-25 16:53:05.028889', 12, '2024-08-15 03:18:30.160741', 12, '2024-09-22 21:51:35', 3, 'PICKUP', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-23 20:33:23.292783', 12, '2024-03-11 06:14:57.307796', 12, '2024-09-21 01:31:20', 5, 'MOTORBIKE', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-19 04:27:46.356501', 12, '2024-04-05 20:49:44.917000', 12, '2024-01-08 05:22:27', 7, 'TRUCK', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-05 02:27:53.677665', 12, '2024-04-14 20:10:29.424553', 12, '2024-09-18 22:42:15', 7, 'TRUCK', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-29 02:49:07.504694', 12, '2024-02-19 13:21:05.129208', 12, '2024-07-29 12:24:57', 4, 'MOTORBIKE', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-25 04:13:43.150074', 12, '2024-07-27 16:15:16.283043', 12, '2024-04-03 04:16:32', 1, 'FOOT', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-27 01:54:57.983450', 12, '2024-03-06 02:41:42.195057', 12, '2024-05-28 06:19:34', 4, 'TRUCK', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-30 17:30:28.808094', 12, '2024-06-20 03:46:45.900385', 12, '2024-02-19 16:54:50', 9, 'TRUCK', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-09 09:41:35.488127', 12, '2024-08-11 18:22:15.557051', 12, '2024-03-21 13:07:59', 4, 'PICKUP', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-12 20:09:02.421538', 12, '2024-06-21 12:53:52.653989', 12, '2024-01-31 14:29:25', 1, 'FOOT', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-29 02:58:00.489060', 12, '2024-06-06 14:37:44.826955', 12, '2024-02-29 08:26:04', 4, 'TRUCK', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-26 05:38:51.266602', 12, '2024-10-11 10:54:37.548563', 12, '2024-04-05 18:25:49', 9, 'FOOT', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-16 19:19:09.219018', 12, '2024-04-21 10:00:37.486201', 12, '2024-02-17 21:25:09', 3, 'FOOT', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-04 21:49:58.900922', 12, '2024-10-02 13:14:38.989057', 12, '2024-03-30 23:34:20', 4, 'FOOT', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-21 21:42:37.510212', 12, '2024-05-03 16:31:15.379252', 12, '2024-06-01 23:12:23', 10, 'FOOT', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-27 23:22:10.430373', 12, '2024-06-29 06:38:02.985107', 12, '2024-01-15 15:21:26', 6, 'TRUCK', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-26 12:09:48.623167', 12, '2024-10-31 13:49:03.338644', 12, '2024-05-24 20:26:01', 9, 'TRUCK', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-18 08:31:56.138055', 12, '2024-04-12 22:33:58.301716', 12, '2024-04-05 14:44:20', 1, 'TRUCK', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-02 18:02:09.811669', 12, '2024-02-13 08:31:43.814402', 12, '2024-09-13 00:47:41', 2, 'FOOT', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-30 02:36:53.543216', 12, '2024-02-21 13:25:35.113152', 12, '2024-10-23 20:53:41', 6, 'PICKUP', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-22 22:58:28.546253', 12, '2024-05-22 22:03:28.993025', 12, '2024-01-30 07:59:51', 1, 'PICKUP', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-11 06:30:54.455675', 12, '2024-07-16 20:28:58.495765', 12, '2024-06-04 17:25:11', 7, 'CAR', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-18 18:38:41.642908', 12, '2024-10-29 14:01:13.791605', 12, '2024-04-01 23:10:26', 1, 'FOOT', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-23 10:17:40.467574', 12, '2024-05-11 18:00:06.254100', 12, '2024-03-24 15:57:02', 6, 'CAR', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-03 20:08:29.005206', 12, '2024-07-18 09:59:19.315731', 12, '2024-10-03 08:13:18', 3, 'MOTORBIKE', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-17 23:12:49.998849', 12, '2024-04-30 11:59:16.922913', 12, '2024-07-06 13:37:24', 6, 'FOOT', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-29 05:50:25.914146', 12, '2024-05-12 13:12:34.178903', 12, '2024-10-01 11:32:34', 5, 'FOOT', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-27 13:57:35.335682', 12, '2024-01-19 04:05:01.673924', 12, '2024-10-01 01:12:45', 6, 'FOOT', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-04 16:40:28.179114', 12, '2024-03-26 12:27:39.361384', 12, '2024-01-25 02:31:16', 8, 'FOOT', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-01 05:05:34.235117', 12, '2024-10-03 20:37:36.753055', 12, '2024-10-09 03:11:32', 4, 'MOTORBIKE', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-03 10:29:24.546897', 12, '2024-10-06 16:14:44.251425', 12, '2024-06-25 14:41:14', 3, 'CAR', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-04 05:51:05.848526', 12, '2024-09-26 00:51:50.464280', 12, '2024-03-10 01:42:39', 7, 'TRUCK', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-11 05:02:07.548422', 12, '2024-02-17 08:45:50.853433', 12, '2024-01-29 18:06:26', 7, 'TRUCK', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-27 03:42:09.680318', 12, '2024-10-03 19:26:05.320033', 12, '2024-09-21 01:38:30', 1, 'FOOT', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-07 03:37:08.489937', 12, '2024-04-27 13:55:45.999888', 12, '2024-10-04 09:52:14', 10, 'CAR', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-02 13:38:58.477514', 12, '2024-02-17 14:34:48.266285', 12, '2024-09-02 21:37:51', 3, 'PICKUP', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-04 14:16:03.980429', 12, '2024-05-14 16:35:37.099371', 12, '2024-10-28 15:47:22', 1, 'FOOT', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-22 19:19:56.305365', 12, '2024-04-22 10:52:21.731839', 12, '2024-10-11 04:11:15', 7, 'MOTORBIKE', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-16 21:05:23.572264', 12, '2024-05-01 04:08:35.496838', 12, '2024-08-05 05:39:34', 2, 'FOOT', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-26 08:06:45.936037', 12, '2024-01-03 16:15:55.575494', 12, '2024-07-13 06:53:16', 5, 'CAR', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-22 18:51:12.245172', 12, '2024-04-01 08:36:33.664178', 12, '2024-07-22 12:15:05', 2, 'TRUCK', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-24 00:13:43.017989', 12, '2024-10-29 16:39:50.388439', 12, '2024-06-10 16:05:37', 8, 'CAR', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-05 23:59:31.296275', 12, '2024-03-02 16:44:23.796354', 12, '2024-08-14 13:23:25', 9, 'CAR', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-23 05:48:59.802456', 12, '2024-09-04 00:29:05.324762', 12, '2024-10-18 04:53:20', 8, 'PICKUP', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-02 02:56:28.345627', 12, '2024-05-13 04:15:44.806779', 12, '2024-01-10 15:06:29', 5, 'CAR', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-13 23:30:52.118017', 12, '2024-08-24 13:10:44.104619', 12, '2024-03-06 08:02:51', 4, 'TRUCK', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-27 12:40:23.040909', 12, '2024-07-31 15:51:41.190579', 12, '2024-07-14 22:33:10', 9, 'PICKUP', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-13 13:38:45.139873', 12, '2024-06-19 22:50:25.702009', 12, '2024-03-12 08:41:28', 6, 'TRUCK', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-15 05:56:28.176177', 12, '2024-02-06 08:49:14.383984', 12, '2024-02-20 06:32:28', 2, 'CAR', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-26 17:02:31.018592', 12, '2024-02-01 04:51:32.552194', 12, '2024-08-16 10:49:34', 4, 'CAR', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-18 19:45:37.054976', 12, '2024-09-23 21:22:50.610929', 12, '2024-05-12 06:50:08', 4, 'TRUCK', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-05 08:18:40.782952', 12, '2024-10-14 17:16:54.550138', 12, '2024-10-20 10:34:28', 5, 'CAR', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-03 14:16:44.309871', 12, '2024-08-02 03:07:40.053001', 12, '2024-07-13 09:56:12', 7, 'FOOT', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-06 17:13:47.966868', 12, '2024-08-28 15:46:06.112584', 12, '2024-08-25 09:13:44', 4, 'TRUCK', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-05 15:30:46.570138', 12, '2024-10-10 10:10:26.136136', 12, '2024-10-24 02:33:59', 7, 'CAR', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-06 02:28:58.229115', 12, '2024-01-31 05:10:57.820807', 12, '2024-05-02 06:08:14', 1, 'CAR', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-12 03:14:55.739850', 12, '2024-04-05 12:59:53.064045', 12, '2024-01-15 08:31:26', 9, 'MOTORBIKE', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-27 21:12:47.449469', 12, '2024-08-04 19:40:38.987457', 12, '2024-04-20 11:05:25', 2, 'FOOT', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-31 03:55:25.103984', 12, '2024-03-04 14:21:47.698230', 12, '2024-09-05 11:12:50', 1, 'TRUCK', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-19 12:48:38.023057', 12, '2024-04-14 03:34:47.414280', 12, '2024-02-21 21:32:57', 8, 'MOTORBIKE', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-01 01:34:16.727982', 12, '2024-08-25 19:51:52.657383', 12, '2024-03-29 21:46:39', 9, 'PICKUP', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-21 10:17:21.524507', 12, '2024-10-05 02:44:52.123916', 12, '2024-08-14 09:21:45', 3, 'CAR', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-10 21:48:25.266082', 12, '2024-01-02 17:30:05.624922', 12, '2024-04-23 16:38:50', 8, 'FOOT', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-08 13:28:35.282545', 12, '2024-07-10 06:07:58.143136', 12, '2024-06-12 02:59:51', 9, 'MOTORBIKE', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-04 17:46:07.443548', 12, '2024-07-14 05:50:19.420590', 12, '2024-01-28 22:46:51', 8, 'CAR', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-17 08:17:38.834440', 12, '2024-10-16 11:33:16.990832', 12, '2024-03-06 12:53:13', 7, 'FOOT', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-21 00:09:56.563046', 12, '2024-03-23 00:58:42.467235', 12, '2024-10-16 15:26:56', 9, 'TRUCK', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-04 08:12:21.599260', 12, '2024-05-24 19:35:07.350781', 12, '2024-10-02 06:04:36', 8, 'MOTORBIKE', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-18 02:49:38.603866', 12, '2024-01-09 09:09:59.691542', 12, '2024-03-03 23:26:33', 10, 'FOOT', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-11 07:36:39.624757', 12, '2024-10-09 17:01:10.759271', 12, '2024-08-24 21:12:36', 10, 'TRUCK', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-18 00:27:08.561356', 12, '2024-10-13 19:26:36.259224', 12, '2024-10-07 20:42:08', 5, 'MOTORBIKE', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-24 23:10:54.044539', 12, '2024-10-31 03:14:07.289152', 12, '2024-08-23 15:55:13', 5, 'TRUCK', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-27 19:33:22.746561', 12, '2024-03-30 02:37:42.072702', 12, '2024-07-17 08:01:40', 6, 'TRUCK', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-08 23:46:39.443562', 12, '2024-01-03 22:06:39.555579', 12, '2024-03-28 14:31:57', 6, 'TRUCK', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-10 19:26:36.660287', 12, '2024-03-03 04:17:13.640136', 12, '2024-08-22 06:55:14', 7, 'FOOT', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-17 22:31:21.932126', 12, '2024-09-03 05:00:43.181497', 12, '2024-11-02 15:31:41', 10, 'MOTORBIKE', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-26 03:31:20.144108', 12, '2024-07-14 16:41:23.084497', 12, '2024-02-03 20:55:23', 3, 'TRUCK', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-29 10:16:38.084501', 12, '2024-06-21 00:13:36.270526', 12, '2024-07-12 18:35:42', 1, 'CAR', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-04 13:23:50.737329', 12, '2024-05-19 19:54:30.217991', 12, '2024-07-03 00:24:39', 7, 'PICKUP', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-27 12:28:04.356182', 12, '2024-07-27 05:02:52.464651', 12, '2024-03-01 15:12:06', 7, 'CAR', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-26 14:00:58.991356', 12, '2024-04-01 19:38:32.581879', 12, '2024-10-12 03:16:30', 9, 'TRUCK', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-25 17:10:26.096858', 12, '2024-02-21 11:15:55.797149', 12, '2024-10-31 23:51:09', 3, 'TRUCK', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-24 19:59:45.612978', 12, '2024-08-08 08:49:17.454965', 12, '2024-08-25 10:24:54', 6, 'FOOT', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-24 18:50:01.062254', 12, '2024-10-20 09:04:54.997437', 12, '2024-10-10 16:44:22', 4, 'FOOT', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-26 02:36:56.324518', 12, '2024-08-09 04:33:47.384408', 12, '2024-01-19 11:37:20', 6, 'PICKUP', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-08 18:31:26.026171', 12, '2024-09-25 14:56:00.516301', 12, '2024-01-11 18:45:36', 7, 'CAR', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-05 18:29:22.982128', 12, '2024-10-09 07:49:22.632721', 12, '2024-07-16 01:39:45', 8, 'TRUCK', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-23 05:21:11.968640', 12, '2024-10-16 07:00:07.215851', 12, '2024-07-28 11:42:51', 5, 'CAR', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-04 19:09:22.234255', 12, '2024-02-07 10:46:23.670578', 12, '2024-07-02 20:51:47', 7, 'CAR', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-24 01:32:08.083815', 12, '2024-06-18 18:21:24.022154', 12, '2024-10-29 13:53:51', 9, 'FOOT', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-04 05:00:12.753807', 12, '2024-05-03 04:39:24.537554', 12, '2024-01-13 16:52:31', 3, 'MOTORBIKE', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-20 14:48:40.577828', 12, '2024-03-18 05:23:01.023213', 12, '2024-09-19 13:55:20', 8, 'MOTORBIKE', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-14 13:13:17.137699', 12, '2024-07-12 12:07:41.475298', 12, '2024-07-22 17:35:33', 2, 'TRUCK', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-08 02:40:11.537068', 12, '2024-07-22 03:37:28.038442', 12, '2024-02-27 06:06:38', 10, 'PICKUP', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-24 07:09:26.091666', 12, '2024-05-21 16:01:14.408472', 12, '2024-08-04 19:10:28', 8, 'PICKUP', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-13 18:41:16.742991', 12, '2024-01-17 18:08:17.317255', 12, '2024-08-14 15:59:16', 8, 'PICKUP', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-11 00:57:11.242560', 12, '2024-09-07 02:39:34.245786', 12, '2024-07-15 23:50:25', 9, 'FOOT', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-24 17:20:51.853348', 12, '2024-02-25 07:57:15.020445', 12, '2024-07-28 07:22:58', 4, 'PICKUP', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-25 08:26:15.785816', 12, '2024-03-22 11:52:26.248048', 12, '2024-04-29 15:58:34', 9, 'CAR', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-21 03:42:59.656188', 12, '2024-09-23 22:31:14.510379', 12, '2024-06-09 23:46:03', 8, 'PICKUP', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-07 02:49:42.337777', 12, '2024-01-22 13:43:30.157894', 12, '2024-10-01 07:53:03', 2, 'TRUCK', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-03 13:02:14.287314', 12, '2024-10-10 23:01:18.447057', 12, '2024-10-07 13:37:11', 1, 'FOOT', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-29 07:48:43.192607', 12, '2024-02-17 12:02:59.971431', 12, '2024-05-17 07:23:30', 2, 'CAR', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-31 13:48:33.395887', 12, '2024-07-18 10:43:49.043602', 12, '2024-08-04 19:23:02', 9, 'PICKUP', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-31 06:06:06.007295', 12, '2024-01-30 06:12:14.540233', 12, '2024-05-15 01:08:50', 4, 'CAR', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-13 22:24:32.593093', 12, '2024-06-05 08:15:51.870484', 12, '2024-03-07 06:37:33', 9, 'PICKUP', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-21 23:16:34.338731', 12, '2024-11-03 17:55:17.859876', 12, '2024-02-23 05:50:29', 4, 'FOOT', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-12 00:49:06.208792', 12, '2024-02-19 01:13:58.710246', 12, '2024-05-29 08:30:01', 4, 'CAR', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-15 17:01:50.740179', 12, '2024-05-15 20:50:08.840494', 12, '2024-10-30 21:05:15', 1, 'CAR', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-12 18:13:58.034881', 12, '2024-07-16 09:24:38.379483', 12, '2024-10-09 06:49:53', 7, 'CAR', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-01 11:40:23.504316', 12, '2024-06-07 21:52:35.289012', 12, '2024-05-24 18:59:19', 7, 'CAR', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-02 13:34:04.219601', 12, '2024-06-16 06:09:35.393860', 12, '2024-03-26 08:26:36', 8, 'CAR', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-23 06:24:25.260726', 12, '2024-01-09 22:59:23.300532', 12, '2024-09-24 19:01:04', 4, 'FOOT', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-24 22:16:10.111574', 12, '2024-08-24 23:53:16.258072', 12, '2024-07-13 08:36:20', 8, 'CAR', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-01 22:34:16.665089', 12, '2024-08-12 19:58:09.743344', 12, '2024-03-08 10:49:39', 9, 'TRUCK', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-07 20:03:58.126444', 12, '2024-09-30 00:14:16.781148', 12, '2024-02-15 15:18:41', 3, 'TRUCK', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-08 10:37:07.283858', 12, '2024-02-05 03:16:05.244005', 12, '2024-04-23 12:54:48', 9, 'PICKUP', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-13 18:41:21.428112', 12, '2024-07-24 17:36:25.825572', 12, '2024-03-16 08:39:21', 3, 'FOOT', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-04 13:36:17.739879', 12, '2024-09-10 00:34:51.507009', 12, '2024-08-03 18:06:18', 6, 'CAR', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-01 09:40:58.108475', 12, '2024-10-06 03:48:35.782650', 12, '2024-05-29 06:50:16', 8, 'PICKUP', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-09 10:53:07.104290', 12, '2024-05-15 11:10:52.394825', 12, '2024-03-10 18:29:50', 6, 'PICKUP', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-09 09:18:09.134495', 12, '2024-05-01 00:26:55.981608', 12, '2024-10-16 02:44:41', 6, 'MOTORBIKE', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-12 19:21:40.455688', 12, '2024-09-05 02:53:57.492495', 12, '2024-01-20 11:58:06', 1, 'TRUCK', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-14 06:21:30.599072', 12, '2024-07-26 17:07:52.204928', 12, '2024-11-02 11:04:54', 7, 'FOOT', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-31 13:42:52.159676', 12, '2024-09-02 10:24:14.376670', 12, '2024-01-19 23:28:32', 6, 'FOOT', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-03 17:39:12.810172', 12, '2024-10-12 09:33:05.534416', 12, '2024-03-26 19:15:38', 10, 'TRUCK', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-31 01:45:38.400645', 12, '2024-05-28 08:42:34.654600', 12, '2024-02-21 06:58:44', 7, 'TRUCK', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-10 10:04:15.027625', 12, '2024-09-22 16:33:22.157562', 12, '2024-05-27 22:52:40', 8, 'TRUCK', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-01 21:14:43.536698', 12, '2024-03-30 02:22:34.900182', 12, '2024-10-02 19:53:40', 5, 'PICKUP', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-08 09:17:52.081775', 12, '2024-01-25 13:09:39.685193', 12, '2024-02-28 15:28:57', 10, 'CAR', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-18 23:34:58.053976', 12, '2024-07-10 20:27:44.815037', 12, '2024-02-12 00:42:23', 2, 'CAR', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-10 09:07:03.428298', 12, '2024-05-25 22:01:40.242065', 12, '2024-09-06 14:29:54', 2, 'CAR', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-28 17:50:11.333619', 12, '2024-01-27 19:23:49.613161', 12, '2024-01-19 09:17:57', 6, 'CAR', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-01 08:52:46.907169', 12, '2024-06-10 11:40:24.182729', 12, '2024-03-13 13:10:23', 6, 'CAR', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-26 18:41:35.610887', 12, '2024-04-24 19:42:15.327239', 12, '2024-04-12 00:54:33', 5, 'FOOT', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-07 02:05:07.089421', 12, '2024-06-04 11:36:50.193140', 12, '2024-02-18 00:40:15', 6, 'TRUCK', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-16 04:22:53.298369', 12, '2024-06-02 13:34:28.279206', 12, '2024-02-16 21:41:32', 5, 'TRUCK', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-01 17:22:15.698649', 12, '2024-09-25 16:41:23.077301', 12, '2024-07-06 09:33:56', 10, 'FOOT', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-10 09:01:49.495457', 12, '2024-03-19 17:18:51.964293', 12, '2024-01-16 12:07:12', 8, 'MOTORBIKE', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-21 17:23:39.930318', 12, '2024-03-17 23:11:28.754768', 12, '2024-02-17 08:11:49', 4, 'MOTORBIKE', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-22 14:13:17.303271', 12, '2024-06-27 18:58:02.795779', 12, '2024-03-23 00:29:56', 10, 'TRUCK', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-02 06:55:28.055569', 12, '2024-07-13 11:14:31.868551', 12, '2024-03-05 09:36:34', 7, 'CAR', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-03 18:01:08.684145', 12, '2024-06-07 00:43:37.525888', 12, '2024-06-15 02:04:28', 1, 'MOTORBIKE', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-17 08:59:16.365379', 12, '2024-06-17 20:02:09.754505', 12, '2024-07-14 00:10:50', 4, 'PICKUP', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-18 19:35:54.609308', 12, '2024-05-21 18:57:57.531070', 12, '2024-01-18 16:46:46', 8, 'CAR', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-24 08:29:18.014000', 12, '2024-10-11 23:49:42.748615', 12, '2024-06-05 01:21:26', 10, 'PICKUP', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-12 11:03:33.591414', 12, '2024-01-27 20:10:07.194858', 12, '2024-10-04 21:20:00', 6, 'MOTORBIKE', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-14 19:03:38.876588', 12, '2024-02-29 04:09:14.759462', 12, '2024-06-06 21:27:01', 10, 'MOTORBIKE', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-13 11:45:34.624622', 12, '2024-10-17 17:16:43.987151', 12, '2024-06-07 21:22:31', 8, 'TRUCK', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-19 15:11:27.302504', 12, '2024-01-21 05:00:49.083295', 12, '2024-01-24 11:11:10', 1, 'CAR', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-14 13:58:25.421539', 12, '2024-06-15 05:46:38.055171', 12, '2024-06-30 05:42:46', 2, 'MOTORBIKE', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-04 16:48:31.632134', 12, '2024-03-02 14:15:43.454383', 12, '2024-01-19 21:12:17', 6, 'MOTORBIKE', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-30 17:14:05.859338', 12, '2024-01-19 06:14:45.814677', 12, '2024-07-22 02:48:34', 1, 'TRUCK', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-18 07:07:57.216847', 12, '2024-05-13 10:30:51.335392', 12, '2024-09-21 15:23:33', 6, 'CAR', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-05 07:17:04.410194', 12, '2024-10-11 16:51:26.396382', 12, '2024-08-08 16:40:30', 2, 'CAR', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-01 10:39:31.098591', 12, '2024-06-29 07:35:43.533990', 12, '2024-08-22 10:29:32', 9, 'TRUCK', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-04 00:14:51.986759', 12, '2024-02-23 12:02:32.820613', 12, '2024-08-25 13:25:43', 5, 'PICKUP', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-04 15:40:18.454198', 12, '2024-01-25 23:11:08.755751', 12, '2024-08-26 01:13:33', 3, 'FOOT', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-27 20:12:57.845172', 12, '2024-08-22 02:08:58.984528', 12, '2024-06-20 06:03:05', 8, 'MOTORBIKE', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-24 15:22:09.923132', 12, '2024-07-06 15:34:15.071127', 12, '2024-10-10 13:00:11', 3, 'PICKUP', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-18 16:08:48.055577', 12, '2024-04-16 21:16:06.141478', 12, '2024-06-29 01:42:51', 3, 'CAR', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-20 21:54:46.657566', 12, '2024-08-10 17:02:48.912141', 12, '2024-02-23 04:15:04', 8, 'MOTORBIKE', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-13 23:27:33.722496', 12, '2024-06-15 22:35:24.532472', 12, '2024-04-27 03:37:11', 10, 'FOOT', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-18 11:26:13.497523', 12, '2024-08-27 06:12:37.423792', 12, '2024-05-14 23:45:42', 5, 'CAR', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-18 05:41:57.209044', 12, '2024-08-22 03:40:03.902916', 12, '2024-08-13 19:45:55', 10, 'FOOT', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-21 17:13:28.337066', 12, '2024-01-12 06:57:14.546162', 12, '2024-09-23 00:11:06', 8, 'FOOT', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-16 10:58:56.586279', 12, '2024-10-26 02:29:03.840101', 12, '2024-07-11 02:39:19', 3, 'PICKUP', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-18 06:53:54.541834', 12, '2024-06-10 23:26:34.068338', 12, '2024-05-11 11:23:05', 1, 'CAR', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-17 08:34:26.243429', 12, '2024-03-22 08:14:22.821997', 12, '2024-02-27 02:45:29', 7, 'TRUCK', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-21 22:27:32.401871', 12, '2024-02-28 21:05:53.117857', 12, '2024-04-15 16:40:25', 5, 'PICKUP', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-13 00:17:52.382725', 12, '2024-02-21 02:08:28.362473', 12, '2024-04-23 00:57:17', 4, 'PICKUP', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-04 05:50:02.500902', 12, '2024-01-27 01:22:48.742715', 12, '2024-04-17 17:17:04', 1, 'FOOT', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-28 06:10:52.484064', 12, '2024-02-16 22:31:23.946091', 12, '2024-01-03 03:11:43', 10, 'PICKUP', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-10 04:54:48.230469', 12, '2024-09-13 10:08:41.441677', 12, '2024-10-19 05:17:21', 8, 'FOOT', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-30 12:31:01.930763', 12, '2024-05-30 16:36:55.122984', 12, '2024-07-27 06:32:35', 2, 'FOOT', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-11 21:38:53.882516', 12, '2024-04-28 14:19:29.441501', 12, '2024-01-19 22:39:43', 5, 'TRUCK', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-09 04:30:58.186862', 12, '2024-08-30 06:17:02.792322', 12, '2024-09-18 10:13:01', 7, 'FOOT', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-27 15:34:58.010221', 12, '2024-04-30 15:22:10.426225', 12, '2024-06-06 17:20:38', 8, 'CAR', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-18 06:01:28.697456', 12, '2024-06-24 02:13:10.136719', 12, '2024-09-15 14:25:52', 10, 'CAR', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-22 05:17:21.896248', 12, '2024-04-12 14:22:35.070139', 12, '2024-03-06 22:45:24', 4, 'TRUCK', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-28 05:17:56.299121', 12, '2024-10-28 14:26:47.558724', 12, '2024-04-09 14:58:14', 6, 'PICKUP', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-18 02:49:01.321848', 12, '2024-05-10 13:52:24.780281', 12, '2024-04-23 19:37:35', 8, 'MOTORBIKE', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-02 15:37:33.826868', 12, '2024-05-03 02:46:23.291019', 12, '2024-05-11 00:55:56', 9, 'PICKUP', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-19 06:29:50.503449', 12, '2024-02-24 23:35:24.834544', 12, '2024-06-01 20:26:07', 1, 'FOOT', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-05 13:32:32.564839', 12, '2024-05-29 04:31:12.796082', 12, '2024-04-08 00:00:29', 1, 'FOOT', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-17 07:56:53.463549', 12, '2024-10-18 16:36:00.823246', 12, '2024-05-18 23:01:37', 2, 'PICKUP', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-13 16:39:03.741189', 12, '2024-02-13 12:34:09.553012', 12, '2024-08-22 00:41:04', 2, 'FOOT', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-08 00:02:05.599792', 12, '2024-08-17 02:03:56.469715', 12, '2024-02-22 06:21:44', 4, 'MOTORBIKE', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-12 23:56:38.338615', 12, '2024-04-10 00:19:02.701487', 12, '2024-02-17 01:39:44', 8, 'PICKUP', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-10 01:45:33.725747', 12, '2024-07-01 04:37:24.367243', 12, '2024-01-14 09:01:24', 2, 'CAR', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-04 13:40:31.857550', 12, '2024-05-11 12:23:23.482913', 12, '2024-04-07 20:31:26', 7, 'MOTORBIKE', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-13 02:09:07.567804', 12, '2024-08-26 08:07:39.812842', 12, '2024-01-26 03:23:55', 6, 'MOTORBIKE', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-22 07:28:23.520420', 12, '2024-03-28 12:33:13.685336', 12, '2024-04-21 22:51:53', 9, 'PICKUP', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-15 03:30:59.105413', 12, '2024-04-23 05:27:01.078140', 12, '2024-10-26 14:43:43', 5, 'MOTORBIKE', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-03 17:32:22.754286', 12, '2024-03-30 19:37:37.406056', 12, '2024-03-03 18:38:06', 6, 'CAR', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-14 01:47:22.164563', 12, '2024-01-21 15:00:25.916998', 12, '2024-10-29 14:45:00', 8, 'MOTORBIKE', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-22 23:21:08.510676', 12, '2024-03-17 02:34:49.426283', 12, '2024-01-08 20:24:33', 10, 'MOTORBIKE', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-09 15:11:38.025960', 12, '2024-02-21 09:07:21.440534', 12, '2024-07-01 05:05:28', 5, 'CAR', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-22 22:00:03.437378', 12, '2024-04-25 23:58:03.260479', 12, '2024-07-12 15:45:18', 6, 'TRUCK', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-07 19:41:33.630739', 12, '2024-08-09 04:51:59.320034', 12, '2024-10-19 06:37:43', 5, 'PICKUP', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-13 09:45:46.929769', 12, '2024-05-07 16:56:06.226848', 12, '2024-03-21 05:00:10', 2, 'MOTORBIKE', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-27 02:15:51.948826', 12, '2024-05-29 02:21:35.677585', 12, '2024-04-06 10:36:19', 1, 'TRUCK', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-17 00:32:57.118459', 12, '2024-09-13 04:38:55.500626', 12, '2024-02-18 11:18:02', 8, 'CAR', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-30 03:48:05.936090', 12, '2024-04-29 05:19:11.603697', 12, '2024-03-14 17:40:29', 4, 'FOOT', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-09 07:09:43.510840', 12, '2024-04-17 06:19:12.028927', 12, '2024-02-02 08:55:28', 7, 'TRUCK', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-16 09:30:20.971182', 12, '2024-10-27 03:07:15.373665', 12, '2024-10-24 11:26:05', 1, 'CAR', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-12 00:46:25.168641', 12, '2024-06-15 20:22:48.406778', 12, '2024-04-29 11:29:00', 6, 'CAR', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-10 05:46:31.388303', 12, '2024-04-06 15:02:17.710182', 12, '2024-03-26 02:58:25', 4, 'MOTORBIKE', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-10 20:04:49.880818', 12, '2024-06-07 01:53:37.006771', 12, '2024-03-04 23:53:02', 3, 'MOTORBIKE', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-20 13:15:32.809123', 12, '2024-08-07 20:34:35.856895', 12, '2024-11-01 10:00:18', 2, 'MOTORBIKE', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-08 11:33:27.961806', 12, '2024-01-28 21:50:29.426403', 12, '2024-02-24 02:07:07', 6, 'MOTORBIKE', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-31 04:14:52.982875', 12, '2024-05-21 23:40:10.010945', 12, '2024-10-05 17:57:01', 5, 'TRUCK', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-10 03:24:58.696136', 12, '2024-09-28 18:58:40.367082', 12, '2024-11-03 04:46:28', 10, 'PICKUP', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-05 12:03:15.958632', 12, '2024-10-02 18:17:04.528638', 12, '2024-07-12 08:57:13', 7, 'FOOT', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-26 06:33:04.718138', 12, '2024-05-22 15:37:08.664456', 12, '2024-09-11 06:58:44', 9, 'CAR', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-04 15:54:24.799873', 12, '2024-01-28 03:25:45.883305', 12, '2024-02-25 12:31:31', 4, 'TRUCK', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-19 21:00:49.023562', 12, '2024-01-14 23:11:02.939096', 12, '2024-05-29 10:10:22', 7, 'MOTORBIKE', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-24 19:36:14.919071', 12, '2024-01-20 14:08:09.335283', 12, '2024-03-29 00:53:41', 10, 'FOOT', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-23 08:39:01.454035', 12, '2024-02-27 02:01:10.939625', 12, '2024-06-07 22:54:36', 9, 'CAR', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-22 21:51:25.081174', 12, '2024-04-07 05:29:11.857017', 12, '2024-03-13 16:02:17', 10, 'PICKUP', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-01 11:36:32.190051', 12, '2024-01-01 04:36:23.338957', 12, '2024-07-24 01:56:15', 2, 'FOOT', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-13 07:21:37.879972', 12, '2024-06-02 14:19:47.360388', 12, '2024-06-12 04:36:37', 2, 'PICKUP', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-25 17:58:17.596456', 12, '2024-03-25 19:36:35.507674', 12, '2024-10-25 11:07:31', 7, 'CAR', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-26 12:03:59.459513', 12, '2024-06-19 10:15:39.531277', 12, '2024-04-06 01:28:55', 1, 'CAR', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-11-03 18:40:12.946220', 12, '2024-04-08 22:08:19.068063', 12, '2024-07-11 12:03:05', 3, 'TRUCK', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-06 07:16:43.620547', 12, '2024-01-10 20:02:43.721771', 12, '2024-08-26 10:09:06', 5, 'FOOT', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-24 22:25:20.629787', 12, '2024-04-25 22:50:48.264116', 12, '2024-03-19 19:44:03', 5, 'PICKUP', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-05 16:30:07.485071', 12, '2024-05-11 00:52:48.159049', 12, '2024-06-11 00:40:23', 8, 'PICKUP', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-05 08:26:12.842095', 12, '2024-09-06 03:30:22.273896', 12, '2024-07-01 03:18:40', 3, 'CAR', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-06 02:25:48.834139', 12, '2024-04-02 19:25:17.837409', 12, '2024-09-12 22:04:31', 5, 'FOOT', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-21 19:48:31.850507', 12, '2024-04-20 14:21:39.721839', 12, '2024-08-19 06:13:17', 8, 'MOTORBIKE', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-21 18:12:11.489070', 12, '2024-01-29 12:13:51.215112', 12, '2024-03-26 06:34:47', 3, 'MOTORBIKE', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-15 19:18:46.040034', 12, '2024-02-16 02:23:25.870187', 12, '2024-08-16 11:45:56', 4, 'CAR', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-31 18:40:56.739216', 12, '2024-02-23 12:56:38.661641', 12, '2024-10-04 03:42:43', 6, 'TRUCK', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-27 13:04:34.454746', 12, '2024-03-24 08:22:42.635202', 12, '2024-08-26 09:20:45', 6, 'TRUCK', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-14 04:39:40.961977', 12, '2024-10-03 03:19:10.978974', 12, '2024-07-01 15:24:47', 2, 'CAR', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-09 01:12:13.140186', 12, '2024-02-01 21:38:25.625875', 12, '2024-09-17 13:14:57', 6, 'MOTORBIKE', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-30 08:14:37.324775', 12, '2024-04-29 21:27:33.486228', 12, '2024-07-09 07:11:06', 9, 'PICKUP', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-26 10:36:54.946095', 12, '2024-10-01 22:01:31.259380', 12, '2024-09-17 18:22:16', 10, 'CAR', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-08 11:34:30.461985', 12, '2024-06-19 13:19:36.437614', 12, '2024-09-30 19:36:58', 8, 'PICKUP', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-11-02 09:22:33.873300', 12, '2024-02-17 20:35:54.437065', 12, '2024-03-22 02:44:43', 7, 'FOOT', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-26 19:58:17.921869', 12, '2024-03-14 00:04:47.958094', 12, '2024-01-09 05:01:17', 3, 'MOTORBIKE', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-29 12:23:27.161152', 12, '2024-04-27 10:48:53.844876', 12, '2024-11-03 04:39:27', 4, 'FOOT', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-09 11:58:44.303581', 12, '2024-08-30 05:37:56.256591', 12, '2024-03-23 01:11:43', 6, 'PICKUP', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-18 19:23:49.896845', 12, '2024-07-19 06:02:17.730196', 12, '2024-01-13 14:38:34', 5, 'PICKUP', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-02 21:03:04.134727', 12, '2024-07-26 19:01:33.190527', 12, '2024-09-06 07:58:05', 3, 'CAR', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-18 03:27:19.006505', 12, '2024-08-30 13:18:16.632024', 12, '2024-01-30 23:44:50', 4, 'TRUCK', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-31 13:05:57.809527', 12, '2024-06-04 02:20:02.830416', 12, '2024-05-04 04:07:48', 1, 'MOTORBIKE', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-08 18:50:15.389798', 12, '2024-08-09 11:15:50.441291', 12, '2024-05-18 19:00:55', 2, 'TRUCK', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-18 02:22:17.798709', 12, '2024-08-08 14:49:26.509790', 12, '2024-03-19 13:26:05', 5, 'MOTORBIKE', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-18 17:45:58.464467', 12, '2024-04-17 06:51:34.317023', 12, '2024-05-14 01:04:54', 9, 'PICKUP', 6, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-13 05:07:09.092568', 12, '2024-01-20 18:32:07.801945', 12, '2024-09-22 22:28:36', 10, 'MOTORBIKE', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-03 20:36:44.948031', 12, '2024-07-14 06:15:46.777568', 12, '2024-04-21 03:29:32', 4, 'FOOT', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-22 01:24:18.669633', 12, '2024-10-31 06:21:10.600930', 12, '2024-10-20 00:22:58', 7, 'PICKUP', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-09 04:06:18.690555', 12, '2024-05-31 20:39:23.477372', 12, '2024-02-11 11:06:15', 2, 'FOOT', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-08 22:13:39.592308', 12, '2024-02-08 22:00:36.806985', 12, '2024-06-30 01:48:28', 1, 'TRUCK', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-05 13:03:46.832793', 12, '2024-02-22 15:04:17.837093', 12, '2024-09-25 01:14:46', 6, 'TRUCK', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-26 20:32:38.725987', 12, '2024-01-06 12:22:13.873043', 12, '2024-09-11 05:49:43', 2, 'PICKUP', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-04 18:46:50.459934', 12, '2024-07-22 07:37:52.124505', 12, '2024-01-05 15:07:42', 9, 'FOOT', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-12 20:26:06.321895', 12, '2024-02-07 00:47:10.346671', 12, '2024-01-13 07:12:07', 6, 'MOTORBIKE', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-31 06:04:41.296067', 12, '2024-02-12 12:36:27.680402', 12, '2024-04-29 19:46:57', 4, 'TRUCK', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-26 00:26:08.869289', 12, '2024-09-03 13:38:53.163376', 12, '2024-01-04 07:05:29', 7, 'PICKUP', 10, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-09 18:09:55.612762', 12, '2024-10-16 13:44:47.557725', 12, '2024-05-22 14:13:59', 1, 'FOOT', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-26 05:14:20.083861', 12, '2024-01-10 00:01:31.437133', 12, '2024-01-30 11:19:14', 8, 'PICKUP', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-16 15:45:04.386459', 12, '2024-03-22 19:21:19.271039', 12, '2024-10-30 23:47:16', 10, 'CAR', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-15 16:37:49.129094', 12, '2024-09-28 18:30:51.179658', 12, '2024-08-23 00:49:47', 10, 'MOTORBIKE', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-04 11:59:49.439643', 12, '2024-06-17 23:55:07.808011', 12, '2024-09-24 10:27:34', 3, 'TRUCK', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-23 11:12:03.937890', 12, '2024-09-16 14:52:34.247244', 12, '2024-03-26 19:12:15', 4, 'CAR', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-07 13:42:46.065976', 12, '2024-03-06 00:16:32.863539', 12, '2024-01-19 07:40:21', 2, 'TRUCK', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-20 06:57:08.403311', 12, '2024-10-11 16:42:24.935076', 12, '2024-08-12 15:47:18', 4, 'FOOT', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-14 19:52:45.212220', 12, '2024-04-04 10:08:14.620683', 12, '2024-09-22 22:07:47', 9, 'PICKUP', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-09 04:44:27.435543', 12, '2024-06-28 15:04:25.599007', 12, '2024-01-17 12:31:20', 3, 'TRUCK', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-26 20:37:17.669448', 12, '2024-01-16 01:30:43.410164', 12, '2024-07-28 11:25:57', 8, 'TRUCK', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-03 13:55:48.878578', 12, '2024-01-04 02:18:55.009163', 12, '2024-07-08 18:30:04', 4, 'MOTORBIKE', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-02 18:50:34.317605', 12, '2024-04-17 12:30:47.537308', 12, '2024-04-17 03:12:27', 1, 'PICKUP', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-27 07:10:02.908780', 12, '2024-05-24 18:00:54.543582', 12, '2024-06-02 15:14:02', 6, 'PICKUP', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-03 22:07:59.709522', 12, '2024-06-19 07:23:45.107090', 12, '2024-01-23 19:44:58', 4, 'TRUCK', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-24 04:06:35.152691', 12, '2024-07-22 13:51:07.115552', 12, '2024-04-03 11:40:54', 3, 'PICKUP', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-08 10:19:44.430188', 12, '2024-01-25 01:35:56.854646', 12, '2024-06-02 17:54:27', 9, 'TRUCK', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-29 07:27:46.167216', 12, '2024-07-11 09:26:50.207278', 12, '2024-01-29 19:03:00', 5, 'MOTORBIKE', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-17 00:12:08.317025', 12, '2024-04-17 00:24:59.048403', 12, '2024-07-22 05:44:45', 5, 'TRUCK', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-03 04:37:09.090405', 12, '2024-09-08 12:18:24.323028', 12, '2024-01-23 13:39:07', 4, 'FOOT', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-12 01:31:45.462168', 12, '2024-10-24 08:30:13.667283', 12, '2024-10-14 14:33:08', 6, 'CAR', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-18 17:22:17.190127', 12, '2024-04-25 22:30:17.727985', 12, '2024-08-15 23:33:39', 4, 'MOTORBIKE', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-25 20:26:36.185041', 12, '2024-01-29 17:18:32.945183', 12, '2024-05-16 02:31:06', 8, 'FOOT', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-06 06:35:42.615841', 12, '2024-04-17 11:27:59.327014', 12, '2024-08-20 22:06:30', 6, 'MOTORBIKE', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-24 02:59:42.660248', 12, '2024-01-22 21:27:53.113729', 12, '2024-08-22 10:34:43', 1, 'CAR', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-13 23:35:37.572904', 12, '2024-10-16 13:22:29.185997', 12, '2024-08-27 03:56:21', 5, 'CAR', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-11 01:48:08.059340', 12, '2024-09-07 11:57:08.631182', 12, '2024-07-23 21:45:49', 6, 'TRUCK', 9, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-02 19:47:02.269235', 12, '2024-05-24 00:28:24.398515', 12, '2024-02-05 15:53:45', 2, 'TRUCK', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-04 03:49:18.862319', 12, '2024-09-29 12:55:14.866810', 12, '2024-02-12 07:15:00', 7, 'TRUCK', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-02 17:29:17.645891', 12, '2024-06-25 03:13:54.276766', 12, '2024-10-11 01:37:05', 1, 'TRUCK', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-27 11:09:25.433980', 12, '2024-05-25 04:32:18.781653', 12, '2024-09-21 03:35:28', 5, 'PICKUP', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-17 05:55:34.206858', 12, '2024-07-13 09:32:55.123034', 12, '2024-02-17 11:43:35', 6, 'MOTORBIKE', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-26 08:59:43.910708', 12, '2024-10-01 02:38:19.661247', 12, '2024-05-18 09:04:44', 4, 'PICKUP', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-19 06:43:05.101917', 12, '2024-08-10 15:33:21.910121', 12, '2024-01-27 22:51:37', 7, 'PICKUP', 4, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-02 06:47:28.571889', 12, '2024-03-08 08:54:10.996305', 12, '2024-07-10 14:31:10', 3, 'TRUCK', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-26 17:31:30.272565', 12, '2024-10-12 16:46:06.677753', 12, '2024-06-13 21:36:19', 10, 'PICKUP', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-18 12:16:47.537068', 12, '2024-05-13 07:29:29.220377', 12, '2024-02-04 09:00:18', 3, 'CAR', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-11 04:07:21.296567', 12, '2024-10-03 14:12:22.780085', 12, '2024-07-25 13:28:16', 10, 'FOOT', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-27 11:18:38.783829', 12, '2024-04-25 06:00:26.508319', 12, '2024-01-08 13:02:20', 8, 'MOTORBIKE', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-15 14:00:10.478920', 12, '2024-09-17 15:35:51.673701', 12, '2024-04-25 09:04:19', 8, 'PICKUP', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-04 22:18:35.222417', 12, '2024-01-30 16:41:15.196223', 12, '2024-05-06 10:42:09', 3, 'FOOT', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-25 04:06:59.203756', 12, '2024-08-02 23:22:04.992961', 12, '2024-04-21 00:24:25', 2, 'TRUCK', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-15 01:02:12.435058', 12, '2024-03-19 15:08:35.811319', 12, '2024-10-08 02:37:25', 10, 'TRUCK', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-12 13:01:56.515226', 12, '2024-07-09 18:40:24.836008', 12, '2024-08-13 05:12:39', 4, 'FOOT', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-08 14:39:24.331952', 12, '2024-03-02 16:28:14.621516', 12, '2024-03-16 10:26:33', 8, 'CAR', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-12 13:56:49.026850', 12, '2024-04-10 10:26:27.027718', 12, '2024-05-30 02:41:13', 2, 'TRUCK', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-24 03:39:54.257411', 12, '2024-04-08 21:04:59.770852', 12, '2024-07-13 19:17:52', 8, 'MOTORBIKE', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-16 11:50:48.599224', 12, '2024-04-28 15:30:03.127492', 12, '2024-09-02 03:23:18', 9, 'CAR', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-21 20:29:48.065277', 12, '2024-08-20 08:20:28.211787', 12, '2024-07-07 10:54:00', 4, 'TRUCK', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-18 08:43:45.852029', 12, '2024-07-05 14:08:20.891388', 12, '2024-10-10 12:17:48', 9, 'CAR', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-14 06:41:43.279177', 12, '2024-04-19 23:45:49.927359', 12, '2024-03-28 15:21:20', 3, 'MOTORBIKE', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-03 07:08:37.798712', 12, '2024-10-24 20:07:32.137890', 12, '2024-07-03 19:36:52', 10, 'MOTORBIKE', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-18 17:09:51.898271', 12, '2024-08-22 18:24:33.301282', 12, '2024-08-20 03:32:24', 9, 'TRUCK', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-26 04:44:52.520421', 12, '2024-02-13 02:58:10.170588', 12, '2024-07-24 23:45:16', 9, 'PICKUP', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-25 13:32:48.919111', 12, '2024-06-10 08:45:45.743728', 12, '2024-02-14 14:21:01', 6, 'PICKUP', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-22 12:10:58.924401', 12, '2024-03-29 12:51:04.005110', 12, '2024-01-22 16:33:52', 3, 'FOOT', 2, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-15 05:19:08.201941', 12, '2024-11-01 00:20:05.298228', 12, '2024-09-17 05:54:30', 4, 'CAR', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-13 07:29:50.810365', 12, '2024-08-30 09:53:37.461054', 12, '2024-07-03 17:54:05', 7, 'CAR', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-24 20:03:52.944832', 12, '2024-09-14 18:54:38.099246', 12, '2024-10-29 07:37:42', 4, 'FOOT', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-19 06:22:04.729569', 12, '2024-01-09 20:00:18.209804', 12, '2024-10-15 11:58:34', 2, 'FOOT', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-06 15:39:56.268738', 12, '2024-01-13 05:37:54.616271', 12, '2024-05-02 21:05:21', 2, 'MOTORBIKE', 3, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-13 15:42:41.227036', 12, '2024-04-08 00:55:16.146981', 12, '2024-01-18 17:45:46', 9, 'PICKUP', 2, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-26 17:52:00.836644', 12, '2024-05-15 02:09:15.871700', 12, '2024-01-31 08:06:01', 4, 'TRUCK', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-07 08:13:35.905337', 12, '2024-05-09 10:47:26.274985', 12, '2024-06-28 00:16:59', 7, 'TRUCK', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-11-02 11:23:54.831850', 12, '2024-06-12 00:37:32.564404', 12, '2024-07-25 19:09:37', 4, 'FOOT', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-10-28 17:54:51.759904', 12, '2024-01-20 16:16:26.690902', 12, '2024-06-27 17:25:16', 2, 'CAR', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-15 03:51:26.001885', 12, '2024-07-27 02:15:38.945080', 12, '2024-02-11 07:50:33', 3, 'TRUCK', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-06 00:27:20.007646', 12, '2024-08-23 11:47:49.321586', 12, '2024-07-03 20:16:04', 4, 'FOOT', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-09 10:18:13.582933', 12, '2024-07-12 17:04:06.021960', 12, '2024-03-20 07:51:38', 2, 'MOTORBIKE', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-22 01:38:59.676031', 12, '2024-10-24 17:11:00.802704', 12, '2024-06-16 06:35:28', 1, 'MOTORBIKE', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-04 04:04:14.086831', 12, '2024-02-16 00:13:21.663061', 12, '2024-01-03 01:27:10', 5, 'TRUCK', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-01 18:30:58.100170', 12, '2024-02-12 04:53:13.576383', 12, '2024-10-03 12:59:49', 5, 'PICKUP', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-01 10:46:32.098861', 12, '2024-08-11 22:19:16.467168', 12, '2024-04-09 16:06:54', 6, 'MOTORBIKE', 5, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-12 04:49:11.384931', 12, '2024-05-11 08:27:03.381492', 12, '2024-04-30 12:36:34', 6, 'PICKUP', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-13 22:38:27.761706', 12, '2024-06-21 06:08:49.906638', 12, '2024-04-21 12:04:35', 6, 'TRUCK', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-17 02:26:24.476755', 12, '2024-02-03 14:01:31.346584', 12, '2024-01-07 04:41:18', 10, 'CAR', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-05 17:11:04.765486', 12, '2024-10-04 00:13:42.799871', 12, '2024-02-19 09:54:37', 7, 'CAR', 1, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-12 04:30:09.691924', 12, '2024-08-12 06:34:57.956983', 12, '2024-02-20 16:18:27', 5, 'CAR', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-03 19:50:54.320277', 12, '2024-06-13 14:10:30.273884', 12, '2024-08-19 23:21:51', 3, 'CAR', 7, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-10 17:30:23.659208', 12, '2024-01-08 12:38:37.481353', 12, '2024-01-11 02:41:19', 6, 'MOTORBIKE', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-04 21:55:07.375620', 12, '2024-07-14 14:03:22.113886', 12, '2024-05-02 04:24:16', 9, 'PICKUP', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-04-26 01:16:50.209158', 12, '2024-05-29 08:44:51.452317', 12, '2024-04-26 18:34:00', 1, 'PICKUP', 3, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-13 00:45:54.098842', 12, '2024-03-14 16:58:55.539867', 12, '2024-02-29 21:46:06', 7, 'PICKUP', 10, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-24 10:15:44.586599', 12, '2024-04-13 16:01:01.619883', 12, '2024-04-25 14:30:53', 4, 'PICKUP', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-09-29 02:37:55.298094', 12, '2024-10-21 05:37:21.207819', 12, '2024-09-28 23:21:38', 4, 'FOOT', 1, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-03-15 23:11:47.906778', 12, '2024-06-01 01:15:16.638290', 12, '2024-04-03 09:31:28', 5, 'PICKUP', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-10 13:00:14.045687', 12, '2024-05-11 13:11:16.640595', 12, '2024-02-21 03:19:14', 6, 'MOTORBIKE', 9, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-30 19:55:30.929205', 12, '2024-09-17 01:53:04.415097', 12, '2024-04-20 12:16:09', 3, 'FOOT', 7, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-17 14:32:22.671307', 12, '2024-04-21 04:40:51.709970', 12, '2024-04-04 07:04:17', 9, 'TRUCK', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-30 06:22:10.746915', 12, '2024-08-22 18:58:42.314528', 12, '2024-10-12 17:32:56', 4, 'MOTORBIKE', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-02-11 09:50:15.186857', 12, '2024-03-10 17:07:49.392885', 12, '2024-07-01 21:17:54', 9, 'PICKUP', 4, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-08-11 14:18:06.359042', 12, '2024-06-27 16:55:37.226173', 12, '2024-06-30 22:10:34', 3, 'CAR', 6, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-01-07 15:59:59.754090', 12, '2024-01-03 13:47:43.084912', 12, '2024-06-06 23:38:20', 9, 'TRUCK', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-11 09:15:08.102958', 12, '2024-04-11 13:23:56.551285', 12, '2024-09-16 20:30:37', 8, 'CAR', 8, 'EXIT', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-07-18 10:10:43.189508', 12, '2024-06-06 21:40:31.316552', 12, '2024-10-15 18:04:12', 6, 'TRUCK', 5, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-06-04 02:57:51.178869', 12, '2024-05-03 17:36:45.443434', 12, '2024-10-17 01:12:21', 4, 'MOTORBIKE', 8, 'ENTRY', false);
-INSERT INTO accesses (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id, vehicle_type, auth_id, action, is_inconsistent) VALUES ('2024-05-01 10:18:41.284280', 12, '2024-06-20 09:42:24.322546', 12, '2024-10-25 17:05:17', 1, 'PICKUP', 7, 'ENTRY', false);
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-29 18:16:01.507831', 12, '2024-09-19 09:09:23.485591', 12,
+         '2024-02-06 08:19:47', 8, 'PICKUP', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-25 16:52:13.860108', 12, '2024-06-04 15:09:52.738031', 12,
+         '2024-06-22 12:25:28', 10, 'CAR', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'IU7784');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-14 06:25:56.623788', 12, '2024-02-05 18:30:40.732544', 12,
+         '2024-06-14 00:41:36', 3, 'TRUCK', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-12 05:55:26.663559', 12, '2024-06-19 04:08:17.075464', 12,
+         '2024-08-31 16:58:48', 7, 'TRUCK', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-27 14:37:08.267464', 12, '2024-06-20 01:51:11.179384', 12,
+         '2024-02-06 12:50:14', 10, 'FOOT', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-12 05:55:26.663559', 12,
+             '2024-03-19 15:03:59.771993', 12, '2024-08-31 20:58:48', 1,
+             'TRUCK', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-14 17:53:01.294780', 12, '2024-08-28 17:13:02.644421', 12,
+         '2024-03-27 22:14:55', 1, 'MOTORBIKE', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-26 21:36:47.269630', 12, '2024-02-14 08:14:48.557717', 12,
+         '2024-08-12 00:29:01', 6, 'PICKUP', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-24 20:13:35.304252', 12, '2024-05-18 11:24:52.987818', 12,
+         '2024-07-20 01:53:01', 4, 'FOOT', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-26 21:36:47.269630', 12,
+             '2024-07-25 16:15:42.078065', 12, '2024-08-12 01:29:01', 8,
+             'PICKUP', 4, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-17 04:29:03.716248', 12, '2024-10-09 23:41:21.795281', 12,
+         '2024-04-27 12:57:43', 5, 'PICKUP', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-20 22:22:52.282123', 12, '2024-01-11 04:01:10.883552', 12,
+         '2024-06-30 11:07:01', 5, 'PICKUP', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-28 03:16:35.022862', 12, '2024-04-13 18:06:00.506680', 12,
+         '2024-09-22 13:31:54', 3, 'PICKUP', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-25 16:52:13.860108', 12,
+             '2024-08-12 19:38:22.756827', 12, '2024-06-22 16:25:28', 1,
+             'CAR', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-17 04:29:03.716248', 12,
+             '2024-07-19 06:10:21.207100', 12, '2024-04-27 13:57:43', 4,
+             'PICKUP', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-23 09:09:57.264898', 12, '2024-06-06 03:04:54.087868', 12,
+         '2024-04-02 13:03:11', 10, 'FOOT', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-03 04:17:03.041197', 12, '2024-10-28 17:02:40.092590', 12,
+         '2024-02-29 23:02:15', 7, 'TRUCK', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-14 18:59:40.305687', 12, '2024-09-20 00:33:15.423981', 12,
+         '2024-03-28 18:45:27', 8, 'FOOT', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-10 12:20:13.626307', 12, '2024-04-01 00:04:21.348669', 12,
+         '2024-01-20 21:07:29', 1, 'CAR', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'YR7788');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-12 01:11:43.491654', 12, '2024-03-25 01:17:11.965287', 12,
+         '2024-08-10 06:17:39', 2, 'MOTORBIKE', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-23 09:09:57.264898', 12,
+             '2024-01-16 15:38:46.455560', 12, '2024-04-02 15:03:11', 9,
+             'FOOT', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-12 01:11:43.491654', 12,
+             '2024-07-18 02:41:33.772553', 12, '2024-08-10 07:17:39', 3,
+             'MOTORBIKE', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-05 09:15:12.012703', 12, '2024-07-03 15:19:46.481590', 12,
+         '2024-10-11 14:36:07', 4, 'MOTORBIKE', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-27 14:37:08.267464', 12,
+             '2024-10-16 19:37:02.461288', 12, '2024-02-06 13:50:14', 4,
+             'FOOT', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-10 10:57:10.831922', 12, '2024-09-30 11:37:04.256552', 12,
+         '2024-10-23 00:48:12', 3, 'MOTORBIKE', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-24 11:46:18.258288', 12, '2024-05-04 05:59:09.269170', 12,
+         '2024-03-22 17:11:06', 7, 'TRUCK', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-19 13:36:09.711882', 12, '2024-07-25 12:47:50.009170', 12,
+         '2024-05-17 07:21:55', 3, 'PICKUP', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-10 12:20:13.626307', 12,
+             '2024-05-10 22:35:12.269971', 12, '2024-01-21 00:07:29', 10,
+             'CAR', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-28 03:16:35.022862', 12,
+             '2024-03-19 07:43:49.621325', 12, '2024-09-22 15:31:54', 1,
+             'PICKUP', 4, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-13 21:16:52.210893', 12, '2024-02-11 05:57:23.712964', 12,
+         '2024-11-01 23:33:42', 6, 'PICKUP', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-22 06:48:24.347827', 12, '2024-07-23 20:02:00.594632', 12,
+         '2024-07-14 13:36:12', 1, 'CAR', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'FG9364');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-05 17:59:11.586218', 12, '2024-05-06 19:37:33.369408', 12,
+         '2024-02-27 10:39:57', 8, 'FOOT', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-23 17:01:55.689088', 12, '2024-05-17 10:17:17.248363', 12,
+         '2024-03-17 10:37:52', 1, 'TRUCK', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-31 20:37:22.032586', 12, '2024-05-22 17:26:05.536137', 12,
+         '2024-09-16 13:19:35', 5, 'CAR', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'EM5943');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-14 06:25:56.623788', 12,
+             '2024-01-22 10:20:13.910774', 12, '2024-06-14 04:41:36', 9,
+             'TRUCK', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-01 03:06:11.288726', 12, '2024-09-03 21:48:46.710579', 12,
+         '2024-10-02 14:32:30', 1, 'PICKUP', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-06 00:55:22.801327', 12, '2024-08-02 03:44:50.144444', 12,
+         '2024-09-06 13:19:52', 2, 'PICKUP', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-13 01:45:05.549209', 12, '2024-05-25 09:18:00.865274', 12,
+         '2024-08-29 22:15:55', 3, 'PICKUP', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-07 09:17:26.523136', 12, '2024-09-27 17:55:07.666372', 12,
+         '2024-10-13 21:15:25', 8, 'MOTORBIKE', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-16 08:54:41.005348', 12, '2024-06-15 19:52:59.445856', 12,
+         '2024-02-10 18:54:17', 4, 'PICKUP', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-10 10:57:10.831922', 12,
+             '2024-07-16 09:48:14.892106', 12, '2024-10-23 03:48:12', 6,
+             'MOTORBIKE', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-30 10:03:38.554816', 12, '2024-10-02 04:12:50.552258', 12,
+         '2024-09-05 17:15:18', 5, 'FOOT', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-01 03:06:11.288726', 12,
+             '2024-06-09 04:38:17.554784', 12, '2024-10-02 16:32:30', 2,
+             'PICKUP', 7, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-03 04:17:03.041197', 12,
+             '2024-06-12 14:31:40.735709', 12, '2024-03-01 02:02:15', 5,
+             'TRUCK', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-16 08:54:41.005348', 12,
+             '2024-09-07 21:42:28.086944', 12, '2024-02-10 22:54:17', 4,
+             'PICKUP', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-14 18:59:40.305687', 12,
+             '2024-09-24 15:10:50.932011', 12, '2024-03-28 22:45:27', 4,
+             'FOOT', 4, 'EXIT', false,
+             true, NULL, NULL, NULL, 'None');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-31 20:37:22.032586', 12,
+             '2024-02-09 20:46:07.358992', 12, '2024-09-16 14:19:35', 6,
+             'CAR', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'EM5943');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-08 20:09:28.572925', 12, '2024-11-01 04:17:04.217995', 12,
+         '2024-08-06 08:24:42', 6, 'CAR', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'IB2794');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-31 10:44:25.088219', 12, '2024-05-25 03:10:38.646536', 12,
+         '2024-05-11 06:05:58', 3, 'PICKUP', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-05 09:15:12.012703', 12,
+             '2024-09-01 18:40:05.525218', 12, '2024-10-11 17:36:07', 8,
+             'MOTORBIKE', 4, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-11 07:59:22.607527', 12, '2024-01-11 18:28:33.370591', 12,
+         '2024-05-30 09:12:26', 10, 'PICKUP', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-16 23:32:46.824462', 12, '2024-03-28 12:03:54.910928', 12,
+         '2024-02-19 09:06:14', 5, 'CAR', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'PZ1195');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-19 19:17:21.284713', 12, '2024-04-18 14:03:21.419563', 12,
+         '2024-05-29 16:14:08', 3, 'PICKUP', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-06 00:55:22.801327', 12,
+             '2024-05-28 16:52:13.883827', 12, '2024-09-06 14:19:52', 2,
+             'PICKUP', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-05 02:07:48.396516', 12, '2024-05-10 13:01:33.665066', 12,
+         '2024-07-14 11:23:05', 7, 'TRUCK', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-06 11:10:44.139928', 12, '2024-02-04 08:07:59.073853', 12,
+         '2024-05-03 14:52:28', 2, 'PICKUP', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-18 02:42:32.582426', 12, '2024-04-07 13:55:05.019397', 12,
+         '2024-04-30 04:04:11', 9, 'PICKUP', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-07 06:10:30.884308', 12, '2024-01-29 06:19:36.685110', 12,
+         '2024-10-26 18:36:14', 6, 'FOOT', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-03 20:44:50.991949', 12, '2024-03-18 19:23:19.552160', 12,
+         '2024-09-16 14:08:52', 10, 'PICKUP', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-07 16:41:34.182705', 12, '2024-07-10 10:15:18.523237', 12,
+         '2024-06-18 17:04:25', 4, 'FOOT', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-02-20 22:22:52.282123', 12,
+             '2024-10-21 03:12:12.536383', 12, '2024-06-30 15:07:01', 4,
+             'PICKUP', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-11 07:59:22.607527', 12,
+             '2024-07-16 15:02:45.319712', 12, '2024-05-30 11:12:26', 9,
+             'PICKUP', 7, 'EXIT', false,
+             true, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-05 19:16:00.799479', 12, '2024-08-03 12:40:34.962895', 12,
+         '2024-04-30 17:51:31', 8, 'PICKUP', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-06 07:29:39.448048', 12, '2024-07-04 07:24:35.154376', 12,
+         '2024-06-21 02:33:06', 2, 'MOTORBIKE', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-12 17:12:36.029494', 12, '2024-05-21 09:07:05.555848', 12,
+         '2024-10-04 15:01:57', 3, 'CAR', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'HB2584');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-19 13:36:09.711882', 12,
+             '2024-09-14 02:46:13.456143', 12, '2024-05-17 09:21:55', 9,
+             'PICKUP', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-28 01:06:55.211203', 12, '2024-10-08 18:16:31.714257', 12,
+         '2024-06-12 16:45:35', 10, 'PICKUP', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-28 09:17:07.869401', 12, '2024-07-03 19:01:07.537833', 12,
+         '2024-06-09 04:35:53', 9, 'TRUCK', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-07 22:06:08.092186', 12, '2024-03-03 08:52:38.140411', 12,
+         '2024-01-25 21:02:10', 4, 'CAR', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'SW1694');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-13 01:45:05.549209', 12,
+             '2024-05-15 10:56:41.937872', 12, '2024-08-30 01:15:55', 6,
+             'PICKUP', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-03 20:44:50.991949', 12,
+             '2024-10-31 06:37:46.243098', 12, '2024-09-16 16:08:52', 9,
+             'PICKUP', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-27 18:37:00.045873', 12, '2024-09-21 08:17:31.964243', 12,
+         '2024-06-01 19:52:28', 5, 'TRUCK', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-02-16 23:32:46.824462', 12,
+             '2024-08-01 06:57:43.504340', 12, '2024-02-19 10:06:14', 3,
+             'CAR', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-12 17:12:36.029494', 12,
+             '2024-02-15 05:54:50.971520', 12, '2024-10-04 19:01:57', 1,
+             'CAR', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-29 18:16:01.507831', 12,
+             '2024-04-08 01:06:08.600703', 12, '2024-02-06 10:19:47', 4,
+             'PICKUP', 2, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-24 11:46:18.258288', 12,
+             '2024-08-02 20:28:37.447949', 12, '2024-03-22 19:11:06', 5,
+             'TRUCK', 2, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-25 09:32:02.030906', 12, '2024-06-17 04:35:49.262967', 12,
+         '2024-01-25 06:55:42', 6, 'CAR', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'LK6911');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-07 06:10:30.884308', 12,
+             '2024-02-12 12:15:13.910629', 12, '2024-10-26 19:36:14', 2,
+             'FOOT', 7, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-12 15:36:17.235058', 12, '2024-06-29 17:44:34.126586', 12,
+         '2024-10-16 06:22:54', 1, 'MOTORBIKE', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-06 07:29:39.448048', 12,
+             '2024-04-08 19:59:49.244965', 12, '2024-06-21 03:33:06', 5,
+             'MOTORBIKE', 7, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-30 16:34:35.174801', 12, '2024-01-14 04:57:30.482761', 12,
+         '2024-01-03 15:31:09', 1, 'MOTORBIKE', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-28 01:06:55.211203', 12,
+             '2024-08-04 15:18:57.275331', 12, '2024-06-12 18:45:35', 5,
+             'PICKUP', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-08 20:09:28.572925', 12,
+             '2024-04-07 10:01:39.646425', 12, '2024-08-06 12:24:42', 5,
+             'CAR', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-05 02:07:48.396516', 12,
+             '2024-10-26 07:32:50.051485', 12, '2024-07-14 13:23:05', 1,
+             'TRUCK', 2, 'EXIT', false,
+             true, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-11 16:49:23.961711', 12, '2024-05-28 03:57:44.447509', 12,
+         '2024-07-17 21:04:23', 6, 'MOTORBIKE', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-25 09:32:02.030906', 12,
+             '2024-09-18 10:31:17.640623', 12, '2024-01-25 10:55:42', 10,
+             'CAR', 4, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-22 14:21:35.956604', 12, '2024-01-25 06:41:55.688046', 12,
+         '2024-11-03 07:37:40', 7, 'MOTORBIKE', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-19 02:46:47.783125', 12, '2024-04-02 15:43:06.521646', 12,
+         '2024-06-17 21:22:39', 9, 'PICKUP', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-07 16:41:34.182705', 12,
+             '2024-07-03 14:17:56.711733', 12, '2024-06-18 19:04:25', 3,
+             'FOOT', 2, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-15 14:12:51.666555', 12, '2024-10-26 19:11:36.951030', 12,
+         '2024-09-26 12:06:26', 1, 'FOOT', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-04 03:58:14.755508', 12, '2024-04-06 00:57:08.086633', 12,
+         '2024-08-06 09:28:34', 7, 'TRUCK', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-04 13:29:59.496174', 12, '2024-07-08 21:11:19.943846', 12,
+         '2024-06-18 18:48:40', 9, 'CAR', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'BQ1394');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-16 20:24:56.534094', 12, '2024-10-05 01:30:35.970563', 12,
+         '2024-02-03 10:52:14', 7, 'TRUCK', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-21 07:52:09.518595', 12, '2024-06-10 14:23:11.370318', 12,
+         '2024-10-25 13:39:44', 1, 'PICKUP', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-02-15 14:12:51.666555', 12,
+             '2024-06-19 00:55:12.221962', 12, '2024-09-26 16:06:26', 3,
+             'FOOT', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-13 21:16:52.210893', 12,
+             '2024-07-23 13:28:53.330989', 12, '2024-11-02 02:33:42', 6,
+             'PICKUP', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-07 06:13:06.314261', 12, '2024-04-05 16:44:44.253427', 12,
+         '2024-02-29 14:43:21', 3, 'TRUCK', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-01 05:46:13.335456', 12, '2024-10-24 09:50:54.668877', 12,
+         '2024-08-02 03:18:23', 3, 'CAR', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'JX3731');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-14 17:53:01.294780', 12,
+             '2024-10-04 18:24:50.457358', 12, '2024-03-28 02:14:55', 3,
+             'MOTORBIKE', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-05 19:16:00.799479', 12,
+             '2024-10-31 18:03:26.097460', 12, '2024-04-30 19:51:31', 2,
+             'PICKUP', 2, 'EXIT', false,
+             true, NULL, NULL, NULL, 'None');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-24 20:13:35.304252', 12,
+             '2024-04-12 11:02:39.055422', 12, '2024-07-20 05:53:01', 2,
+             'FOOT', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-09 13:23:54.663733', 12, '2024-08-13 11:10:47.817692', 12,
+         '2024-01-11 21:42:32', 1, 'CAR', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'AP3793');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-14 00:18:35.291797', 12, '2024-08-30 16:08:06.244024', 12,
+         '2024-10-19 00:18:01', 2, 'TRUCK', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-22 14:21:35.956604', 12,
+             '2024-07-13 06:33:04.555077', 12, '2024-11-03 11:37:40', 3,
+             'MOTORBIKE', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-23 17:01:55.689088', 12,
+             '2024-03-07 08:15:47.940907', 12, '2024-03-17 14:37:52', 3,
+             'TRUCK', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-16 20:24:56.534094', 12,
+             '2024-04-11 19:24:08.635623', 12, '2024-02-03 13:52:14', 7,
+             'TRUCK', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-31 10:44:25.088219', 12,
+             '2024-09-28 05:10:15.503370', 12, '2024-05-11 09:05:58', 1,
+             'PICKUP', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-19 02:46:47.783125', 12,
+             '2024-04-04 14:20:08.938458', 12, '2024-06-17 23:22:39', 4,
+             'PICKUP', 7, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-11 23:44:29.779609', 12, '2024-06-25 19:47:13.445445', 12,
+         '2024-08-18 03:25:39', 4, 'TRUCK', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-21 11:33:34.857762', 12, '2024-09-06 07:53:02.995786', 12,
+         '2024-06-16 01:14:06', 5, 'TRUCK', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-28 09:17:07.869401', 12,
+             '2024-03-05 06:11:09.973592', 12, '2024-06-09 07:35:53', 8,
+             'TRUCK', 2, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-02 23:51:54.615737', 12, '2024-01-08 14:30:18.393968', 12,
+         '2024-09-19 01:44:32', 7, 'FOOT', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-23 02:36:37.008428', 12, '2024-09-20 02:29:26.104365', 12,
+         '2024-02-28 22:54:47', 9, 'CAR', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'HE9106');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-09 08:09:44.732406', 12, '2024-08-06 20:07:25.209527', 12,
+         '2024-03-02 07:52:54', 6, 'CAR', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'FR2148');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-06 02:39:56.352273', 12, '2024-02-28 07:05:21.594611', 12,
+         '2024-02-09 18:07:39', 9, 'FOOT', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-22 23:38:13.715289', 12, '2024-04-27 12:12:35.449340', 12,
+         '2024-10-22 17:28:01', 5, 'TRUCK', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-09 13:23:54.663733', 12,
+             '2024-01-19 19:44:49.541283', 12, '2024-01-11 22:42:32', 7,
+             'CAR', 7, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-01 22:34:38.606076', 12, '2024-10-24 07:07:35.047594', 12,
+         '2024-09-29 10:25:58', 3, 'TRUCK', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-09 20:27:16.304212', 12, '2024-05-30 18:06:30.991969', 12,
+         '2024-02-29 12:53:05', 6, 'FOOT', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-17 12:54:18.280627', 12, '2024-05-24 10:52:56.787953', 12,
+         '2024-04-10 10:24:00', 4, 'TRUCK', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-22 06:48:24.347827', 12,
+             '2024-05-27 11:27:25.218869', 12, '2024-07-14 16:36:12', 10,
+             'CAR', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'FG9364');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-23 02:36:37.008428', 12,
+             '2024-09-28 12:22:22.473949', 12, '2024-02-29 01:54:47', 7,
+             'CAR', 2, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-27 20:20:09.452286', 12, '2024-10-27 07:39:22.042276', 12,
+         '2024-06-27 22:29:32', 3, 'FOOT', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-11 18:31:59.522180', 12, '2024-05-11 22:20:26.516216', 12,
+         '2024-08-06 01:54:09', 3, 'MOTORBIKE', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-08 06:04:27.207377', 12, '2024-07-07 18:03:29.869361', 12,
+         '2024-09-25 06:19:15', 4, 'MOTORBIKE', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-17 01:28:42.364779', 12, '2024-04-20 03:08:34.706252', 12,
+         '2024-05-24 07:40:01', 4, 'CAR', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'CJ8659');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-17 12:54:18.280627', 12,
+             '2024-02-16 18:00:11.076245', 12, '2024-04-10 11:24:00', 6,
+             'TRUCK', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-02 23:51:54.615737', 12,
+             '2024-07-14 02:47:40.042482', 12, '2024-09-19 03:44:32', 2,
+             'FOOT', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-08 06:04:27.207377', 12,
+             '2024-10-10 06:30:14.599719', 12, '2024-09-25 10:19:15', 1,
+             'MOTORBIKE', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-07 22:06:08.092186', 12,
+             '2024-09-06 22:24:40.003422', 12, '2024-01-25 23:02:10', 7,
+             'CAR', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-21 11:33:34.857762', 12,
+             '2024-05-29 04:04:29.100949', 12, '2024-06-16 03:14:06', 4,
+             'TRUCK', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-01 14:38:29.308234', 12, '2024-03-15 13:53:46.457791', 12,
+         '2024-02-21 03:11:04', 9, 'FOOT', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-26 08:25:50.902466', 12, '2024-06-28 01:41:37.185059', 12,
+         '2024-02-05 19:38:09', 10, 'TRUCK', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-11 23:44:29.779609', 12,
+             '2024-10-03 00:10:14.858914', 12, '2024-08-18 06:25:39', 4,
+             'TRUCK', 7, 'EXIT', false,
+             true, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-16 18:09:35.761758', 12, '2024-10-15 21:23:04.618016', 12,
+         '2024-04-14 13:58:14', 2, 'MOTORBIKE', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-24 18:16:51.634571', 12, '2024-09-19 09:43:15.680908', 12,
+         '2024-09-18 14:00:21', 3, 'CAR', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'ZG9311');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-19 19:17:21.284713', 12,
+             '2024-06-09 16:24:44.899966', 12, '2024-05-29 17:14:08', 2,
+             'PICKUP', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-11 18:31:59.522180', 12,
+             '2024-01-09 14:14:20.306088', 12, '2024-08-06 05:54:09', 1,
+             'MOTORBIKE', 7, 'EXIT', false,
+             true, NULL, NULL, NULL, 'None');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-04 03:58:14.755508', 12,
+             '2024-10-18 00:49:45.442127', 12, '2024-08-06 11:28:34', 9,
+             'TRUCK', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-04 13:29:59.496174', 12,
+             '2024-01-22 10:41:44.037536', 12, '2024-06-18 19:48:40', 10,
+             'CAR', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'BQ1394');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-02 04:50:07.613451', 12, '2024-09-19 10:26:11.677616', 12,
+         '2024-10-18 17:14:40', 3, 'MOTORBIKE', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-06 00:06:22.716473', 12, '2024-02-04 12:06:45.320057', 12,
+         '2024-06-28 17:05:00', 2, 'PICKUP', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-24 18:16:51.634571', 12,
+             '2024-10-30 21:44:38.866618', 12, '2024-09-18 16:00:21', 2,
+             'CAR', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-27 02:02:43.397013', 12, '2024-06-27 15:46:24.004786', 12,
+         '2024-10-05 16:01:59', 5, 'TRUCK', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-28 01:27:08.234452', 12, '2024-06-23 13:39:10.421660', 12,
+         '2024-06-02 22:41:19', 3, 'TRUCK', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-04 11:09:20.840542', 12, '2024-05-02 13:40:50.982437', 12,
+         '2024-06-17 19:20:10', 5, 'FOOT', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-22 23:38:13.715289', 12,
+             '2024-04-24 11:46:34.421581', 12, '2024-10-22 19:28:01', 7,
+             'TRUCK', 2, 'EXIT', false,
+             true, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-08 21:43:48.378203', 12, '2024-10-22 02:39:20.834117', 12,
+         '2024-01-01 09:44:54', 4, 'CAR', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NI1494');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-11-03 19:00:31.215410', 12, '2024-10-10 10:38:16.071964', 12,
+         '2024-02-01 17:44:56', 5, 'CAR', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'OB3356');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-06 11:10:44.139928', 12,
+             '2024-06-17 15:22:26.413048', 12, '2024-05-03 17:52:28', 2,
+             'PICKUP', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-10 11:25:26.991509', 12, '2024-05-19 01:50:22.987779', 12,
+         '2024-05-15 08:46:17', 3, 'TRUCK', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-16 11:30:17.570379', 12, '2024-01-20 10:35:32.593489', 12,
+         '2024-04-05 10:45:17', 6, 'TRUCK', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-17 01:04:48.199166', 12, '2024-08-15 23:37:59.100991', 12,
+         '2024-07-06 20:01:16', 1, 'MOTORBIKE', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-27 11:48:01.188742', 12, '2024-09-22 04:36:55.163306', 12,
+         '2024-03-08 03:09:24', 7, 'CAR', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'IO4490');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-09 08:09:44.732406', 12,
+             '2024-06-28 22:21:41.128296', 12, '2024-03-02 10:52:54', 9,
+             'CAR', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-06 00:06:22.716473', 12,
+             '2024-04-29 19:05:33.811463', 12, '2024-06-28 18:05:00', 3,
+             'PICKUP', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-14 09:41:36.005370', 12, '2024-08-15 06:02:53.601695', 12,
+         '2024-07-02 14:33:37', 7, 'FOOT', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-02-11 16:49:23.961711', 12,
+             '2024-09-02 02:00:24.934535', 12, '2024-07-18 00:04:23', 1,
+             'MOTORBIKE', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-19 14:16:01.687289', 12, '2024-06-06 06:16:34.797783', 12,
+         '2024-08-02 03:14:27', 5, 'TRUCK', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-28 23:07:14.922996', 12, '2024-06-03 01:43:51.937687', 12,
+         '2024-07-20 18:16:09', 1, 'CAR', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'KT8807');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-02-06 02:39:56.352273', 12,
+             '2024-03-10 15:03:18.375156', 12, '2024-02-09 22:07:39', 4,
+             'FOOT', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-09 14:08:34.482874', 12, '2024-02-14 23:04:13.224606', 12,
+         '2024-01-13 23:07:53', 4, 'PICKUP', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-02-07 06:13:06.314261', 12,
+             '2024-10-22 17:25:59.719706', 12, '2024-02-29 18:43:21', 10,
+             'TRUCK', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-26 08:25:50.902466', 12,
+             '2024-03-04 13:06:28.642122', 12, '2024-02-05 22:38:09', 1,
+             'TRUCK', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-02 04:50:07.613451', 12,
+             '2024-05-20 16:27:26.839503', 12, '2024-10-18 19:14:40', 5,
+             'MOTORBIKE', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-28 01:27:08.234452', 12,
+             '2024-02-22 02:47:10.960956', 12, '2024-06-02 23:41:19', 6,
+             'TRUCK', 7, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-09 20:27:16.304212', 12,
+             '2024-03-31 19:16:50.686249', 12, '2024-02-29 15:53:05', 8,
+             'FOOT', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-10 13:31:43.933657', 12, '2024-08-13 17:29:19.188440', 12,
+         '2024-02-11 06:19:36', 5, 'FOOT', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-17 19:28:23.273791', 12, '2024-06-11 07:47:14.390636', 12,
+         '2024-02-06 11:37:29', 8, 'PICKUP', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-16 18:09:35.761758', 12,
+             '2024-10-07 22:21:39.208971', 12, '2024-04-14 16:58:14', 4,
+             'MOTORBIKE', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-19 14:16:01.687289', 12,
+             '2024-08-29 14:43:35.369090', 12, '2024-08-02 05:14:27', 8,
+             'TRUCK', 7, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-15 13:08:46.008492', 12, '2024-01-19 00:33:00.185648', 12,
+         '2024-03-11 08:47:06', 8, 'MOTORBIKE', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-05 17:59:11.586218', 12,
+             '2024-01-17 23:28:53.156615', 12, '2024-02-27 14:39:57', 2,
+             'FOOT', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-07 23:27:26.336926', 12, '2024-03-30 07:58:28.306816', 12,
+         '2024-07-10 11:48:27', 4, 'FOOT', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-04 11:09:20.840542', 12,
+             '2024-01-30 04:32:35.169444', 12, '2024-06-17 22:20:10', 8,
+             'FOOT', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-31 21:00:14.396508', 12, '2024-04-26 22:25:09.774440', 12,
+         '2024-01-24 06:37:26', 10, 'FOOT', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-07 09:43:52.372344', 12, '2024-07-19 18:21:58.501060', 12,
+         '2024-09-12 22:34:07', 8, 'PICKUP', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-20 06:05:02.144446', 12, '2024-05-10 17:18:16.174705', 12,
+         '2024-01-18 22:41:38', 9, 'MOTORBIKE', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-01 14:38:29.308234', 12,
+             '2024-04-16 06:06:42.961863', 12, '2024-02-21 07:11:04', 8,
+             'FOOT', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-14 20:24:05.865576', 12, '2024-05-18 10:17:54.502600', 12,
+         '2024-03-26 01:49:46', 3, 'CAR', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'YO4017');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-27 02:02:43.397013', 12,
+             '2024-09-14 01:52:11.742209', 12, '2024-10-05 19:01:59', 5,
+             'TRUCK', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-28 07:06:50.699128', 12, '2024-02-05 05:02:13.291874', 12,
+         '2024-04-10 06:15:57', 3, 'PICKUP', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-12 01:18:30.930169', 12, '2024-08-19 22:50:55.752419', 12,
+         '2024-10-23 05:51:24', 7, 'FOOT', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-12 11:13:35.074635', 12, '2024-08-16 00:18:58.669621', 12,
+         '2024-07-12 18:34:00', 7, 'MOTORBIKE', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-28 23:07:14.922996', 12,
+             '2024-07-09 09:43:44.505751', 12, '2024-07-20 19:16:09', 5,
+             'CAR', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-15 13:08:46.008492', 12,
+             '2024-02-04 21:47:11.131618', 12, '2024-03-11 10:47:06', 2,
+             'MOTORBIKE', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-15 21:30:58.304305', 12, '2024-03-10 20:22:22.055526', 12,
+         '2024-09-20 03:24:53', 9, 'FOOT', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-01 08:43:31.191960', 12, '2024-09-07 20:43:43.914597', 12,
+         '2024-04-09 18:04:20', 3, 'TRUCK', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-13 15:52:42.035695', 12, '2024-09-03 11:46:24.775560', 12,
+         '2024-05-01 03:26:37', 3, 'PICKUP', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-12 01:18:30.930169', 12,
+             '2024-01-14 11:47:26.549897', 12, '2024-10-23 09:51:24', 5,
+             'FOOT', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-10 09:17:36.577886', 12, '2024-10-12 22:29:58.918901', 12,
+         '2024-08-08 08:42:49', 3, 'MOTORBIKE', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-18 23:03:48.444991', 12, '2024-04-10 00:09:04.406749', 12,
+         '2024-02-04 14:23:43', 9, 'CAR', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'CR5886');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-27 12:22:49.811508', 12, '2024-04-29 20:47:13.441047', 12,
+         '2024-03-30 07:16:52', 5, 'TRUCK', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-17 01:04:48.199166', 12,
+             '2024-07-10 21:21:15.899843', 12, '2024-07-07 00:01:16', 1,
+             'MOTORBIKE', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-26 14:59:53.954434', 12, '2024-04-22 23:36:16.322427', 12,
+         '2024-02-04 17:01:08', 7, 'CAR', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'SE1275');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-14 12:23:45.486918', 12, '2024-08-02 20:17:18.071585', 12,
+         '2024-06-08 21:06:47', 5, 'MOTORBIKE', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-31 09:46:14.771872', 12, '2024-10-05 02:26:28.634592', 12,
+         '2024-02-16 00:58:25', 10, 'TRUCK', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-08 05:26:44.208197', 12, '2024-03-21 06:59:41.553611', 12,
+         '2024-06-02 17:06:00', 7, 'FOOT', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-13 01:24:04.614751', 12, '2024-07-25 08:21:49.680848', 12,
+         '2024-01-03 06:45:59', 3, 'FOOT', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-30 17:35:51.748278', 12, '2024-10-29 04:07:47.837996', 12,
+         '2024-01-16 04:45:39', 8, 'MOTORBIKE', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-26 02:05:10.801774', 12, '2024-01-10 07:36:52.835954', 12,
+         '2024-06-09 21:54:40', 9, 'TRUCK', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-27 21:40:24.048826', 12, '2024-05-31 11:19:58.345275', 12,
+         '2024-04-27 00:40:44', 1, 'FOOT', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-30 16:34:35.174801', 12,
+             '2024-03-10 20:04:38.936724', 12, '2024-01-03 18:31:09', 5,
+             'MOTORBIKE', 4, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-26 02:05:10.801774', 12,
+             '2024-01-19 09:13:09.864381', 12, '2024-06-10 01:54:40', 8,
+             'TRUCK', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-09 13:02:44.870314', 12, '2024-07-03 21:23:06.856699', 12,
+         '2024-02-16 22:34:29', 8, 'PICKUP', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-08 21:43:48.378203', 12,
+             '2024-01-22 23:41:56.503244', 12, '2024-01-01 11:44:54', 1,
+             'CAR', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NI1494');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-07 09:17:26.523136', 12,
+             '2024-10-07 04:12:11.405607', 12, '2024-10-13 22:15:25', 7,
+             'MOTORBIKE', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-30 15:25:41.488257', 12, '2024-05-11 22:04:50.508459', 12,
+         '2024-03-22 22:51:22', 8, 'TRUCK', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-07 09:43:52.372344', 12,
+             '2024-06-06 02:37:44.762040', 12, '2024-09-12 23:34:07', 4,
+             'PICKUP', 7, 'EXIT', false,
+             true, NULL, NULL, NULL, 'None');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-27 11:48:01.188742', 12,
+             '2024-09-09 15:49:05.540318', 12, '2024-03-08 06:09:24', 5,
+             'CAR', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-10 09:17:36.577886', 12,
+             '2024-08-19 02:20:25.155440', 12, '2024-08-08 10:42:49', 2,
+             'MOTORBIKE', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-02-14 09:41:36.005370', 12,
+             '2024-02-12 01:01:48.925363', 12, '2024-07-02 15:33:37', 9,
+             'FOOT', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-11-03 19:00:31.215410', 12,
+             '2024-08-21 00:27:13.658202', 12, '2024-02-01 21:44:56', 5,
+             'CAR', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-18 23:03:48.444991', 12,
+             '2024-03-16 15:14:32.721495', 12, '2024-02-04 18:23:43', 2,
+             'CAR', 7, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-05 16:29:10.076348', 12, '2024-04-01 20:14:02.742896', 12,
+         '2024-08-12 11:06:20', 2, 'FOOT', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-20 06:05:02.144446', 12,
+             '2024-08-30 20:52:16.064131', 12, '2024-01-19 01:41:38', 8,
+             'MOTORBIKE', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-06 11:14:25.145890', 12, '2024-07-31 00:25:16.905180', 12,
+         '2024-07-03 17:46:41', 5, 'TRUCK', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-09 14:08:34.482874', 12,
+             '2024-03-18 05:25:17.144801', 12, '2024-01-14 00:07:53', 4,
+             'PICKUP', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-28 14:03:14.943039', 12, '2024-09-19 05:54:36.512257', 12,
+         '2024-02-28 21:54:19', 3, 'TRUCK', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-19 18:02:57.335590', 12, '2024-07-19 19:13:56.760908', 12,
+         '2024-08-15 22:19:09', 8, 'FOOT', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-30 17:35:51.748278', 12,
+             '2024-09-16 10:51:34.547827', 12, '2024-01-16 07:45:39', 4,
+             'MOTORBIKE', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-05 16:29:10.076348', 12,
+             '2024-08-31 19:50:34.225842', 12, '2024-08-12 13:06:20', 8,
+             'FOOT', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-10 13:31:43.933657', 12,
+             '2024-04-16 15:48:07.126108', 12, '2024-02-11 08:19:36', 4,
+             'FOOT', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-28 14:03:14.943039', 12,
+             '2024-10-02 21:30:28.466850', 12, '2024-02-29 00:54:19', 10,
+             'TRUCK', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-14 08:44:25.640939', 12, '2024-06-23 01:49:55.923345', 12,
+         '2024-09-16 23:43:16', 1, 'PICKUP', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-28 22:21:18.608538', 12, '2024-04-29 19:43:56.519961', 12,
+         '2024-08-31 22:00:23', 3, 'CAR', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'BY7406');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-23 17:56:01.815934', 12, '2024-07-18 11:51:43.992525', 12,
+         '2024-06-24 05:36:44', 1, 'TRUCK', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-10 11:25:26.991509', 12,
+             '2024-05-21 06:37:33.215944', 12, '2024-05-15 12:46:17', 3,
+             'TRUCK', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-22 00:25:14.345150', 12, '2024-11-02 08:48:32.033880', 12,
+         '2024-10-26 02:46:52', 10, 'FOOT', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-02-07 23:27:26.336926', 12,
+             '2024-02-02 00:54:54.732016', 12, '2024-07-10 13:48:27', 2,
+             'FOOT', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-07 00:33:32.707590', 12, '2024-02-01 18:57:15.834842', 12,
+         '2024-08-04 04:02:36', 7, 'CAR', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'HT3387');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-09 06:31:05.037968', 12, '2024-04-30 15:58:24.682640', 12,
+         '2024-06-14 03:52:20', 3, 'TRUCK', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-09 06:31:05.037968', 12,
+             '2024-03-02 10:37:36.352220', 12, '2024-06-14 04:52:20', 6,
+             'TRUCK', 7, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-08 23:04:10.467121', 12, '2024-01-23 13:31:43.757039', 12,
+         '2024-08-30 06:19:48', 1, 'CAR', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'HI8627');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-08 10:22:41.938963', 12, '2024-01-25 21:43:45.440622', 12,
+         '2024-08-09 16:47:38', 2, 'FOOT', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-20 11:29:13.905781', 12, '2024-01-18 05:01:17.115822', 12,
+         '2024-09-14 21:50:02', 7, 'CAR', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NE9377');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-12 14:59:54.541545', 12, '2024-08-15 22:03:40.765967', 12,
+         '2024-08-12 00:18:25', 9, 'TRUCK', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-06 04:16:36.558266', 12, '2024-08-04 15:02:13.652074', 12,
+         '2024-06-15 03:51:41', 8, 'TRUCK', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-25 04:11:06.935834', 12, '2024-03-09 09:19:53.347235', 12,
+         '2024-04-05 04:36:59', 10, 'MOTORBIKE', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-19 14:36:11.751469', 12, '2024-10-27 18:58:12.017268', 12,
+         '2024-10-22 16:03:51', 9, 'CAR', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'PG1536');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-06 12:33:10.588821', 12, '2024-05-22 05:06:38.163143', 12,
+         '2024-03-28 18:41:53', 4, 'MOTORBIKE', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-09 13:02:44.870314', 12,
+             '2024-07-21 11:38:30.028698', 12, '2024-02-17 01:34:29', 5,
+             'PICKUP', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-14 20:24:05.865576', 12,
+             '2024-03-18 16:50:03.102569', 12, '2024-03-26 03:49:46', 5,
+             'CAR', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-15 21:30:58.304305', 12,
+             '2024-10-10 12:54:37.158423', 12, '2024-09-20 06:24:53', 2,
+             'FOOT', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-30 10:03:38.554816', 12,
+             '2024-08-02 10:03:01.663898', 12, '2024-09-05 18:15:18', 5,
+             'FOOT', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-26 20:45:22.000236', 12, '2024-09-06 11:34:31.036923', 12,
+         '2024-10-08 03:57:27', 9, 'PICKUP', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-22 09:21:52.403764', 12, '2024-10-01 08:14:39.426693', 12,
+         '2024-06-26 21:41:15', 2, 'PICKUP', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-18 14:33:46.003296', 12, '2024-01-17 21:51:12.908473', 12,
+         '2024-08-15 00:09:47', 2, 'TRUCK', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-08 05:26:44.208197', 12,
+             '2024-05-09 18:40:17.728508', 12, '2024-06-02 18:06:00', 7,
+             'FOOT', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-07 23:52:13.730826', 12, '2024-07-29 05:17:15.585693', 12,
+         '2024-07-22 13:05:15', 8, 'TRUCK', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-03 05:11:33.149560', 12, '2024-05-01 22:38:08.447578', 12,
+         '2024-05-18 08:47:07', 9, 'CAR', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'WL9225');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-13 08:47:13.309350', 12, '2024-05-13 03:51:22.642456', 12,
+         '2024-05-26 04:38:39', 6, 'TRUCK', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-16 03:26:22.046247', 12, '2024-01-25 00:40:46.955239', 12,
+         '2024-03-04 07:07:02', 7, 'CAR', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'SQ4649');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-31 21:00:14.396508', 12,
+             '2024-04-03 00:48:06.611886', 12, '2024-01-24 10:37:26', 1,
+             'FOOT', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-31 05:56:09.975694', 12, '2024-03-23 20:16:42.906382', 12,
+         '2024-02-16 03:16:19', 1, 'FOOT', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-19 06:52:55.185324', 12, '2024-10-21 11:22:22.388063', 12,
+         '2024-04-11 17:24:49', 1, 'FOOT', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-18 14:33:46.003296', 12,
+             '2024-04-30 04:33:28.536283', 12, '2024-08-15 04:09:47', 9,
+             'TRUCK', 7, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-12 13:07:08.811527', 12, '2024-01-22 20:55:00.098991', 12,
+         '2024-08-16 01:00:07', 1, 'FOOT', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-29 16:01:42.996965', 12, '2024-06-02 04:57:39.082429', 12,
+         '2024-09-03 10:29:48', 8, 'FOOT', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-14 08:44:25.640939', 12,
+             '2024-03-03 09:38:21.298850', 12, '2024-09-17 00:43:16', 8,
+             'PICKUP', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-27 13:58:25.336275', 12, '2024-10-16 06:10:59.350908', 12,
+         '2024-06-17 20:11:08', 4, 'FOOT', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-21 07:52:09.518595', 12,
+             '2024-04-11 06:20:23.917538', 12, '2024-10-25 15:39:44', 8,
+             'PICKUP', 4, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-18 02:42:32.582426', 12,
+             '2024-01-12 07:01:34.965131', 12, '2024-04-30 05:04:11', 6,
+             'PICKUP', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-14 12:23:45.486918', 12,
+             '2024-04-29 04:18:59.339644', 12, '2024-06-09 01:06:47', 2,
+             'MOTORBIKE', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-04 13:25:35.604544', 12, '2024-07-04 16:19:16.098609', 12,
+         '2024-03-21 11:08:59', 9, 'MOTORBIKE', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-17 20:41:10.459120', 12, '2024-07-14 11:40:08.530469', 12,
+         '2024-01-03 01:20:21', 7, 'MOTORBIKE', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-29 16:01:42.996965', 12,
+             '2024-04-17 21:26:36.203785', 12, '2024-09-03 12:29:48', 6,
+             'FOOT', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-20 11:29:13.905781', 12,
+             '2024-07-27 18:55:53.133112', 12, '2024-09-14 22:50:02', 1,
+             'CAR', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-06 07:00:28.672360', 12, '2024-02-08 15:58:42.532307', 12,
+         '2024-04-23 06:07:11', 8, 'FOOT', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-08 01:47:45.709128', 12, '2024-05-21 04:20:57.175325', 12,
+         '2024-03-23 14:29:13', 1, 'FOOT', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-30 15:25:41.488257', 12,
+             '2024-01-01 02:52:37.869178', 12, '2024-03-23 00:51:22', 1,
+             'TRUCK', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-15 10:31:44.439170', 12, '2024-01-27 11:24:20.504921', 12,
+         '2024-02-10 08:36:50', 8, 'MOTORBIKE', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-07 07:01:23.931044', 12, '2024-10-25 02:09:04.514181', 12,
+         '2024-10-04 15:18:10', 3, 'PICKUP', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-04 04:16:01.407514', 12, '2024-03-02 00:54:49.820588', 12,
+         '2024-01-09 20:48:05', 6, 'FOOT', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-23 17:56:01.815934', 12,
+             '2024-07-26 01:59:42.314364', 12, '2024-06-24 08:36:44', 6,
+             'TRUCK', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-02 12:03:44.780591', 12, '2024-11-02 21:42:36.229551', 12,
+         '2024-02-19 20:44:17', 6, 'MOTORBIKE', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-27 18:37:00.045873', 12,
+             '2024-06-04 04:28:27.548944', 12, '2024-06-01 22:52:28', 10,
+             'TRUCK', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-08 23:04:10.467121', 12,
+             '2024-02-29 01:28:10.391716', 12, '2024-08-30 07:19:48', 8,
+             'CAR', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'HI8627');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-23 02:45:20.053523', 12, '2024-10-06 10:37:12.732098', 12,
+         '2024-09-29 00:49:54', 5, 'MOTORBIKE', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-14 00:18:35.291797', 12,
+             '2024-10-26 10:58:35.864919', 12, '2024-10-19 01:18:01', 2,
+             'TRUCK', 4, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-06 11:14:25.145890', 12,
+             '2024-02-23 01:57:56.787296', 12, '2024-07-03 21:46:41', 10,
+             'TRUCK', 2, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-26 22:31:14.245238', 12, '2024-04-09 14:12:48.355390', 12,
+         '2024-10-06 03:56:46', 5, 'CAR', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'OH4927');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-12 15:36:17.235058', 12,
+             '2024-03-30 02:26:34.408314', 12, '2024-10-16 08:22:54', 4,
+             'MOTORBIKE', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-02-16 03:26:22.046247', 12,
+             '2024-05-27 09:07:04.224500', 12, '2024-03-04 11:07:02', 10,
+             'CAR', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-31 05:56:09.975694', 12,
+             '2024-02-09 01:20:27.300502', 12, '2024-02-16 07:16:19', 4,
+             'FOOT', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-04 04:16:01.407514', 12,
+             '2024-02-18 23:54:57.778125', 12, '2024-01-09 23:48:05', 3,
+             'FOOT', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-11 17:54:51.021984', 12, '2024-08-01 16:03:52.555176', 12,
+         '2024-10-05 17:01:38', 6, 'PICKUP', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-15 10:31:44.439170', 12,
+             '2024-06-16 23:05:00.154676', 12, '2024-02-10 10:36:50', 3,
+             'MOTORBIKE', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-25 11:22:58.778021', 12, '2024-03-06 09:58:02.683919', 12,
+         '2024-01-19 00:18:33', 1, 'PICKUP', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-02 07:50:07.178941', 12, '2024-05-03 12:49:28.012229', 12,
+         '2024-03-04 01:11:28', 7, 'PICKUP', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-26 20:45:22.000236', 12,
+             '2024-03-17 10:55:16.093650', 12, '2024-10-08 07:57:27', 7,
+             'PICKUP', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-06 16:14:51.725413', 12, '2024-05-14 00:36:20.516741', 12,
+         '2024-05-12 17:53:44', 4, 'TRUCK', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-13 06:21:16.060767', 12, '2024-02-04 08:19:09.682160', 12,
+         '2024-09-27 05:08:51', 10, 'FOOT', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-08 01:47:45.709128', 12,
+             '2024-02-10 12:34:22.849904', 12, '2024-03-23 15:29:13', 2,
+             'FOOT', 7, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-07 01:16:40.942330', 12, '2024-08-03 22:13:13.567571', 12,
+         '2024-08-31 19:59:58', 9, 'TRUCK', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-01 05:46:13.335456', 12,
+             '2024-09-26 06:28:45.291710', 12, '2024-08-02 06:18:23', 10,
+             'CAR', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-07 07:01:23.931044', 12,
+             '2024-08-17 12:59:50.138610', 12, '2024-10-04 18:18:10', 6,
+             'PICKUP', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-19 18:02:57.335590', 12,
+             '2024-02-06 06:23:01.328687', 12, '2024-08-16 00:19:09', 8,
+             'FOOT', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-07 01:16:40.942330', 12,
+             '2024-07-19 04:39:44.090952', 12, '2024-08-31 23:59:58', 6,
+             'TRUCK', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-19 14:36:11.751469', 12,
+             '2024-07-29 16:36:27.257882', 12, '2024-10-22 19:03:51', 6,
+             'CAR', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-16 01:02:09.743246', 12, '2024-03-21 14:18:56.483316', 12,
+         '2024-05-26 11:27:11', 6, 'MOTORBIKE', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-15 15:34:31.703970', 12, '2024-10-03 00:47:52.540697', 12,
+         '2024-01-11 02:08:52', 6, 'MOTORBIKE', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-22 00:25:14.345150', 12,
+             '2024-06-03 22:36:13.795072', 12, '2024-10-26 05:46:52', 6,
+             'FOOT', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-02 12:03:44.780591', 12,
+             '2024-03-01 05:29:54.702340', 12, '2024-02-20 00:44:17', 2,
+             'MOTORBIKE', 7, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-23 02:10:52.673370', 12, '2024-05-14 18:09:19.307322', 12,
+         '2024-07-06 21:35:42', 9, 'TRUCK', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-25 11:22:58.778021', 12,
+             '2024-03-21 18:04:53.265161', 12, '2024-01-19 04:18:33', 3,
+             'PICKUP', 7, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-16 00:12:07.124109', 12, '2024-01-21 21:11:34.740207', 12,
+         '2024-03-20 14:35:04', 5, 'MOTORBIKE', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-23 02:45:20.053523', 12,
+             '2024-09-16 05:28:46.709498', 12, '2024-09-29 03:49:54', 6,
+             'MOTORBIKE', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-17 02:11:35.413721', 12, '2024-08-22 23:11:35.253770', 12,
+         '2024-08-30 05:15:56', 9, 'MOTORBIKE', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-16 11:55:36.793395', 12, '2024-10-02 07:29:58.150127', 12,
+         '2024-05-26 14:32:23', 8, 'TRUCK', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-23 07:53:40.487509', 12, '2024-02-23 08:03:26.111715', 12,
+         '2024-09-09 12:30:06', 6, 'FOOT', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-21 08:56:17.323618', 12, '2024-09-21 07:38:06.353427', 12,
+         '2024-07-14 00:50:03', 6, 'TRUCK', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-10 23:44:30.061052', 12, '2024-09-18 13:58:57.350295', 12,
+         '2024-08-23 05:49:22', 3, 'PICKUP', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-01 22:34:38.606076', 12,
+             '2024-10-02 11:15:21.476642', 12, '2024-09-29 14:25:58', 2,
+             'TRUCK', 4, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-27 08:47:09.819160', 12, '2024-10-02 06:22:55.883771', 12,
+         '2024-01-23 03:33:13', 5, 'TRUCK', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-06 05:02:20.666321', 12, '2024-06-01 06:14:40.270867', 12,
+         '2024-07-10 20:01:35', 10, 'TRUCK', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-22 16:12:28.184069', 12, '2024-05-05 03:21:44.466839', 12,
+         '2024-03-14 14:36:15', 8, 'TRUCK', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-16 11:55:36.793395', 12,
+             '2024-08-10 22:40:03.620423', 12, '2024-05-26 17:32:23', 10,
+             'TRUCK', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-22 18:38:47.156368', 12, '2024-09-04 10:38:33.179531', 12,
+         '2024-06-25 04:40:14', 3, 'TRUCK', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-02-22 09:21:52.403764', 12,
+             '2024-10-16 08:22:21.035147', 12, '2024-06-27 01:41:15', 5,
+             'PICKUP', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-03 20:22:15.437033', 12, '2024-02-10 10:32:55.758474', 12,
+         '2024-02-21 07:44:31', 6, 'MOTORBIKE', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-06 04:16:36.558266', 12,
+             '2024-06-02 04:19:01.860644', 12, '2024-06-15 06:51:41', 10,
+             'TRUCK', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-10 02:19:55.675759', 12, '2024-02-16 15:50:33.606692', 12,
+         '2024-07-21 17:49:12', 5, 'MOTORBIKE', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-25 04:11:06.935834', 12,
+             '2024-03-11 02:23:58.384142', 12, '2024-04-05 06:36:59', 7,
+             'MOTORBIKE', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-17 20:41:10.459120', 12,
+             '2024-01-16 03:30:07.775952', 12, '2024-01-03 03:20:21', 1,
+             'MOTORBIKE', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-06 12:33:10.588821', 12,
+             '2024-09-09 14:40:48.247081', 12, '2024-03-28 19:41:53', 8,
+             'MOTORBIKE', 2, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-28 21:34:45.827510', 12, '2024-09-07 02:59:28.900939', 12,
+         '2024-06-28 20:54:23', 9, 'FOOT', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-10 02:19:55.675759', 12,
+             '2024-06-25 09:28:01.655933', 12, '2024-07-21 19:49:12', 6,
+             'MOTORBIKE', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-20 18:01:46.867133', 12, '2024-09-06 19:25:43.283128', 12,
+         '2024-09-04 06:54:19', 2, 'TRUCK', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-08 22:43:15.041683', 12, '2024-07-21 03:49:10.888466', 12,
+         '2024-06-20 06:46:38', 4, 'TRUCK', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-15 04:53:21.278270', 12, '2024-05-17 03:56:26.875638', 12,
+         '2024-05-20 10:44:31', 3, 'PICKUP', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-11 17:54:51.021984', 12,
+             '2024-04-20 05:29:04.197065', 12, '2024-10-05 21:01:38', 8,
+             'PICKUP', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-25 18:05:29.296331', 12, '2024-04-10 15:12:18.752445', 12,
+         '2024-01-17 05:45:37', 7, 'TRUCK', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-29 14:37:50.527039', 12, '2024-03-15 21:06:05.101709', 12,
+         '2024-04-03 07:50:17', 7, 'FOOT', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-15 04:53:21.278270', 12,
+             '2024-10-02 05:40:36.119635', 12, '2024-05-20 11:44:31', 6,
+             'PICKUP', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-23 07:53:40.487509', 12,
+             '2024-07-21 07:09:49.756111', 12, '2024-09-09 13:30:06', 1,
+             'FOOT', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-06 16:14:51.725413', 12,
+             '2024-03-24 09:20:23.986211', 12, '2024-05-12 19:53:44', 9,
+             'TRUCK', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-06 05:02:20.666321', 12,
+             '2024-01-07 01:18:42.084453', 12, '2024-07-10 23:01:35', 2,
+             'TRUCK', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-03 21:04:36.544803', 12, '2024-04-05 13:19:47.703197', 12,
+         '2024-07-29 20:41:57', 1, 'FOOT', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-05 18:06:12.117968', 12, '2024-03-02 03:47:30.044121', 12,
+         '2024-07-22 09:45:20', 5, 'FOOT', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-15 15:34:31.703970', 12,
+             '2024-05-18 12:09:11.104546', 12, '2024-01-11 03:08:52', 3,
+             'MOTORBIKE', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-26 06:01:03.608948', 12, '2024-02-28 15:09:40.666370', 12,
+         '2024-09-11 08:22:24', 10, 'TRUCK', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-25 09:56:17.013341', 12, '2024-04-15 18:36:28.566039', 12,
+         '2024-08-04 17:09:20', 3, 'MOTORBIKE', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-29 04:32:25.715113', 12, '2024-03-12 14:00:04.643020', 12,
+         '2024-01-30 23:00:01', 7, 'TRUCK', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-24 09:39:09.465170', 12, '2024-05-03 10:24:03.125629', 12,
+         '2024-04-07 08:59:55', 4, 'MOTORBIKE', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-13 08:47:13.309350', 12,
+             '2024-09-07 19:55:26.038025', 12, '2024-05-26 05:38:39', 2,
+             'TRUCK', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-27 08:47:09.819160', 12,
+             '2024-10-11 05:25:31.907281', 12, '2024-01-23 06:33:13', 4,
+             'TRUCK', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-20 16:40:00.697789', 12, '2024-02-18 08:25:11.659598', 12,
+         '2024-01-07 09:02:09', 2, 'MOTORBIKE', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-27 20:20:09.452286', 12,
+             '2024-07-28 00:28:48.228105', 12, '2024-06-27 23:29:32', 1,
+             'FOOT', 4, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-24 10:38:18.704049', 12, '2024-03-28 19:24:37.003911', 12,
+         '2024-06-11 01:14:33', 4, 'PICKUP', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-02 12:01:17.037400', 12, '2024-09-14 02:35:02.487914', 12,
+         '2024-03-24 19:32:45', 7, 'PICKUP', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-03 20:22:15.437033', 12,
+             '2024-10-27 20:34:19.063522', 12, '2024-02-21 11:44:31', 5,
+             'MOTORBIKE', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-11-02 13:25:10.407541', 12, '2024-01-30 11:12:34.233540', 12,
+         '2024-09-16 21:54:54', 6, 'FOOT', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-27 11:00:13.930670', 12, '2024-10-10 08:34:05.314212', 12,
+         '2024-07-09 12:50:46', 1, 'MOTORBIKE', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-13 01:58:50.164503', 12, '2024-06-20 22:08:55.981291', 12,
+         '2024-01-15 13:26:43', 7, 'FOOT', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-02-10 23:44:30.061052', 12,
+             '2024-05-28 20:49:07.315621', 12, '2024-08-23 06:49:22', 3,
+             'PICKUP', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-17 01:28:42.364779', 12,
+             '2024-10-30 06:51:13.584264', 12, '2024-05-24 08:40:01', 8,
+             'CAR', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-25 11:01:00.388446', 12, '2024-08-10 12:56:39.318935', 12,
+         '2024-02-15 15:42:33', 10, 'FOOT', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-24 09:39:09.465170', 12,
+             '2024-01-03 01:31:32.682515', 12, '2024-04-07 09:59:55', 5,
+             'MOTORBIKE', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-19 21:51:57.273698', 12, '2024-04-24 19:38:59.901710', 12,
+         '2024-06-17 18:21:17', 1, 'CAR', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'UX3765');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-19 18:27:06.591296', 12, '2024-06-17 06:06:16.958509', 12,
+         '2024-10-26 10:27:22', 10, 'FOOT', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-25 18:05:29.296331', 12,
+             '2024-01-02 13:10:10.119429', 12, '2024-01-17 08:45:37', 4,
+             'TRUCK', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-20 18:01:46.867133', 12,
+             '2024-08-18 11:14:59.185577', 12, '2024-09-04 09:54:19', 2,
+             'TRUCK', 7, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-04 12:18:55.029933', 12, '2024-08-08 08:01:44.052986', 12,
+         '2024-08-10 20:41:15', 3, 'CAR', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'MW2355');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-25 17:43:23.693251', 12, '2024-09-05 21:06:14.877211', 12,
+         '2024-02-28 15:28:29', 8, 'CAR', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'ZW6807');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-10 22:27:04.314565', 12, '2024-03-19 13:34:50.527355', 12,
+         '2024-10-11 08:04:36', 1, 'FOOT', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-29 14:16:01.737431', 12, '2024-05-01 20:37:07.775257', 12,
+         '2024-06-06 16:53:06', 6, 'PICKUP', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-28 21:34:45.827510', 12,
+             '2024-04-26 12:57:54.053315', 12, '2024-06-28 21:54:23', 9,
+             'FOOT', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-25 09:56:17.013341', 12,
+             '2024-09-04 09:43:23.841176', 12, '2024-08-04 18:09:20', 3,
+             'MOTORBIKE', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-16 19:44:06.303382', 12, '2024-04-04 11:46:05.559677', 12,
+         '2024-06-04 10:50:46', 5, 'CAR', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'ZZ5035');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-27 11:16:45.290488', 12, '2024-09-20 07:29:49.876283', 12,
+         '2024-10-30 12:49:58', 6, 'FOOT', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-02-12 11:13:35.074635', 12,
+             '2024-10-23 11:09:50.462423', 12, '2024-07-12 19:34:00', 10,
+             'MOTORBIKE', 4, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-02-16 11:30:17.570379', 12,
+             '2024-01-11 00:03:23.576077', 12, '2024-04-05 14:45:17', 1,
+             'TRUCK', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-13 15:52:42.035695', 12,
+             '2024-10-20 02:37:16.570518', 12, '2024-05-01 06:26:37', 7,
+             'PICKUP', 4, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-11 16:41:00.777181', 12, '2024-05-05 02:53:01.972555', 12,
+         '2024-06-17 19:17:53', 10, 'MOTORBIKE', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-03 00:39:30.656207', 12, '2024-01-06 17:15:25.665576', 12,
+         '2024-01-30 18:34:33', 8, 'PICKUP', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-02 12:01:17.037400', 12,
+             '2024-07-30 19:32:03.102755', 12, '2024-03-24 23:32:45', 6,
+             'PICKUP', 7, 'EXIT', false,
+             true, NULL, NULL, NULL, 'None');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-11 16:41:00.777181', 12,
+             '2024-10-21 23:22:16.240517', 12, '2024-06-17 22:17:53', 8,
+             'MOTORBIKE', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-11-02 13:25:10.407541', 12,
+             '2024-04-29 03:33:58.281338', 12, '2024-09-17 01:54:54', 10,
+             'FOOT', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-18 02:10:51.363216', 12, '2024-04-07 04:25:43.287404', 12,
+         '2024-03-27 21:44:55', 5, 'CAR', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'TI4239');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-20 21:49:54.277238', 12, '2024-07-26 07:18:24.888782', 12,
+         '2024-02-13 04:13:55', 1, 'FOOT', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-25 11:01:00.388446', 12,
+             '2024-06-25 17:19:13.591463', 12, '2024-02-15 16:42:33', 1,
+             'FOOT', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-03 00:39:30.656207', 12,
+             '2024-09-11 03:27:54.013698', 12, '2024-01-30 19:34:33', 3,
+             'PICKUP', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-03 23:35:46.624783', 12, '2024-09-01 09:59:05.357681', 12,
+         '2024-04-18 09:23:32', 3, 'CAR', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'FX5691');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-19 07:45:33.706357', 12, '2024-05-11 07:27:51.878747', 12,
+         '2024-05-09 00:29:01', 3, 'TRUCK', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-21 03:07:46.513113', 12, '2024-04-26 14:08:45.131519', 12,
+         '2024-09-02 23:58:00', 6, 'MOTORBIKE', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-17 19:28:23.273791', 12,
+             '2024-02-29 12:46:53.462032', 12, '2024-02-06 13:37:29', 2,
+             'PICKUP', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-03 21:04:36.544803', 12,
+             '2024-04-08 20:40:34.846533', 12, '2024-07-30 00:41:57', 4,
+             'FOOT', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-01 00:01:15.361341', 12, '2024-01-04 18:31:22.277119', 12,
+         '2024-06-03 18:22:27', 1, 'CAR', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'KX4725');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-05 18:06:12.117968', 12,
+             '2024-08-10 17:51:51.736572', 12, '2024-07-22 12:45:20', 9,
+             'FOOT', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-28 07:06:50.699128', 12,
+             '2024-08-14 11:38:08.384302', 12, '2024-04-10 09:15:57', 3,
+             'PICKUP', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-27 12:22:49.811508', 12,
+             '2024-02-22 05:13:50.226559', 12, '2024-03-30 09:16:52', 2,
+             'TRUCK', 4, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-02 17:45:23.114265', 12, '2024-07-24 05:47:51.754124', 12,
+         '2024-05-15 21:41:31', 6, 'TRUCK', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-21 03:07:46.513113', 12,
+             '2024-10-09 21:20:54.032450', 12, '2024-09-03 02:58:00', 5,
+             'MOTORBIKE', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-01 08:43:31.191960', 12,
+             '2024-03-24 04:27:33.274232', 12, '2024-04-09 20:04:20', 6,
+             'TRUCK', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-21 01:59:42.164989', 12, '2024-06-01 15:43:30.211631', 12,
+         '2024-09-28 09:40:08', 6, 'MOTORBIKE', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-08 19:46:46.281892', 12, '2024-06-12 05:18:20.678772', 12,
+         '2024-10-24 09:20:23', 3, 'TRUCK', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-19 06:52:55.185324', 12,
+             '2024-07-26 09:01:41.134260', 12, '2024-04-11 21:24:49', 6,
+             'FOOT', 2, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-30 01:19:08.457849', 12, '2024-09-09 02:07:33.809375', 12,
+         '2024-07-27 16:04:25', 10, 'TRUCK', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-03 23:35:46.624783', 12,
+             '2024-05-31 05:42:43.836793', 12, '2024-04-18 10:23:32', 5,
+             'CAR', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'FX5691');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-07 01:53:23.506075', 12, '2024-02-26 05:50:59.525442', 12,
+         '2024-06-27 22:40:16', 4, 'TRUCK', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-20 10:30:56.909308', 12, '2024-09-20 15:52:11.806489', 12,
+         '2024-08-22 09:49:01', 7, 'CAR', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'KL4525');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-29 08:15:35.602344', 12, '2024-04-05 17:03:46.474009', 12,
+         '2024-03-10 18:42:48', 1, 'CAR', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'BL9629');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-26 14:17:15.049114', 12, '2024-09-16 04:36:33.401024', 12,
+         '2024-10-30 12:43:52', 2, 'MOTORBIKE', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-25 17:43:23.693251', 12,
+             '2024-10-13 16:08:42.315387', 12, '2024-02-28 18:28:29', 8,
+             'CAR', 7, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-16 04:27:17.531928', 12, '2024-02-08 04:31:35.158131', 12,
+         '2024-06-18 14:29:32', 7, 'PICKUP', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-04 01:44:36.741278', 12, '2024-02-07 12:23:21.237296', 12,
+         '2024-02-25 03:06:48', 8, 'MOTORBIKE', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-24 10:38:18.704049', 12,
+             '2024-07-10 01:37:20.054825', 12, '2024-06-11 02:14:33', 10,
+             'PICKUP', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-04 23:27:01.184098', 12, '2024-09-02 12:27:23.249368', 12,
+         '2024-08-04 04:24:53', 7, 'FOOT', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-02-02 17:45:23.114265', 12,
+             '2024-07-27 11:10:59.486563', 12, '2024-05-16 01:41:31', 7,
+             'TRUCK', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-14 15:23:54.264033', 12, '2024-07-28 17:38:21.012332', 12,
+         '2024-05-21 13:19:56', 4, 'CAR', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'FB7763');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-04 01:44:36.741278', 12,
+             '2024-06-04 05:52:14.040518', 12, '2024-02-25 05:06:48', 7,
+             'MOTORBIKE', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-09 16:54:00.806163', 12, '2024-08-20 10:35:26.353301', 12,
+         '2024-11-01 14:05:24', 5, 'PICKUP', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-14 17:38:46.258530', 12, '2024-02-27 07:27:46.705567', 12,
+         '2024-10-24 08:09:59', 2, 'PICKUP', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-04 05:16:50.402310', 12, '2024-04-04 13:44:06.702600', 12,
+         '2024-01-28 14:11:55', 8, 'FOOT', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-04 12:18:55.029933', 12,
+             '2024-08-14 16:49:44.136421', 12, '2024-08-10 23:41:15', 7,
+             'CAR', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-01 17:52:39.462528', 12, '2024-07-23 02:22:55.230081', 12,
+         '2024-07-06 19:25:35', 8, 'MOTORBIKE', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-04 22:06:55.658370', 12, '2024-08-16 10:57:33.457837', 12,
+         '2024-05-16 04:08:54', 2, 'MOTORBIKE', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-07 01:53:23.506075', 12,
+             '2024-10-14 21:54:36.199048', 12, '2024-06-27 23:40:16', 8,
+             'TRUCK', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-18 07:10:24.885564', 12, '2024-03-25 01:51:29.066736', 12,
+         '2024-02-22 17:22:42', 5, 'FOOT', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-10 22:27:04.314565', 12,
+             '2024-01-21 10:54:47.125106', 12, '2024-10-11 12:04:36', 5,
+             'FOOT', 7, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-09 11:44:13.148887', 12, '2024-01-15 01:38:06.992600', 12,
+         '2024-10-23 03:55:11', 5, 'MOTORBIKE', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-29 14:16:01.737431', 12,
+             '2024-06-06 23:37:20.843403', 12, '2024-06-06 17:53:06', 10,
+             'PICKUP', 7, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-14 08:58:15.533698', 12, '2024-03-24 13:39:01.550121', 12,
+         '2024-10-07 23:23:37', 10, 'FOOT', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-28 06:10:10.008104', 12, '2024-05-11 23:45:51.348273', 12,
+         '2024-05-24 04:52:32', 5, 'MOTORBIKE', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-05 12:05:44.037947', 12, '2024-07-11 08:43:36.904327', 12,
+         '2024-08-10 23:07:14', 10, 'CAR', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NP8299');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-05 12:05:44.037947', 12,
+             '2024-08-19 11:11:12.456087', 12, '2024-08-11 02:07:14', 1,
+             'CAR', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NP8299');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-02 06:45:53.777795', 12, '2024-10-19 01:40:32.779673', 12,
+         '2024-09-18 03:39:48', 5, 'FOOT', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-20 17:33:20.956504', 12, '2024-06-08 13:20:05.440938', 12,
+         '2024-06-20 14:40:29', 3, 'FOOT', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-12 13:07:08.811527', 12,
+             '2024-09-05 07:54:04.135126', 12, '2024-08-16 05:00:07', 8,
+             'FOOT', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-05 15:05:11.032119', 12, '2024-09-13 01:46:15.456937', 12,
+         '2024-07-03 19:51:33', 7, 'PICKUP', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-26 14:59:53.954434', 12,
+             '2024-04-14 14:34:10.770014', 12, '2024-02-04 18:01:08', 9,
+             'CAR', 4, 'EXIT', false,
+             false, NULL, NULL, NULL, 'SE1275');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-20 23:55:37.360918', 12, '2024-01-16 06:08:27.961020', 12,
+         '2024-02-25 12:26:34', 1, 'FOOT', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-04 05:16:50.402310', 12,
+             '2024-05-17 08:55:44.487404', 12, '2024-01-28 17:11:55', 6,
+             'FOOT', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-12 04:12:59.344930', 12, '2024-06-25 22:21:58.628922', 12,
+         '2024-08-04 01:45:11', 7, 'CAR', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'CQ8823');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-16 19:44:06.303382', 12,
+             '2024-07-25 10:52:51.084994', 12, '2024-06-04 13:50:46', 2,
+             'CAR', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-07 21:43:56.398673', 12, '2024-08-12 05:38:06.545637', 12,
+         '2024-10-12 22:50:44', 10, 'MOTORBIKE', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-22 02:29:59.400983', 12, '2024-07-17 05:40:14.324495', 12,
+         '2024-06-07 20:22:58', 2, 'MOTORBIKE', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-16 11:25:11.590224', 12, '2024-09-18 09:10:07.787084', 12,
+         '2024-05-28 19:31:46', 5, 'CAR', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'CS4456');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-27 06:45:48.576424', 12, '2024-05-14 06:57:58.205172', 12,
+         '2024-10-19 01:15:24', 10, 'CAR', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'IE2682');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-13 13:47:07.604827', 12, '2024-08-10 23:03:09.042808', 12,
+         '2024-02-16 13:19:32', 6, 'PICKUP', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-31 09:46:14.771872', 12,
+             '2024-02-23 03:45:53.870560', 12, '2024-02-16 04:58:25', 3,
+             'TRUCK', 4, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-24 16:15:31.546575', 12, '2024-07-16 22:46:09.471263', 12,
+         '2024-01-14 15:48:34', 1, 'CAR', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'DS4898');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-07 01:13:50.528886', 12, '2024-04-05 15:18:21.723329', 12,
+         '2024-02-28 16:42:49', 7, 'PICKUP', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-27 19:32:46.532361', 12, '2024-05-09 08:08:41.201479', 12,
+         '2024-01-15 13:14:37', 2, 'CAR', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'PS6303');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-13 11:56:42.252628', 12, '2024-07-28 19:31:26.402990', 12,
+         '2024-01-17 19:33:15', 7, 'FOOT', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-28 08:16:59.303004', 12, '2024-06-10 13:31:24.567615', 12,
+         '2024-02-08 13:38:10', 10, 'FOOT', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-05-27 19:32:46.532361', 12,
+             '2024-03-07 21:57:08.141774', 12, '2024-01-15 17:14:37', 4,
+             'CAR', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-20 17:33:20.956504', 12,
+             '2024-07-08 19:00:37.178837', 12, '2024-06-20 15:40:29', 6,
+             'FOOT', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-02-16 11:25:11.590224', 12,
+             '2024-09-14 15:54:10.248448', 12, '2024-05-28 23:31:46', 9,
+             'CAR', 8, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-06 15:48:40.577946', 12, '2024-04-13 23:58:21.787736', 12,
+         '2024-06-17 12:55:11', 7, 'TRUCK', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-06 17:41:17.081463', 12, '2024-07-19 10:52:32.715122', 12,
+         '2024-02-28 23:28:34', 6, 'CAR', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'RP1008');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-20 10:30:56.909308', 12,
+             '2024-06-05 05:06:12.288414', 12, '2024-08-22 10:49:01', 10,
+             'CAR', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'KL4525');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-24 16:15:31.546575', 12,
+             '2024-04-25 05:47:20.065982', 12, '2024-01-14 19:48:34', 2,
+             'CAR', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-11 08:51:18.048863', 12, '2024-03-14 12:21:54.825341', 12,
+         '2024-10-22 11:40:51', 8, 'CAR', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'LE9882');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-28 22:21:18.608538', 12,
+             '2024-07-12 04:40:40.883868', 12, '2024-09-01 02:00:23', 8,
+             'CAR', 4, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-02-27 13:58:25.336275', 12,
+             '2024-02-25 20:25:48.297470', 12, '2024-06-17 22:11:08', 1,
+             'FOOT', 2, 'EXIT', false,
+             true, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-17 17:20:22.003591', 12, '2024-06-19 04:14:05.987284', 12,
+         '2024-02-22 15:46:15', 5, 'FOOT', 7, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-15 10:19:42.330492', 12, '2024-05-10 21:29:49.440935', 12,
+         '2024-05-05 06:49:44', 9, 'TRUCK', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-11 16:30:19.894781', 12, '2024-06-11 03:28:11.122605', 12,
+         '2024-07-27 02:02:42', 6, 'MOTORBIKE', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-17 11:19:01.259886', 12, '2024-07-10 01:05:47.938926', 12,
+         '2024-04-29 16:13:44', 7, 'CAR', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'DH1313');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-30 03:43:17.616138', 12, '2024-07-13 08:18:29.136641', 12,
+         '2024-06-23 01:18:59', 8, 'PICKUP', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-28 21:33:35.227525', 12, '2024-04-04 12:26:40.838056', 12,
+         '2024-03-12 09:40:39', 4, 'FOOT', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-10-13 11:45:46.139120', 12, '2024-09-18 08:07:43.249590', 12,
+         '2024-05-08 16:30:17', 9, 'PICKUP', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-11 15:09:43.889626', 12, '2024-09-24 09:45:10.302149', 12,
+         '2024-04-29 17:31:09', 4, 'TRUCK', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-01 03:12:14.377989', 12, '2024-02-28 07:46:08.207705', 12,
+         '2024-09-07 00:12:17', 1, 'CAR', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'UV8822');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-01 03:12:14.377989', 12,
+             '2024-02-29 17:06:08.912209', 12, '2024-09-07 02:12:17', 6,
+             'CAR', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-13 11:56:42.252628', 12,
+             '2024-08-06 12:34:48.103097', 12, '2024-01-17 21:33:15', 10,
+             'FOOT', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-01-26 22:31:14.245238', 12,
+             '2024-06-23 03:40:26.569454', 12, '2024-10-06 06:56:46', 3,
+             'CAR', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-13 01:24:04.614751', 12,
+             '2024-08-10 23:55:00.269205', 12, '2024-01-03 10:45:59', 10,
+             'FOOT', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-02 07:50:07.178941', 12,
+             '2024-09-11 11:39:59.678132', 12, '2024-03-04 04:11:28', 6,
+             'PICKUP', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-16 01:02:09.743246', 12,
+             '2024-02-29 01:00:17.810579', 12, '2024-05-26 14:27:11', 3,
+             'MOTORBIKE', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-23 14:02:07.649906', 12, '2024-01-16 23:26:55.309221', 12,
+         '2024-01-26 11:59:53', 3, 'CAR', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'YU3184');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-07 01:13:50.528886', 12,
+             '2024-09-18 21:39:58.707949', 12, '2024-02-28 18:42:49', 9,
+             'PICKUP', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-23 02:10:52.673370', 12,
+             '2024-08-28 06:28:49.629120', 12, '2024-07-07 00:35:42', 2,
+             'TRUCK', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-16 00:12:07.124109', 12,
+             '2024-09-03 17:49:52.964567', 12, '2024-03-20 18:35:04', 6,
+             'MOTORBIKE', 2, 'EXIT', false,
+             true, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-06-17 17:27:35.849452', 12, '2024-01-22 09:28:26.415597', 12,
+         '2024-06-21 14:40:17', 8, 'FOOT', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-14 23:40:42.513381', 12, '2024-05-25 11:41:13.343849', 12,
+         '2024-08-23 19:12:40', 2, 'CAR', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'DK5970');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-14 15:23:54.264033', 12,
+             '2024-01-31 04:44:04.162576', 12, '2024-05-21 16:19:56', 4,
+             'CAR', 7, 'EXIT', false,
+             false, NULL, NULL, NULL, 'FB7763');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-10-29 08:15:35.602344', 12,
+             '2024-08-31 01:55:27.098529', 12, '2024-03-10 22:42:48', 5,
+             'CAR', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'BL9629');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-08-14 23:40:42.513381', 12,
+             '2024-06-22 13:53:03.190008', 12, '2024-08-23 21:12:40', 4,
+             'CAR', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-13 06:17:39.584816', 12, '2024-03-09 08:17:03.873266', 12,
+         '2024-03-01 11:04:47', 10, 'PICKUP', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-28 03:21:18.305026', 12, '2024-07-04 23:53:50.437078', 12,
+         '2024-02-17 10:35:45', 7, 'FOOT', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-27 21:40:24.048826', 12,
+             '2024-09-18 02:37:54.094400', 12, '2024-04-27 01:40:44', 7,
+             'FOOT', 6, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-28 21:48:24.204624', 12, '2024-08-15 17:50:26.299152', 12,
+         '2024-01-07 16:48:45', 7, 'CAR', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'YA5300');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-31 20:01:51.820530', 12, '2024-09-08 21:25:58.114602', 12,
+         '2024-06-03 07:37:47', 7, 'FOOT', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-07 00:33:32.707590', 12,
+             '2024-06-09 06:30:16.460384', 12, '2024-08-04 08:02:36', 1,
+             'CAR', 4, 'EXIT', false,
+             false, NULL, NULL, NULL, 'HT3387');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-12 07:38:25.254692', 12, '2024-04-21 21:34:06.313305', 12,
+         '2024-07-09 23:57:09', 4, 'TRUCK', 1, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-04-22 19:12:36.805373', 12, '2024-05-30 04:48:28.615498', 12,
+         '2024-02-05 04:20:37', 5, 'FOOT', 3, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-03-05 07:19:26.961889', 12, '2024-09-03 08:48:36.721979', 12,
+         '2024-05-27 08:03:22', 3, 'PICKUP', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-31 20:01:51.820530', 12,
+             '2024-02-22 22:42:40.431342', 12, '2024-06-03 10:37:47', 3,
+             'FOOT', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-12 14:59:54.541545', 12,
+             '2024-03-27 13:40:38.069051', 12, '2024-08-12 02:18:25', 4,
+             'TRUCK', 4, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-07 23:52:13.730826', 12,
+             '2024-10-17 12:16:05.730289', 12, '2024-07-22 16:05:15', 3,
+             'TRUCK', 4, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-16 00:43:15.495722', 12, '2024-06-11 09:49:55.832969', 12,
+         '2024-03-26 04:40:42', 10, 'CAR', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'IP9438');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-05 06:26:24.837189', 12, '2024-09-08 15:42:53.067386', 12,
+         '2024-08-29 19:26:17', 4, 'FOOT', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-21 19:46:31.078440', 12, '2024-06-17 20:33:47.025938', 12,
+         '2024-05-16 07:59:54', 4, 'CAR', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'SE6426');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-05 04:49:27.255911', 12, '2024-05-07 18:01:55.369713', 12,
+         '2024-10-21 00:50:06', 8, 'TRUCK', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-07-28 08:16:59.303004', 12,
+             '2024-08-17 10:03:47.534070', 12, '2024-02-08 17:38:10', 8,
+             'FOOT', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-05-11 18:42:14.975223', 12, '2024-03-19 02:42:40.429175', 12,
+         '2024-03-10 02:47:25', 5, 'PICKUP', 10, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-17 02:11:35.413721', 12,
+             '2024-08-28 23:24:24.711056', 12, '2024-08-30 07:15:56', 6,
+             'MOTORBIKE', 2, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-13 09:26:22.364332', 12, '2024-08-12 17:35:36.006906', 12,
+         '2024-07-07 08:05:25', 10, 'MOTORBIKE', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-03-28 21:33:35.227525', 12,
+             '2024-02-10 07:02:26.718713', 12, '2024-03-12 12:40:39', 9,
+             'FOOT', 5, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-27 21:52:23.094387', 12, '2024-04-15 03:46:27.281341', 12,
+         '2024-05-12 21:01:07', 3, 'TRUCK', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-12 07:38:25.254692', 12,
+             '2024-11-01 09:19:08.404743', 12, '2024-07-10 01:57:09', 3,
+             'TRUCK', 1, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-09-12 16:22:03.560365', 12, '2024-09-24 21:42:39.884549', 12,
+         '2024-09-23 22:04:42', 4, 'CAR', 4, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'ZQ9746');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-06-26 14:17:15.049114', 12,
+             '2024-06-09 07:46:40.492957', 12, '2024-10-30 14:43:52', 4,
+             'MOTORBIKE', 10, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-08-27 20:54:29.586970', 12, '2024-09-12 14:37:29.904135', 12,
+         '2024-01-25 18:56:24', 5, 'FOOT', 5, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-09-17 11:19:01.259886', 12,
+             '2024-02-24 02:39:12.360473', 12, '2024-04-29 18:13:44', 10,
+             'CAR', 9, 'EXIT', false,
+             false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-04 07:11:53.810149', 12, '2024-05-25 14:54:14.893577', 12,
+         '2024-01-14 15:56:40', 7, 'PICKUP', 6, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-07-07 23:14:39.860562', 12, '2024-08-06 20:43:03.545854', 12,
+         '2024-07-04 01:59:04', 2, 'TRUCK', 9, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-01-09 21:02:48.362022', 12, '2024-01-07 11:13:29.099507', 12,
+         '2024-04-19 22:26:42', 1, 'FOOT', 8, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'NULL');
+
+
+        INSERT INTO accesses
+        (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+         vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+         supplier_employee_id, vehicle_description, vehicle_reg)
+        VALUES
+        ('2024-02-25 19:05:48.881422', 12, '2024-01-08 04:07:01.932758', 12,
+         '2024-07-22 20:17:56', 1, 'CAR', 2, 'ENTRY',
+         false, false, NULL, NULL, NULL, 'ZW9014');
+
+
+            INSERT INTO accesses
+            (created_date, created_user, last_updated_date, last_updated_user, action_date, plot_id,
+             vehicle_type, auth_id, action, is_inconsistent, notified, comments,
+             supplier_employee_id, vehicle_description, vehicle_reg)
+            VALUES
+            ('2024-04-22 19:12:36.805373', 12,
+             '2024-05-15 00:59:03.743782', 12, '2024-02-05 06:20:37', 6,
+             'FOOT', 3, 'EXIT', false,
+             false, NULL, NULL, NULL, 'None');
+
+GO
+
+WITH numbered_accesses AS (
+  SELECT
+    id,
+    auth_id,
+    action,
+    action_date,
+    @row_num := IF(
+      @prev_auth = auth_id AND @prev_action = action,
+      @row_num + 1,
+      1
+    ) AS consecutive_count,
+    @prev_auth := auth_id AS dummy1,
+    @prev_action := action AS dummy2
+  FROM (
+    SELECT id, auth_id, action, action_date
+    FROM accesses
+    ORDER BY auth_id, action_date
+  ) ordered_accesses
+  CROSS JOIN (SELECT @row_num := 1, @prev_auth := NULL, @prev_action := NULL) vars
+)
+UPDATE accesses a
+INNER JOIN numbered_accesses na ON a.id = na.id
+SET a.is_inconsistent = TRUE
+WHERE na.consecutive_count > 1;

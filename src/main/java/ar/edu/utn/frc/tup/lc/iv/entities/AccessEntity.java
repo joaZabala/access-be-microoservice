@@ -102,6 +102,12 @@ public class AccessEntity extends AuditBaseEntity {
     @Column(name = "comments")
     private String comments;
     /**
+     * It means that an employee was
+     * notified of fines for leaving late.
+     */
+    @Column(name = "notified")
+    private Boolean notified;
+    /**
      * Is inconsistent access.
      */
     @Column(name = "is_inconsistent")
