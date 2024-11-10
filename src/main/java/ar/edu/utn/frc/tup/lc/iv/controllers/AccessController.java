@@ -235,4 +235,19 @@ public class AccessController {
         }
         return accessesService.getAccessGrouped(from, to, visitorType, actionTypes, group);
     }
+
+    @GetMapping("/inconsistent")
+    public Long getAccessesVisitorType(@RequestParam
+                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                     LocalDateTime from,
+                                                     @RequestParam
+                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                     LocalDateTime to,
+                                                     @RequestParam(required = false) VisitorType visitorType) {
+
+        if (from.isAfter(to)) {
+            throw new IllegalArgumentException("La fecha 'desde' no puede ser posterior a la fecha 'hasta'");
+        }
+        return accessesService.getInconsistentAccessCount(from, to, visitorType);
+    }
 }

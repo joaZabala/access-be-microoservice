@@ -113,4 +113,8 @@ public interface IAccessesService {
                                         ActionTypes actionType,
                                         GroupByPeriod group
     );
+
+    Long getInconsistentAccessCount(LocalDateTime from,
+                                    LocalDateTime to,
+                                    VisitorType visitorType);
 }

@@ -167,6 +167,12 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
                                          @Param("action") ActionTypes action,
                                          @Param("dateFormat") String dateFormat);
 
-
+    @Query("SELECT COUNT(a) AS count "
+            + "FROM AccessEntity a "
+            + "WHERE a.actionDate BETWEEN :fromDate AND :toDate and "
+            + "(:visitorType is null or a.auth.visitorType = :visitorType) and a.isInconsistent = true")
+    Long findAccessInconsistentCounts(@Param("fromDate") LocalDateTime fromDate,
+                                           @Param("toDate") LocalDateTime toDate,
+                                           @Param("visitorType") VisitorType visitorType);
 }
 

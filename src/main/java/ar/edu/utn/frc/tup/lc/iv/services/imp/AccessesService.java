@@ -27,7 +27,10 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
 import java.util.Map;
@@ -329,40 +332,63 @@ public class AccessesService implements IAccessesService {
                                                ) {
 
         String dateFormat;
+        DateTimeFormatter formatter;
+        ChronoUnit unit;
+
         switch (group) {
             case DAY:
                 dateFormat = "%Y-%m-%d";
+                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                unit = ChronoUnit.DAYS;
                 break;
             case WEEK:
                 dateFormat = "%Y-%u";
+                formatter = DateTimeFormatter.ofPattern("yyyy-ww");
+                unit = ChronoUnit.WEEKS;
                 break;
             case MONTH:
                 dateFormat = "%Y-%m";
+                formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+                unit = ChronoUnit.MONTHS;
                 break;
             case YEAR:
                 dateFormat = "%Y";
+                formatter = DateTimeFormatter.ofPattern("yyyy");
+                unit = ChronoUnit.YEARS;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid period for grouping: " + group);
         }
 
-        List<Object[]> results = accessesRepository.findAccessCountsByGroup(from,
-                                                                            to,
-                                                                            visitorType,
-                                                                            actionType,
-                                                                            dateFormat);
+        List<Object[]> results = accessesRepository.findAccessCountsByGroup(from, to, visitorType, actionType, dateFormat);
 
         Map<String, Long> accessMap = new HashMap<>();
-
         for (Object[] row : results) {
             String period = (String) row[0];
             Long accessCount = ((Number) row[1]).longValue();
-
             accessMap.put(period, accessCount);
         }
 
-        return accessMap.entrySet().stream()
-                .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue(), null))
-                .collect(Collectors.toList());
+        List<DashboardDTO> dashboardData = new ArrayList<>();
+        LocalDateTime current = from;
+        while (!current.isAfter(to)) {
+            String periodKey = current.format(formatter);
+            Long accessCount = accessMap.getOrDefault(periodKey, 0L);
+            dashboardData.add(new DashboardDTO(periodKey, accessCount, null));
+            current = current.plus(1, unit);
+        }
+
+        dashboardData.sort(Comparator.comparing(DashboardDTO::getKey));
+
+        return dashboardData;
+
+    }
+
+    @Override
+    public Long getInconsistentAccessCount(LocalDateTime from,
+                                                         LocalDateTime to,
+                                                         VisitorType visitorType) {
+        return accessesRepository.findAccessInconsistentCounts(from, to, visitorType);
+
     }
 }

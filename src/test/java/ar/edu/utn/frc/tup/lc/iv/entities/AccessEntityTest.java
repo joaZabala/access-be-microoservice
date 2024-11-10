@@ -49,7 +49,8 @@ class AccessEntityTest {
                 vehicleDescription,
                 plotId,
                 supplierEmployeeId,
-                comments
+                comments,
+                false
         );
 
         assertEquals(accessId, access.getAccessId());
