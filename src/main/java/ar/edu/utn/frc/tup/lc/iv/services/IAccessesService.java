@@ -108,6 +108,15 @@ public interface IAccessesService {
      * @return a list of {@link DashboardDTO}  access counts per visitor type
      */
     List<DashboardDTO> getAccessesByVisitor(LocalDateTime from, LocalDateTime to);
+    /**
+     * @param from the start date/time (inclusive) of the range.
+     * @param to the end date/time (inclusive) of the range.
+     * @param visitorType the type of visitor for filtering (optional).
+     * @param actionType the type of action for filtering (optional).
+     * @param group the period to group the results by (DAY, WEEK, MONTH, YEAR).
+     * @param dataType the type of data to retrieve (ALL or INCONSISTENCIES).
+     * @return {@link DashboardDTO}  access counts grouped by the specified period.
+     */
     List<DashboardDTO> getAccessGrouped(LocalDateTime from,
                                         LocalDateTime to,
                                         VisitorType visitorType,
@@ -115,7 +124,14 @@ public interface IAccessesService {
                                         GroupByPeriod group,
                                         DataType dataType
     );
-
+    /**
+     * Retrieves the count of inconsistent access events within
+     * the specified date range and filtered by visitor type.
+     * @param from the start date and time (inclusive) of the range
+     * @param to the end date and time (inclusive) of the range
+     * @param visitorType the type of visitor to filter by
+     * @return the count of inconsistent access events that match the given criteria
+     */
     Long getInconsistentAccessCount(LocalDateTime from,
                                     LocalDateTime to,
                                     VisitorType visitorType);

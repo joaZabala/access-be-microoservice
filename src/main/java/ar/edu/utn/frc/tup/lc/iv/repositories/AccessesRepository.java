@@ -13,7 +13,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,6 +21,10 @@ import java.util.List;
  */
 @Repository
 public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
+    /** Represent a fromDate param. */
+    String  FROM_DATE = "fromDate";
+    /** Represent a toDate param. */
+    String  TO_DATE = "toDate";
     /**
      * Finds a list of AccessEntity by the given AuthEntity.
      *
@@ -97,8 +100,8 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
             + "WHERE action_date BETWEEN :fromDate AND :toDate "
             + "GROUP BY DATE_FORMAT(action_date, '%H:00') "
             + "ORDER BY hour", nativeQuery = true)
-    List<Object[]> findAccessCountsByHourNative(@Param("fromDate") LocalDateTime fromDate,
-                                                @Param("toDate") LocalDateTime toDate);
+    List<Object[]> findAccessCountsByHourNative(@Param(FROM_DATE) LocalDateTime fromDate,
+                                                @Param(TO_DATE) LocalDateTime toDate);
     /**
      * Retrieves access counts grouped by weekday within the specified date range.
      * @param fromDate the start date and time (inclusive).
@@ -113,8 +116,8 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
             + "WHERE action_date BETWEEN :fromDate AND :toDate "
             + "GROUP BY DAYOFWEEK(action_date) "
             + "ORDER BY dayOfWeek", nativeQuery = true)
-    List<Object[]> findAccessCountsByDayOfWeekNative(@Param("fromDate") LocalDateTime fromDate,
-                                                     @Param("toDate") LocalDateTime toDate);
+    List<Object[]> findAccessCountsByDayOfWeekNative(@Param(FROM_DATE) LocalDateTime fromDate,
+                                                     @Param(TO_DATE) LocalDateTime toDate);
 
     /**
      * Counts entries and exits between two dates.
@@ -143,14 +146,14 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
             + "WHERE a.action_date BETWEEN :fromDate AND :toDate "
             + "GROUP BY auth.visitor_type "
             + "ORDER BY visitorType", nativeQuery = true)
-    List<Object[]> findAccessCountsByVisitorType(@Param("fromDate") LocalDateTime fromDate,
-                                                 @Param("toDate") LocalDateTime toDate);
+    List<Object[]> findAccessCountsByVisitorType(@Param(FROM_DATE) LocalDateTime fromDate,
+                                                 @Param(TO_DATE) LocalDateTime toDate);
     /**
-     * Retrieves access counts grouped by day within the specified date range
      * @param fromDate   the start date and time (inclusive).
      * @param toDate     the end date and time (inclusive).
      * @param visitorType the type of visitor to filter by (nullable).
      * @param action     the action type to filter by (nullable).
+     * @param dateFormat represent a format of group
      * @return a list of Object arrays where each array contains:
      */
     @Query("SELECT FUNCTION('DATE_FORMAT', a.actionDate, :dateFormat) AS day, COUNT(a) AS count "
@@ -161,19 +164,19 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
             + "(:action is null or a.action = :action)"
             + "GROUP BY FUNCTION('DATE_FORMAT', a.actionDate, :dateFormat) "
             + "ORDER BY day")
-    List<Object[]> findAccessCountsByGroup(@Param("fromDate") LocalDateTime fromDate,
-                                         @Param("toDate") LocalDateTime toDate,
+    List<Object[]> findAccessCountsByGroup(@Param(FROM_DATE) LocalDateTime fromDate,
+                                         @Param(TO_DATE) LocalDateTime toDate,
                                          @Param("visitorType") VisitorType visitorType,
                                          @Param("action") ActionTypes action,
                                          @Param("dateFormat") String dateFormat);
 
     /**
-     * Retrieves access counts grouped by day within the specified date range
      * @param fromDate   the start date and time (inclusive).
      * @param toDate     the end date and time (inclusive).
      * @param visitorType the type of visitor to filter by (nullable).
      * @param action     the action type to filter by (nullable).
-     * @return a list of Object arrays where each array contains:
+     * @param dateFormat represent a format of group
+     * @return list an inconsistent access  grouped by period
      */
     @Query("SELECT FUNCTION('DATE_FORMAT', a.actionDate, :dateFormat) AS day, COUNT(a) AS count "
             + "FROM AccessEntity a "
@@ -183,18 +186,26 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
             + "(:action is null or a.action = :action) AND a.isInconsistent = true "
             + "GROUP BY FUNCTION('DATE_FORMAT', a.actionDate, :dateFormat) "
             + "ORDER BY day")
-    List<Object[]> findInconsistentAccessCountsByGroup(@Param("fromDate") LocalDateTime fromDate,
-                                                       @Param("toDate") LocalDateTime toDate,
+    List<Object[]> findInconsistentAccessCountsByGroup(@Param(FROM_DATE) LocalDateTime fromDate,
+                                                       @Param(TO_DATE) LocalDateTime toDate,
                                                        @Param("visitorType") VisitorType visitorType,
                                                        @Param("action") ActionTypes action,
                                                        @Param("dateFormat") String dateFormat);
 
+    /**
+     * Retrieves the count of inconsistent access
+     * events within the specified date range and filtered by visitor type.
+     * @param fromDate the start date and time (inclusive) of the range
+     * @param toDate the end date and time (inclusive) of the range
+     * @param visitorType the type of visitor to filter by
+     * @return the count of inconsistent access events that match the given criteria
+     */
     @Query("SELECT COUNT(a) AS count "
             + "FROM AccessEntity a "
             + "WHERE a.actionDate BETWEEN :fromDate AND :toDate and "
             + "(:visitorType is null or a.auth.visitorType = :visitorType) and a.isInconsistent = true")
-    Long findAccessInconsistentCounts(@Param("fromDate") LocalDateTime fromDate,
-                                           @Param("toDate") LocalDateTime toDate,
+    Long findAccessInconsistentCounts(@Param(FROM_DATE) LocalDateTime fromDate,
+                                           @Param(TO_DATE) LocalDateTime toDate,
                                            @Param("visitorType") VisitorType visitorType);
 }
 

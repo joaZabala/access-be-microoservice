@@ -323,7 +323,15 @@ public class AccessesService implements IAccessesService {
                 .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue()[0], entry.getValue()[1])) // entradas y salidas
                 .collect(Collectors.toList());
     }
-
+    /**
+     * @param from the start date/time (inclusive) of the range.
+     * @param to the end date/time (inclusive) of the range.
+     * @param visitorType the type of visitor for filtering (optional).
+     * @param actionType the type of action for filtering (optional).
+     * @param group the period to group the results by (DAY, WEEK, MONTH, YEAR).
+     * @param dataType the type of data to retrieve (ALL or INCONSISTENCIES).
+     * @return {@link DashboardDTO}  access counts grouped by the specified period.
+     */
     @Override
     public List<DashboardDTO> getAccessGrouped(LocalDateTime from,
                                                LocalDateTime to,
@@ -363,8 +371,7 @@ public class AccessesService implements IAccessesService {
         }
 
         List<Object[]> results = new ArrayList<>();
-        if (dataType == DataType.ALL)
-        {
+        if (dataType == DataType.ALL) {
             results = accessesRepository.findAccessCountsByGroup(from, to, visitorType, actionType, dateFormat);
         } else if (dataType == DataType.INCONSISTENCIES) {
             results = accessesRepository.findInconsistentAccessCountsByGroup(from,
@@ -395,7 +402,14 @@ public class AccessesService implements IAccessesService {
         return dashboardData;
 
     }
-
+    /**
+     * Retrieves the count of inconsistent access events
+     * within the specified date range and filtered by visitor type.
+     * @param from the start date and time (inclusive) of the range
+     * @param to the end date and time (inclusive) of the range
+     * @param visitorType the type of visitor to filter by
+     * @return the count of inconsistent access events that match the given criteria
+     */
     @Override
     public Long getInconsistentAccessCount(LocalDateTime from,
                                                          LocalDateTime to,

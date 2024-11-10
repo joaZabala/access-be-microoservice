@@ -61,7 +61,8 @@ public class AccessController {
 
     /** Response code for bad request errors. */
     private static final String BAD_REQUEST_CODE = "400";
-
+    /** Response code for invalid dates. */
+    private static final String INVALID_DATE = "La fecha 'desde' no puede ser posterior a la fecha 'hasta'";
     /**
      * Authorize visitor with authorized ranges.
      *
@@ -198,7 +199,7 @@ public class AccessController {
                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
 
         if (from.isAfter(to)) {
-            throw new IllegalArgumentException("La fecha 'desde' no puede ser posterior a la fecha 'hasta'");
+            throw new IllegalArgumentException(INVALID_DATE);
         }
         return accessesService.getAccessByDate(from, to);
     }
@@ -215,13 +216,21 @@ public class AccessController {
                                                      LocalDateTime to) {
 
         if (from.isAfter(to)) {
-            throw new IllegalArgumentException("La fecha 'desde' no puede ser posterior a la fecha 'hasta'");
+            throw new IllegalArgumentException(INVALID_DATE);
         }
         return accessesService.getAccessesByVisitor(from, to);
     }
-
+    /**
+     * @param from the start date/time (inclusive) of the range.
+     * @param to the end date/time (inclusive) of the range.
+     * @param visitorType the type of visitor for filtering (optional).
+     * @param actionTypes the type of action for filtering (optional).
+     * @param group the period to group the results by (DAY, WEEK, MONTH, YEAR).
+     * @param dataType the type of data to retrieve (ALL or INCONSISTENCIES).
+     * @return {@link DashboardDTO}  access counts grouped by the specified period.
+     */
     @GetMapping("/period")
-    public List<DashboardDTO> getAccessesVisitorType(@RequestParam
+    public List<DashboardDTO> getAccessesByPeriod(@RequestParam
                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                                                      LocalDateTime from,
                                                      @RequestParam
@@ -233,11 +242,18 @@ public class AccessController {
                                                      @RequestParam DataType dataType) {
 
         if (from.isAfter(to)) {
-            throw new IllegalArgumentException("La fecha 'desde' no puede ser posterior a la fecha 'hasta'");
+            throw new IllegalArgumentException(INVALID_DATE);
         }
         return accessesService.getAccessGrouped(from, to, visitorType, actionTypes, group, dataType);
     }
-
+    /**
+     * Retrieves the count of inconsistent access events
+     * within the specified date range and filtered by visitor type.
+     * @param from the start date and time (inclusive) of the range
+     * @param to the end date and time (inclusive) of the range
+     * @param visitorType the type of visitor to filter by
+     * @return the count of inconsistent access events that match the given criteria
+     */
     @GetMapping("/inconsistent")
     public Long getAccessesVisitorType(@RequestParam
                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -248,7 +264,7 @@ public class AccessController {
                                                      @RequestParam(required = false) VisitorType visitorType) {
 
         if (from.isAfter(to)) {
-            throw new IllegalArgumentException("La fecha 'desde' no puede ser posterior a la fecha 'hasta'");
+            throw new IllegalArgumentException(INVALID_DATE);
         }
         return accessesService.getInconsistentAccessCount(from, to, visitorType);
     }
