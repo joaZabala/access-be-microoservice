@@ -5,10 +5,12 @@ import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.EntryReport.EntryReport;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.DataType;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
+import ar.edu.utn.frc.tup.lc.iv.models.GroupByPeriod;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AccessesRepository;
 import ar.edu.utn.frc.tup.lc.iv.repositories.specification.accesses.AccessSpecification;
@@ -26,7 +28,10 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
 import java.util.Map;
@@ -301,7 +306,7 @@ public class AccessesService implements IAccessesService {
      * access counts per visitor type
      */
     @Override
-    public List<DashboardDTO> getAccessesByVisitor(LocalDate from, LocalDate to) {
+    public List<DashboardDTO> getAccessesByVisitor(LocalDateTime from, LocalDateTime to) {
         List<Object[]> results = accessesRepository.findAccessCountsByVisitorType(from, to);
 
         Map<String, Long[]> visitorTypeAccessMap = new HashMap<>();
@@ -317,5 +322,99 @@ public class AccessesService implements IAccessesService {
         return visitorTypeAccessMap.entrySet().stream()
                 .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue()[0], entry.getValue()[1])) // entradas y salidas
                 .collect(Collectors.toList());
+    }
+    /**
+     * @param from the start date/time (inclusive) of the range.
+     * @param to the end date/time (inclusive) of the range.
+     * @param visitorType the type of visitor for filtering (optional).
+     * @param actionType the type of action for filtering (optional).
+     * @param group the period to group the results by (DAY, WEEK, MONTH, YEAR).
+     * @param dataType the type of data to retrieve (ALL or INCONSISTENCIES).
+     * @return {@link DashboardDTO}  access counts grouped by the specified period.
+     */
+    @Override
+    public List<DashboardDTO> getAccessGrouped(LocalDateTime from,
+                                               LocalDateTime to,
+                                               VisitorType visitorType,
+                                               ActionTypes actionType,
+                                               GroupByPeriod group,
+                                               DataType dataType
+                                               ) {
+
+        String dateFormat;
+        DateTimeFormatter formatter;
+        ChronoUnit unit;
+
+        switch (group) {
+            case DAY:
+                dateFormat = "%Y-%m-%d";
+                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                unit = ChronoUnit.DAYS;
+                break;
+            case WEEK:
+                dateFormat = "%Y-%u";
+                formatter = DateTimeFormatter.ofPattern("yyyy-ww");
+                unit = ChronoUnit.WEEKS;
+                break;
+            case MONTH:
+                dateFormat = "%Y-%m";
+                formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+                unit = ChronoUnit.MONTHS;
+                break;
+            case YEAR:
+                dateFormat = "%Y";
+                formatter = DateTimeFormatter.ofPattern("yyyy");
+                unit = ChronoUnit.YEARS;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid period for grouping: " + group);
+        }
+
+        List<Object[]> results = new ArrayList<>();
+        if (dataType == DataType.ALL) {
+            results = accessesRepository.findAccessCountsByGroup(from, to, visitorType, actionType, dateFormat);
+        } else if (dataType == DataType.INCONSISTENCIES) {
+            results = accessesRepository.findInconsistentAccessCountsByGroup(from,
+                                                                            to,
+                                                                            visitorType,
+                                                                            actionType,
+                                                                            dateFormat);
+        }
+
+        Map<String, Long> accessMap = new HashMap<>();
+        for (Object[] row : results) {
+            String period = (String) row[0];
+            Long accessCount = ((Number) row[1]).longValue();
+            accessMap.put(period, accessCount);
+        }
+
+        List<DashboardDTO> dashboardData = new ArrayList<>();
+        LocalDateTime current = from;
+        while (!current.isAfter(to)) {
+            String periodKey = current.format(formatter);
+            Long accessCount = accessMap.getOrDefault(periodKey, 0L);
+            dashboardData.add(new DashboardDTO(periodKey, accessCount, null));
+            current = current.plus(1, unit);
+        }
+
+        dashboardData.sort(Comparator.comparing(DashboardDTO::getKey));
+
+        return dashboardData;
+
+    }
+    /**
+     * Retrieves the count of inconsistent access events
+     * within the specified date range and filtered by visitor type.
+     * @param from the start date and time (inclusive) of the range
+     * @param to the end date and time (inclusive) of the range
+     * @param visitorType the type of visitor to filter by
+     * @return the count of inconsistent access events that match the given criteria
+     */
+    @Override
+    public Long getInconsistentAccessCount(LocalDateTime from,
+                                                         LocalDateTime to,
+                                                         VisitorType visitorType) {
+        return accessesRepository.findAccessInconsistentCounts(from, to, visitorType);
+
     }
 }

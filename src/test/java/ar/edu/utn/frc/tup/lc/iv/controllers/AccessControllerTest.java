@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -229,8 +230,8 @@ class AccessControllerTest {
 
     @Test
     void getAccessesVisitorTypeSuccess() {
-        LocalDate from = LocalDate.of(2024, 1, 1);
-        LocalDate to = LocalDate.of(2024, 1, 31);
+        LocalDateTime from = LocalDateTime.of(2024, 1, 1, 0, 0, 0, 0);
+        LocalDateTime to = LocalDateTime.of(2024, 1, 31, 23, 59, 59, 999999999);
         List<DashboardDTO> expectedData = Arrays.asList(
                 new DashboardDTO("RESIDENT", 50L, 25L),
                 new DashboardDTO("VISITOR", 30L, 15L)
@@ -249,8 +250,8 @@ class AccessControllerTest {
 
     @Test
     void getAccessesVisitorTypeInvalidDateRange() {
-        LocalDate from = LocalDate.of(2024, 2, 1);
-        LocalDate to = LocalDate.of(2024, 1, 1); // from is after to
+        LocalDateTime from = LocalDateTime.of(2024, 2, 1, 0, 0, 0, 0);
+        LocalDateTime to = LocalDateTime.of(2024, 1, 1, 23, 59, 59, 999999999);// from is after to
 
         assertThrows(IllegalArgumentException.class, () ->
                 accessController.getAccessesVisitorType(from, to)

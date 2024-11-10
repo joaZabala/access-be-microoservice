@@ -42,7 +42,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Audited
-@AuditTable("access_audit")
+@AuditTable("accesses_audit")
 public class AccessEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Accesses.
@@ -101,4 +101,9 @@ public class AccessEntity extends AuditBaseEntity {
      */
     @Column(name = "comments")
     private String comments;
+    /**
+     * Is inconsistent access.
+     */
+    @Column(name = "is_inconsistent")
+    private Boolean isInconsistent;
 }

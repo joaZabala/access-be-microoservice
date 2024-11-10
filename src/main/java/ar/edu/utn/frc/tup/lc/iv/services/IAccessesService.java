@@ -3,10 +3,12 @@ package ar.edu.utn.frc.tup.lc.iv.services;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.EntryReport.EntryReport;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.DataType;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
+import ar.edu.utn.frc.tup.lc.iv.models.GroupByPeriod;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 
 import java.time.LocalDate;
@@ -105,5 +107,32 @@ public interface IAccessesService {
      * @param to   the end date and time (inclusive) of the range
      * @return a list of {@link DashboardDTO}  access counts per visitor type
      */
-    List<DashboardDTO> getAccessesByVisitor(LocalDate from, LocalDate to);
+    List<DashboardDTO> getAccessesByVisitor(LocalDateTime from, LocalDateTime to);
+    /**
+     * @param from the start date/time (inclusive) of the range.
+     * @param to the end date/time (inclusive) of the range.
+     * @param visitorType the type of visitor for filtering (optional).
+     * @param actionType the type of action for filtering (optional).
+     * @param group the period to group the results by (DAY, WEEK, MONTH, YEAR).
+     * @param dataType the type of data to retrieve (ALL or INCONSISTENCIES).
+     * @return {@link DashboardDTO}  access counts grouped by the specified period.
+     */
+    List<DashboardDTO> getAccessGrouped(LocalDateTime from,
+                                        LocalDateTime to,
+                                        VisitorType visitorType,
+                                        ActionTypes actionType,
+                                        GroupByPeriod group,
+                                        DataType dataType
+    );
+    /**
+     * Retrieves the count of inconsistent access events within
+     * the specified date range and filtered by visitor type.
+     * @param from the start date and time (inclusive) of the range
+     * @param to the end date and time (inclusive) of the range
+     * @param visitorType the type of visitor to filter by
+     * @return the count of inconsistent access events that match the given criteria
+     */
+    Long getInconsistentAccessCount(LocalDateTime from,
+                                    LocalDateTime to,
+                                    VisitorType visitorType);
 }
