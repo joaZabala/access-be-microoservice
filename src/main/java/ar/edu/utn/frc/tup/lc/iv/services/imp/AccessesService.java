@@ -9,6 +9,7 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
+import ar.edu.utn.frc.tup.lc.iv.models.GroupByPeriod;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AccessesRepository;
 import ar.edu.utn.frc.tup.lc.iv.repositories.specification.accesses.AccessSpecification;
@@ -301,7 +302,7 @@ public class AccessesService implements IAccessesService {
      * access counts per visitor type
      */
     @Override
-    public List<DashboardDTO> getAccessesByVisitor(LocalDate from, LocalDate to) {
+    public List<DashboardDTO> getAccessesByVisitor(LocalDateTime from, LocalDateTime to) {
         List<Object[]> results = accessesRepository.findAccessCountsByVisitorType(from, to);
 
         Map<String, Long[]> visitorTypeAccessMap = new HashMap<>();
@@ -316,6 +317,52 @@ public class AccessesService implements IAccessesService {
 
         return visitorTypeAccessMap.entrySet().stream()
                 .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue()[0], entry.getValue()[1])) // entradas y salidas
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DashboardDTO> getAccessGrouped(LocalDateTime from,
+                                               LocalDateTime to,
+                                               VisitorType visitorType,
+                                               ActionTypes actionType,
+                                               GroupByPeriod group
+                                               ) {
+
+        String dateFormat;
+        switch (group) {
+            case DAY:
+                dateFormat = "%Y-%m-%d";
+                break;
+            case WEEK:
+                dateFormat = "%Y-%u";
+                break;
+            case MONTH:
+                dateFormat = "%Y-%m";
+                break;
+            case YEAR:
+                dateFormat = "%Y";
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid period for grouping: " + group);
+        }
+
+        List<Object[]> results = accessesRepository.findAccessCountsByGroup(from,
+                                                                            to,
+                                                                            visitorType,
+                                                                            actionType,
+                                                                            dateFormat);
+
+        Map<String, Long> accessMap = new HashMap<>();
+
+        for (Object[] row : results) {
+            String period = (String) row[0];
+            Long accessCount = ((Number) row[1]).longValue();
+
+            accessMap.put(period, accessCount);
+        }
+
+        return accessMap.entrySet().stream()
+                .map(entry -> new DashboardDTO(entry.getKey(), entry.getValue(), null))
                 .collect(Collectors.toList());
     }
 }

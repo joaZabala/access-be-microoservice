@@ -143,7 +143,30 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
             + "WHERE a.action_date BETWEEN :fromDate AND :toDate "
             + "GROUP BY auth.visitor_type "
             + "ORDER BY visitorType", nativeQuery = true)
-    List<Object[]> findAccessCountsByVisitorType(@Param("fromDate") LocalDate fromDate,
-                                                 @Param("toDate") LocalDate toDate);
+    List<Object[]> findAccessCountsByVisitorType(@Param("fromDate") LocalDateTime fromDate,
+                                                 @Param("toDate") LocalDateTime toDate);
+    /**
+     * Retrieves access counts grouped by day within the specified date range
+     * @param fromDate   the start date and time (inclusive).
+     * @param toDate     the end date and time (inclusive).
+     * @param visitorType the type of visitor to filter by (nullable).
+     * @param action     the action type to filter by (nullable).
+     * @return a list of Object arrays where each array contains:
+     */
+    @Query("SELECT FUNCTION('DATE_FORMAT', a.actionDate, :dateFormat) AS day, COUNT(a) AS count "
+            + "FROM AccessEntity a "
+            + "JOIN a.auth auth "
+            + "WHERE a.actionDate BETWEEN :fromDate AND :toDate and "
+            + "(:visitorType is null or a.auth.visitorType = :visitorType) and "
+            + "(:action is null or a.action = :action)"
+            + "GROUP BY FUNCTION('DATE_FORMAT', a.actionDate, :dateFormat) "
+            + "ORDER BY day")
+    List<Object[]> findAccessCountsByGroup(@Param("fromDate") LocalDateTime fromDate,
+                                         @Param("toDate") LocalDateTime toDate,
+                                         @Param("visitorType") VisitorType visitorType,
+                                         @Param("action") ActionTypes action,
+                                         @Param("dateFormat") String dateFormat);
+
+
 }
 

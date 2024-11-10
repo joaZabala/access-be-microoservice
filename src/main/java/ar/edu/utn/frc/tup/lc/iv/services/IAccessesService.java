@@ -7,6 +7,7 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
+import ar.edu.utn.frc.tup.lc.iv.models.GroupByPeriod;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 
 import java.time.LocalDate;
@@ -105,5 +106,11 @@ public interface IAccessesService {
      * @param to   the end date and time (inclusive) of the range
      * @return a list of {@link DashboardDTO}  access counts per visitor type
      */
-    List<DashboardDTO> getAccessesByVisitor(LocalDate from, LocalDate to);
+    List<DashboardDTO> getAccessesByVisitor(LocalDateTime from, LocalDateTime to);
+    List<DashboardDTO> getAccessGrouped(LocalDateTime from,
+                                        LocalDateTime to,
+                                        VisitorType visitorType,
+                                        ActionTypes actionType,
+                                        GroupByPeriod group
+    );
 }

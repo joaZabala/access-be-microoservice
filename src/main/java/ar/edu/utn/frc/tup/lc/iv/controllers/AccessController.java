@@ -7,6 +7,8 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
+import ar.edu.utn.frc.tup.lc.iv.models.GroupByPeriod;
+import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.services.IAccessesService;
 import ar.edu.utn.frc.tup.lc.iv.services.imp.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -206,12 +208,31 @@ public class AccessController {
      * @return entry report.
      */
     @GetMapping("/visitor/type")
-    public List<DashboardDTO> getAccessesVisitorType(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
-                                                     @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+    public List<DashboardDTO> getAccessesVisitorType(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                     LocalDateTime from,
+                                                     @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                     LocalDateTime to) {
 
         if (from.isAfter(to)) {
             throw new IllegalArgumentException("La fecha 'desde' no puede ser posterior a la fecha 'hasta'");
         }
         return accessesService.getAccessesByVisitor(from, to);
+    }
+
+    @GetMapping("/period")
+    public List<DashboardDTO> getAccessesVisitorType(@RequestParam
+                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                     LocalDateTime from,
+                                                     @RequestParam
+                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                     LocalDateTime to,
+                                                     @RequestParam(required = false) VisitorType visitorType,
+                                                     @RequestParam(required = false) ActionTypes actionTypes,
+                                                     @RequestParam GroupByPeriod group) {
+
+        if (from.isAfter(to)) {
+            throw new IllegalArgumentException("La fecha 'desde' no puede ser posterior a la fecha 'hasta'");
+        }
+        return accessesService.getAccessGrouped(from, to, visitorType, actionTypes, group);
     }
 }
