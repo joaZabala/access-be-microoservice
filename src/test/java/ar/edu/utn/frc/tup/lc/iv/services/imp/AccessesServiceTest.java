@@ -418,7 +418,6 @@ public class AccessesServiceTest {
 
     @Test
     public void testGetAccessGroupedByDay() {
-        // Arrange
         LocalDateTime from = LocalDateTime.of(2024, 1, 1, 0, 0);
         LocalDateTime to = LocalDateTime.of(2024, 1, 2, 23, 59);
         VisitorType visitorType = VisitorType.VISITOR;
@@ -519,7 +518,7 @@ public class AccessesServiceTest {
         VisitorType visitorType = VisitorType.VISITOR;
         ActionTypes actionType = ActionTypes.ENTRY;
         GroupByPeriod invalidPeriod = null;
-        
+
         assertThrows(NullPointerException.class, () -> {
             accessesService.getAccessGrouped(
                     from, to, visitorType, actionType, invalidPeriod, DataType.ALL

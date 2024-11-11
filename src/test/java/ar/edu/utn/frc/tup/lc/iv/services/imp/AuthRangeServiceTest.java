@@ -22,10 +22,7 @@ import org.modelmapper.ModelMapper;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -252,5 +249,114 @@ class AuthRangeServiceTest {
         when(authRangeRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> authRangeService.updateAuthRange(1L, request));
+    }
+
+    @Test
+    void isValidAuthRangeWithNullFields() {
+        AuthRangeDTO dto = new AuthRangeDTO();
+        dto.setActive(true);
+        dto.setDaysOfWeek(new ArrayList<>());
+
+        LocalDate currentDate = LocalDate.now();
+        LocalTime currentTime = LocalTime.of(12, 0);
+
+        boolean result = authRangeService.isValidAuthRange(dto, currentDate, currentTime);
+
+        assertTrue(result);
+    }
+
+    @Test
+    void isValidAuthRangeWithSpecificDay() {
+        AuthRangeDTO dto = new AuthRangeDTO();
+        dto.setActive(true);
+        dto.setDaysOfWeek(Arrays.asList(LocalDate.now().getDayOfWeek()));
+
+        LocalDate currentDate = LocalDate.now();
+        LocalTime currentTime = LocalTime.of(12, 0);
+
+        boolean result = authRangeService.isValidAuthRange(dto, currentDate, currentTime);
+
+        assertTrue(result);
+    }
+
+    @Test
+    void isValidAuthRangeWithDateRange() {
+        AuthRangeDTO dto = new AuthRangeDTO();
+        dto.setActive(true);
+        dto.setDaysOfWeek(new ArrayList<>());
+        dto.setDateFrom(LocalDate.now().minusDays(1));
+        dto.setDateTo(LocalDate.now().plusDays(1));
+
+        LocalDate currentDate = LocalDate.now();
+        LocalTime currentTime = LocalTime.of(12, 0);
+
+        boolean result = authRangeService.isValidAuthRange(dto, currentDate, currentTime);
+
+        assertTrue(result);
+    }
+
+    @Test
+    void isValidAuthRangeWithTimeRange() {
+        AuthRangeDTO dto = new AuthRangeDTO();
+        dto.setActive(true);
+        dto.setDaysOfWeek(new ArrayList<>());
+        dto.setHourFrom(LocalTime.of(8, 0));
+        dto.setHourTo(LocalTime.of(18, 0));
+
+        LocalDate currentDate = LocalDate.now();
+        LocalTime currentTime = LocalTime.of(12, 0);
+
+        boolean result = authRangeService.isValidAuthRange(dto, currentDate, currentTime);
+
+        assertTrue(result);
+    }
+
+    @Test
+    void getValidAuthRangesTest() {
+        AuthRangeDTO validRange = new AuthRangeDTO();
+        validRange.setActive(true);
+        validRange.setDaysOfWeek(new ArrayList<>());
+
+        AuthRangeDTO invalidRange = new AuthRangeDTO();
+        invalidRange.setActive(false);
+        invalidRange.setDaysOfWeek(new ArrayList<>());
+
+        List<AuthRangeDTO> authRanges = Arrays.asList(validRange, invalidRange);
+
+        LocalDate currentDate = LocalDate.now();
+        LocalTime currentTime = LocalTime.of(12, 0);
+
+        List<AuthRangeDTO> result = authRangeService.getValidAuthRanges(authRanges, currentDate, currentTime);
+
+        assertTrue(result.get(0).isActive());
+    }
+
+    @Test
+    void updateAuthRangeByAuthIdTest() {
+        Long authId = 1L;
+        AuthRangeRequestDTO request = new AuthRangeRequestDTO();
+        request.setAuthRangeId(1L);
+        request.setDaysOfWeek(Arrays.asList(DayOfWeek.MONDAY));
+        request.setActive(true);
+        request.setComment("Test comment");
+
+        AuthEntity auth = new AuthEntity();
+        VisitorEntity visitor = new VisitorEntity();
+        visitor.setVisitorId(1L);
+        auth.setVisitor(visitor);
+
+        AuthRangeEntity existingRange = new AuthRangeEntity();
+        AuthRangeDTO expectedDto = new AuthRangeDTO();
+
+        when(authRepository.findByAuthId(authId)).thenReturn(auth);
+        when(authRangeRepository.findById(1L)).thenReturn(Optional.of(existingRange));
+        when(authRangeRepository.save(any(AuthRangeEntity.class))).thenReturn(existingRange);
+        when(modelMapper.map(any(), eq(AuthRangeDTO[].class))).thenReturn(new AuthRangeDTO[]{expectedDto});
+
+        AuthRangeDTO[] result = authRangeService.updateAuthRangeByAuthId(authId, Arrays.asList(request));
+
+        assertNotNull(result);
+        assertEquals(1, result.length);
+        verify(authRangeRepository).save(any(AuthRangeEntity.class));
     }
 }
