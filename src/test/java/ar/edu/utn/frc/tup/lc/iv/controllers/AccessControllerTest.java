@@ -221,7 +221,7 @@ class AccessControllerTest {
     @Test
     void getAccessByDateInvalidDateRange() {
         LocalDate from = LocalDate.of(2024, 2, 1);
-        LocalDate to = LocalDate.of(2024, 1, 1); // from is after to
+        LocalDate to = LocalDate.of(2024, 1, 1);
 
         assertThrows(IllegalArgumentException.class, () ->
                 accessController.getAccessByDate(from, to)
@@ -251,7 +251,7 @@ class AccessControllerTest {
     @Test
     void getAccessesVisitorTypeInvalidDateRange() {
         LocalDateTime from = LocalDateTime.of(2024, 2, 1, 0, 0, 0, 0);
-        LocalDateTime to = LocalDateTime.of(2024, 1, 1, 23, 59, 59, 999999999);// from is after to
+        LocalDateTime to = LocalDateTime.of(2024, 1, 1, 23, 59, 59, 999999999);
 
         assertThrows(IllegalArgumentException.class, () ->
                 accessController.getAccessesVisitorType(from, to)

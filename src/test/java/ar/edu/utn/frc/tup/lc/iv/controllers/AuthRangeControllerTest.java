@@ -38,7 +38,6 @@ class AuthRangeControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        // Inicializar el DTO de prueba
         authRangeDTO = new AuthRangeDTO();
         authRangeDTO.setAuthRangeId(1L);
         authRangeDTO.setDateFrom(LocalDate.now());
@@ -47,7 +46,6 @@ class AuthRangeControllerTest {
         authRangeDTO.setHourTo(LocalTime.of(18, 0));
         authRangeDTO.setActive(true);
 
-        // Inicializar el RequestDTO de prueba
         authRangeRequestDTO = new AuthRangeRequestDTO();
         authRangeRequestDTO.setDateFrom(LocalDate.now());
         authRangeRequestDTO.setDateTo(LocalDate.now().plusDays(7));
@@ -57,7 +55,6 @@ class AuthRangeControllerTest {
 
     @Test
     void getAuthRanges_Success() {
-        // Arrange
         VisitorType visitorType = VisitorType.OWNER;
         Long docNumber = 123456L;
         Long plotId = 1L;
@@ -66,10 +63,8 @@ class AuthRangeControllerTest {
         when(authRangeService.getAuthRanges(visitorType, docNumber, plotId))
                 .thenReturn(expectedRanges);
 
-        // Act
         List<AuthRangeDTO> response = authRangeController.getAuthRanges(visitorType, docNumber, plotId);
 
-        // Assert
         assertNotNull(response);
         assertFalse(response.isEmpty());
         assertEquals(expectedRanges.size(), response.size());
@@ -79,7 +74,6 @@ class AuthRangeControllerTest {
 
     @Test
     void getAuthRanges_EmptyList() {
-        // Arrange
         VisitorType visitorType = VisitorType.OWNER;
         Long docNumber = 123456L;
         Long plotId = 1L;
@@ -87,10 +81,8 @@ class AuthRangeControllerTest {
         when(authRangeService.getAuthRanges(visitorType, docNumber, plotId))
                 .thenReturn(Collections.emptyList());
 
-        // Act
         List<AuthRangeDTO> response = authRangeController.getAuthRanges(visitorType, docNumber, plotId);
 
-        // Assert
         assertNotNull(response);
         assertTrue(response.isEmpty());
         verify(authRangeService).getAuthRanges(visitorType, docNumber, plotId);
@@ -98,16 +90,13 @@ class AuthRangeControllerTest {
 
     @Test
     void deleteAuthRange_Success() {
-        // Arrange
         Long rangeId = 1L;
         Long userId = 1L;
 
         when(authRangeService.deleteAuthRange(rangeId)).thenReturn(authRangeDTO);
 
-        // Act
         ResponseEntity<AuthRangeDTO> response = authRangeController.deleteAuthRange(rangeId, userId);
 
-        // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(authRangeDTO, response.getBody());
@@ -116,16 +105,13 @@ class AuthRangeControllerTest {
 
     @Test
     void deleteAuthRange_ReturnsNull() {
-        // Arrange
         Long rangeId = 1L;
         Long userId = 1L;
 
         when(authRangeService.deleteAuthRange(rangeId)).thenReturn(null);
 
-        // Act
         ResponseEntity<AuthRangeDTO> response = authRangeController.deleteAuthRange(rangeId, userId);
 
-        // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNull(response.getBody());
@@ -134,17 +120,14 @@ class AuthRangeControllerTest {
 
     @Test
     void updateAuthRange_Success() {
-        // Arrange
         Long rangeId = 1L;
         Long userId = 1L;
 
         when(authRangeService.updateAuthRange(eq(rangeId), any(AuthRangeRequestDTO.class)))
                 .thenReturn(authRangeDTO);
 
-        // Act
         ResponseEntity<AuthRangeDTO> response = authRangeController.updateAuthRange(rangeId, authRangeRequestDTO, userId);
 
-        // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(authRangeDTO, response.getBody());
@@ -153,17 +136,14 @@ class AuthRangeControllerTest {
 
     @Test
     void updateAuthRange_ReturnsNull() {
-        // Arrange
         Long rangeId = 1L;
         Long userId = 1L;
 
         when(authRangeService.updateAuthRange(eq(rangeId), any(AuthRangeRequestDTO.class)))
                 .thenReturn(null);
 
-        // Act
         ResponseEntity<AuthRangeDTO> response = authRangeController.updateAuthRange(rangeId, authRangeRequestDTO, userId);
 
-        // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNull(response.getBody());
