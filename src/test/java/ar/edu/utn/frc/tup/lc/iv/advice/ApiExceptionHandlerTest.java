@@ -29,14 +29,11 @@ class ApiExceptionHandlerTest {
     }
 
     @Test
-    void handleAllExceptions_ShouldReturnInternalServerError() {
-        // Given
+    void handleAllExceptionsShouldReturnInternalServerError() {
         Exception exception = new RuntimeException("Test error message");
 
-        // When
         ResponseEntity<ErrorApi> response = apiExceptionHandler.handleAllExceptions(exception);
 
-        // Then
         assertNotNull(response);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
 
@@ -46,7 +43,6 @@ class ApiExceptionHandlerTest {
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), errorApi.getError());
         assertEquals("Test error message", errorApi.getMessage());
 
-        // Verify timestamp format
         assertDoesNotThrow(() ->
                 LocalDateTime.parse(errorApi.getTimestamp(),
                         DateTimeFormatter.ofPattern(DATE_PATTERN))
@@ -54,8 +50,7 @@ class ApiExceptionHandlerTest {
     }
 
     @Test
-    void handleMethodArgumentNotValid_WithFieldError_ShouldReturnBadRequest() {
-        // Given
+    void handleMethodArgumentNotValidWithFieldErrorShouldReturnBadRequest() {
         MethodArgumentNotValidException ex = mock(MethodArgumentNotValidException.class);
         BindingResult bindingResult = mock(BindingResult.class);
         FieldError fieldError = new FieldError("object", "field", "Custom error message");
@@ -63,10 +58,8 @@ class ApiExceptionHandlerTest {
         when(ex.getBindingResult()).thenReturn(bindingResult);
         when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError));
 
-        // When
         ResponseEntity<ErrorApi> response = apiExceptionHandler.handleMethodArgumentNotValid(ex);
 
-        // Then
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -76,7 +69,6 @@ class ApiExceptionHandlerTest {
         assertEquals("Custom error message", errorApi.getError());
         assertEquals("Validation failed", errorApi.getMessage());
 
-        // Verify timestamp format
         assertDoesNotThrow(() ->
                 LocalDateTime.parse(errorApi.getTimestamp(),
                         DateTimeFormatter.ofPattern(DATE_PATTERN))
@@ -84,18 +76,15 @@ class ApiExceptionHandlerTest {
     }
 
     @Test
-    void handleMethodArgumentNotValid_WithoutFieldError_ShouldReturnDefaultMessage() {
-        // Given
+    void handleMethodArgumentNotValidWithoutFieldErrorShouldReturnDefaultMessage() {
         MethodArgumentNotValidException ex = mock(MethodArgumentNotValidException.class);
         BindingResult bindingResult = mock(BindingResult.class);
 
         when(ex.getBindingResult()).thenReturn(bindingResult);
         when(bindingResult.getFieldErrors()).thenReturn(List.of());
 
-        // When
         ResponseEntity<ErrorApi> response = apiExceptionHandler.handleMethodArgumentNotValid(ex);
 
-        // Then
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -108,13 +97,10 @@ class ApiExceptionHandlerTest {
 
     @Test
     void handleEntityNotFoundException_ShouldReturnNotFound() {
-        // Given
         EntityNotFoundException exception = new EntityNotFoundException("Entity not found");
 
-        // When
         ResponseEntity<ErrorApi> response = apiExceptionHandler.handleNotFoundExceptiob(exception);
 
-        // Then
         assertNotNull(response);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
@@ -124,7 +110,6 @@ class ApiExceptionHandlerTest {
         assertEquals(HttpStatus.NOT_FOUND.getReasonPhrase(), errorApi.getError());
         assertEquals("Entity not found", errorApi.getMessage());
 
-        // Verify timestamp format
         assertDoesNotThrow(() ->
                 LocalDateTime.parse(errorApi.getTimestamp(),
                         DateTimeFormatter.ofPattern(DATE_PATTERN))
