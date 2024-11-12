@@ -112,7 +112,7 @@ public interface IAuthService {
      * @param documentType document type of authorized person.
      * @return the deleted {@link AuthDTO}
      */
-    List<AuthDTO> deleteAllAuthorizationsByDocNumber(Long docNumber , DocumentType documentType);
+    List<AuthDTO> deleteAllAuthorizationsByDocNumber(Long docNumber, DocumentType documentType);
 
     /**
      * Activates the authorization by ID.

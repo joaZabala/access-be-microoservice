@@ -499,13 +499,13 @@ public class AuthService implements IAuthService {
      */
     @Override
     public List<AuthDTO> deleteAllAuthorizationsByDocNumber(Long docNumber, DocumentType documentType) {
-        VisitorDTO visitorDTO = visitorService.getVisitorByDocNumberAndDocumentType(docNumber , documentType);
+        VisitorDTO visitorDTO = visitorService.getVisitorByDocNumberAndDocumentType(docNumber, documentType);
         VisitorEntity visitorEntity = modelMapper.map(visitorDTO, VisitorEntity.class);
 
         List<AuthEntity> authEntityList =  authRepository.findByVisitor(visitorEntity);
 
         if (authEntityList.isEmpty()) {
-            throw new EntityNotFoundException("No se encontraron autorizaciones para el "+ documentType+" " + docNumber);
+            throw new EntityNotFoundException("No se encontraron autorizaciones para el " + documentType + " " + docNumber);
         }
 
         for (AuthEntity authEntity : authEntityList) {

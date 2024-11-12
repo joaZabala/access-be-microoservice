@@ -5,7 +5,6 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
-import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 
 /**
  * This interface defines the contract for a service
@@ -65,5 +64,5 @@ public interface IVisitorService {
      * @param documentType of the visitor.
      * @return visitorDto
      */
-    VisitorDTO getVisitorByDocNumberAndDocumentType(Long docNumber , DocumentType documentType);
+    VisitorDTO getVisitorByDocNumberAndDocumentType(Long docNumber, DocumentType documentType);
 }

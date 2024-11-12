@@ -198,7 +198,7 @@ public class VisitorService implements IVisitorService {
      */
     @Override
     public VisitorDTO getVisitorByDocNumberAndDocumentType(Long docNumber, DocumentType documentType) {
-        VisitorEntity visitorEntity = visitorRepository.findByDocNumberAndDocumentType(docNumber,documentType);
+        VisitorEntity visitorEntity = visitorRepository.findByDocNumberAndDocumentType(docNumber, documentType);
 
         if (Objects.isNull(visitorEntity)) {
             return null;
