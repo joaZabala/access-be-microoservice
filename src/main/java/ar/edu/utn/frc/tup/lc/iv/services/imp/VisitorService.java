@@ -11,6 +11,7 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorRequest;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
+import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
 import ar.edu.utn.frc.tup.lc.iv.repositories.VisitorRepository;
@@ -189,4 +190,20 @@ public class VisitorService implements IVisitorService {
         return modelMapper.map(visitorEntity.get(), VisitorDTO.class);
     }
 
+    /**
+     * fetch visitor by docNumber.
+     * @param docNumber of the visitor.
+     * @param documentType of the visitor
+     * @return visitorDto.
+     */
+    @Override
+    public VisitorDTO getVisitorByDocNumberAndDocumentType(Long docNumber, DocumentType documentType) {
+        VisitorEntity visitorEntity = visitorRepository.findByDocNumberAndDocumentType(docNumber, documentType);
+
+        if (Objects.isNull(visitorEntity)) {
+            return null;
+        } else {
+            return modelMapper.map(visitorEntity, VisitorDTO.class);
+        }
+    }
 }

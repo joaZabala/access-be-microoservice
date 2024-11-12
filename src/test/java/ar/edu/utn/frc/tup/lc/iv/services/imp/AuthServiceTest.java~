@@ -597,7 +597,7 @@ class AuthServiceTest {
         authEntities.add(authEntity);
         mockAuthDTO.setActive(false);
 
-        when(visitorService.getVisitorByDocNumberAndDocumentType(123456L , DocumentType.DNI)).thenReturn(null);
+        when(visitorService.getVisitorByDocNumber(123456L)).thenReturn(visitorDTO);
         when(modelMapper.map(any(VisitorDTO.class), eq(VisitorEntity.class))).thenReturn(visitorEntity);
         when(authRepository.findByVisitor(visitorEntity)).thenReturn(Collections.emptyList());
 
