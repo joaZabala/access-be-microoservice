@@ -264,11 +264,12 @@ class AuthServiceTest {
         assertEquals(VisitorType.PROVIDER, result.getVisitorType());
     }
 
-    //@Test
+    @Test
     void testAuthorizeVisitorNoValidAuths() {
         Long documentNumber = 12345L;
         AccessDTO accessDTO = new AccessDTO();
         accessDTO.setDocNumber(documentNumber);
+        accessDTO.setAction(ActionTypes.ENTRY);
 
         VisitorEntity mockVisitor = new VisitorEntity();
         when(visitorRepository.findByDocNumber(documentNumber)).thenReturn(mockVisitor);
