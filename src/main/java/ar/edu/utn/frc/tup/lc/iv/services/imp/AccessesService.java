@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -421,6 +422,16 @@ public class AccessesService implements IAccessesService {
                                                          LocalDateTime to,
                                                          VisitorType visitorType) {
         return accessesRepository.findAccessInconsistentCounts(from, to, visitorType);
+
+    }
+    /**
+     * Retrieves last access
+     * @param authId authId
+     * @return an optional last access
+     * */
+    @Override
+    public Optional<AccessEntity> getLastAccessByAuthId(Long authId) {
+        return accessesRepository.findLastAccessByAuthId(authId);
 
     }
 }

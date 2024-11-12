@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository interface for accessing visit access records from the database.
@@ -229,5 +230,11 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
     Long findAccessInconsistentCounts(@Param(FROM_DATE) LocalDateTime fromDate,
                                            @Param(TO_DATE) LocalDateTime toDate,
                                            @Param("visitorType") VisitorType visitorType);
+    /**
+     * Retrieves a last access
+     */
+    @Query("SELECT a FROM AccessEntity a WHERE a.auth.id = :authId ORDER BY a.actionDate DESC")
+    Optional<AccessEntity> findLastAccessByAuthId(@Param("authId") Long authId);
+
 }
 

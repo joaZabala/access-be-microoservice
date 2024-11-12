@@ -112,4 +112,9 @@ public class AccessEntity extends AuditBaseEntity {
      */
     @Column(name = "is_inconsistent")
     private Boolean isInconsistent;
+    /**
+     * Represent a late access.
+     */
+    @Column(name = "is_late")
+    private Boolean isLate;
 }

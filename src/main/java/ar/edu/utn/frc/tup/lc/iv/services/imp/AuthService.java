@@ -2,6 +2,7 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import ar.edu.utn.frc.tup.lc.iv.clients.UserDetailDto;
@@ -419,8 +420,31 @@ public class AuthService implements IAuthService {
             throw new EntityNotFoundException(
                     "No existen autorizaciones validas para el documento " + accessDTO.getDocNumber());
         }
+        AuthDTO auth = authDTOs.get(0);
+        boolean isLate = false;
+        if (auth.getVisitorType() == VisitorType.WORKER
+            || auth.getVisitorType() == VisitorType.EMPLOYEE) {
 
-        AuthEntity authEntity = authRepository.findById(authDTOs.get(0).getAuthId()).get();
+            if (auth.getAuthRanges().isEmpty()) {
+                throw new EntityNotFoundException(
+                        "No existen rangos para  el documento " + accessDTO.getDocNumber());
+            }
+            auth.getAuthRanges().sort(Comparator
+                    .comparing(AuthRangeDTO::getDateFrom)
+                    .thenComparing(AuthRangeDTO::getHourFrom));
+
+            Optional<AccessEntity> lastAccess = accessesService.getLastAccessByAuthId(auth.getAuthId());
+            if (lastAccess.isPresent()) {
+                AccessEntity access = lastAccess.get();
+                boolean isSameDay = access.getActionDate().toLocalDate().isEqual(LocalDate.now());
+                isLate = !isSameDay &&
+                        auth.getAuthRanges().get(0).getHourFrom().plusMinutes(15).isBefore(LocalTime.now());
+            }
+
+
+        }
+
+        AuthEntity authEntity = authRepository.findById(auth.getAuthId()).get();
 
         Boolean isInconsistentAccess = !accessesService.canDoAction(accessDTO.getVehicleReg(), accessDTO.getAction());
 
@@ -434,7 +458,7 @@ public class AuthService implements IAuthService {
                 .vehicleReg(accessDTO.getVehicleReg())
                 .vehicleDescription(accessDTO.getVehicleDescription())
                 .plotId(authEntity.getPlotId())
-                .supplierEmployeeId(authDTOs.get(0).getExternalID())
+                .supplierEmployeeId(auth.getExternalID())
                 .comments(accessDTO.getComments())
                 .isInconsistent(isInconsistentAccess)
                 .build();
