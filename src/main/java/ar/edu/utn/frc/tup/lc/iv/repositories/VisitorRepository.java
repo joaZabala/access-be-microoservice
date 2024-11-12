@@ -1,6 +1,7 @@
 package ar.edu.utn.frc.tup.lc.iv.repositories;
 
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
+import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -50,4 +51,13 @@ public interface VisitorRepository extends JpaRepository<VisitorEntity, Long> {
      * @return records that match the given specification and pagination.
      */
     Page<VisitorEntity> findAll(Specification<VisitorEntity> spec, Pageable pageable);
+
+
+    /**
+     * Finds a visitor entity by document number.
+     * @param docNumber the document number of the authorized person.
+     * @param documentType the document type of the authorized person.
+     * @return the visitor entity with the specified document number.
+     */
+    VisitorEntity findByDocNumberAndDocumentType(Long docNumber , DocumentType documentType);
 }

@@ -505,7 +505,7 @@ public class AuthService implements IAuthService {
         List<AuthEntity> authEntityList =  authRepository.findByVisitor(visitorEntity);
 
         if (authEntityList.isEmpty()) {
-            throw new EntityNotFoundException("No se encontraron autorizaciones para el "+ documentType+" " + docNumber);
+            throw new EntityNotFoundException("No se encontraron autorizaciones para el documento " + docNumber);
         }
 
         for (AuthEntity authEntity : authEntityList) {

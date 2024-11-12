@@ -2,6 +2,7 @@ package ar.edu.utn.frc.tup.lc.iv.controllers;
 
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
+import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import ar.edu.utn.frc.tup.lc.iv.services.IAuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -178,6 +179,20 @@ public class AuthController {
     public ResponseEntity<AuthDTO> updateAuthorization(@RequestBody VisitorAuthRequest visitorAuthRequest,
                                                        @RequestHeader(USER_ID_HEADER) Long userId) {
         return ResponseEntity.ok(authService.updateAuthorizationByAuthid(visitorAuthRequest));
+    }
+
+    /**
+     * deletes all authorizations by document number.
+     * @param docNumber of the visitor.
+     * @param docType of the visitor.
+     * @param userId ID of the user requesting the deletion.
+     * @return list of authorizations deleted.
+     */
+    @DeleteMapping("/{docType}/{docNumber}/authorizations")
+    public ResponseEntity<List<AuthDTO>> deleteAllAuthsByDocNumber(@PathVariable Long docNumber,
+                                                                   @PathVariable DocumentType docType,
+                                                                   @RequestHeader(USER_ID_HEADER) Long userId) {
+        return ResponseEntity.ok(authService.deleteAllAuthorizationsByDocNumber(docNumber, docType));
     }
 
 }
