@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import ar.edu.utn.frc.tup.lc.iv.clients.ModerationsRestClient;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserDetailDto;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
@@ -13,7 +14,9 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeRequestDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
+import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthRange;
+import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.specification.auth.AuthSpecification;
 import jakarta.persistence.EntityNotFoundException;
@@ -98,6 +101,13 @@ public class AuthService implements IAuthService {
      */
     @Autowired
     private UserRestClient userRestClient;
+
+    /**
+     * moderationsRestClient.
+     */
+    @Autowired
+    private ModerationsRestClient moderationsRestClient;
+
 
     /**
      * Get all authorizations.
@@ -415,15 +425,36 @@ public class AuthService implements IAuthService {
     @Override
     public AccessDTO authorizeVisitor(AccessDTO accessDTO, Long guardID) {
         List<AuthDTO> authDTOs = getValidAuthsByDocNumber(accessDTO.getDocNumber());
+        AuthEntity authEntity;
+        boolean isNotified = false;
 
-        if (authDTOs.isEmpty()) {
+        if (authDTOs.isEmpty() && accessDTO.getAction() == ActionTypes.ENTRY) {
             throw new EntityNotFoundException(
                     "No existen autorizaciones validas para el documento " + accessDTO.getDocNumber());
+        } else if (accessDTO.getAction() == ActionTypes.EXIT) {
+            authEntity = authRepository.findTopByIsActiveTrueAndVisitorTypeAndDocumentTypeAndDocNumberOrderByAuthIdDesc(VisitorType.WORKER, DocumentType.DNI, accessDTO.getDocNumber());
+            if(authEntity != null){
+                LocalTime targetTime = LocalTime.of(18, 30);
+                LocalTime currentTime = LocalTime.now();
+                if (currentTime.isAfter(targetTime)) {
+                    isNotified = true;
+                    String description = "El trabajador " + authEntity.getVisitor().getName() + " " + authEntity.getVisitor().getLastName() + " salió del barrio fuera del horario permitido";
+                    Long sanctionTypeId = 1002L;
+                    try {
+                        moderationsRestClient.sendModeration(authEntity.getPlotId().toString(), description, sanctionTypeId.toString());
+                    } catch (Exception e) {
+                        System.err.println("Error al enviar moderación: " + e.getMessage());
+                    }
+                }
+            }
+        } else {
+            authEntity = authRepository.findById(authDTOs.get(0).getAuthId()).get();
         }
         AuthDTO auth = authDTOs.get(0);
         boolean isLate = false;
-        if (auth.getVisitorType() == VisitorType.WORKER
-            || auth.getVisitorType() == VisitorType.EMPLOYEE) {
+        
+        if ((auth.getVisitorType() == VisitorType.WORKER
+            || auth.getVisitorType() == VisitorType.EMPLOYEE) && accessDTO.getAction() == ActionTypes.ENTRY) {
 
             if (auth.getAuthRanges().isEmpty()) {
                 throw new EntityNotFoundException(
@@ -441,10 +472,7 @@ public class AuthService implements IAuthService {
                         auth.getAuthRanges().get(0).getHourFrom().plusMinutes(15).isBefore(LocalTime.now());
             }
 
-
         }
-
-        AuthEntity authEntity = authRepository.findById(auth.getAuthId()).get();
 
         Boolean isInconsistentAccess = !accessesService.canDoAction(accessDTO.getVehicleReg(), accessDTO.getAction());
 
@@ -461,6 +489,8 @@ public class AuthService implements IAuthService {
                 .supplierEmployeeId(auth.getExternalID())
                 .comments(accessDTO.getComments())
                 .isInconsistent(isInconsistentAccess)
+                .isLate(isLate)
+                .notified(isNotified)
                 .build();
 
         return accessesService.registerAccess(accessEntity);
