@@ -290,7 +290,7 @@ public class AuthService implements IAuthService {
 
     /**
      * update authorization authorized ranges.
-     * 
+     *
      * @param visitorAuthRequest request
      * @return updated authorization.
      */
@@ -470,14 +470,12 @@ public class AuthService implements IAuthService {
                 auth.getAuthRanges().sort(Comparator
                         .comparing(AuthRangeDTO::getDateFrom)
                         .thenComparing(AuthRangeDTO::getHourFrom));
-                //Revisate esta parte porque si no hay un acceso el mismo dia nunca va a ser isLate.
                 AccessEntity lastAccess = accessesService.getLastAccessByAuthId(auth.getAuthId());
                 if (lastAccess != null) {
                     boolean isSameDay = lastAccess.getActionDate().toLocalDate().isEqual(LocalDate.now());
-                    isLate = !isSameDay &&
-                            auth.getAuthRanges().get(0).getHourFrom().plusMinutes(15).isBefore(LocalTime.now());
+                    isLate = !isSameDay && auth.getAuthRanges().get(0).getHourFrom().plusMinutes(15).isBefore(LocalTime.now());
                 } else {
-                    isLate = auth.getAuthRanges().get(0).getHourFrom().plusMinutes(15).isBefore(LocalTime.now());;
+                    isLate = auth.getAuthRanges().get(0).getHourFrom().plusMinutes(15).isBefore(LocalTime.now());
                 }
 
             }

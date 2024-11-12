@@ -119,9 +119,9 @@ public class AccessDTO {
     private Long authorizerId;
 
     /**
-     * The id of the authorizer.
+     * Is the access late.
      */
     @JsonProperty("is_late")
-    private Long isLate;
+    private Boolean isLate;
 
 }

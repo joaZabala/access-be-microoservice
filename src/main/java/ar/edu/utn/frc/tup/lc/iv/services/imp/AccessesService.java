@@ -38,7 +38,6 @@ import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -425,7 +424,7 @@ public class AccessesService implements IAccessesService {
 
     }
     /**
-     * Retrieves last access
+     * Retrieves last access.
      * @param authId authId
      * @return an optional last access
      * */

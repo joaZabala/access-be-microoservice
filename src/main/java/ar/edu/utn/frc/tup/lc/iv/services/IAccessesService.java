@@ -14,7 +14,6 @@ import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * This interface defines the contract for a service
@@ -136,5 +135,12 @@ public interface IAccessesService {
     Long getInconsistentAccessCount(LocalDateTime from,
                                     LocalDateTime to,
                                     VisitorType visitorType);
+
+
+    /**
+     * Retrieves the last access of an authorized person.
+     * @param authId
+     * @return the last access of the authorized person.
+     */
     AccessEntity getLastAccessByAuthId(Long authId);
 }

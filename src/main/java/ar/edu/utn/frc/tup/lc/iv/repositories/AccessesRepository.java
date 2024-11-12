@@ -12,10 +12,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Repository interface for accessing visit access records from the database.
@@ -230,10 +228,14 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
     Long findAccessInconsistentCounts(@Param(FROM_DATE) LocalDateTime fromDate,
                                            @Param(TO_DATE) LocalDateTime toDate,
                                            @Param("visitorType") VisitorType visitorType);
-    /**
-     * Retrieves a last access
-     */
 
+
+    /**
+     * Retrieves the count of late access
+     * events within the specified date range and filtered by visitor type.
+     * @param authId the authId
+     * @return the count of late access events that match the given criteria
+     */
     @Query("SELECT a FROM AccessEntity a WHERE a.auth.authId = :authId ORDER BY a.actionDate DESC")
     List<AccessEntity> findAccessByAuthIdDesc(@Param("authId") Long authId);
 }

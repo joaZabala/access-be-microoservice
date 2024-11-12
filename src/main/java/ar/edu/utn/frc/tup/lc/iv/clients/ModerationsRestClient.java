@@ -12,18 +12,30 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+
+/**
+ * This class is a REST client for the moderation service.
+*/
 @Service
 public class ModerationsRestClient {
 
+
+    /**
+    * The REST template used to send requests to the moderation service.
+    */
     @Autowired
     private RestTemplate restTemplate;
 
+
+    /**
+    * The URL of the moderation service.
+    */
     @Value("http://localhost:8080")
     private String moderationsServiceUrl;
 
     /**
      * Sends the query parameters to the moderation service using multipart/form-data.
-     * 
+     *
      * @param plotId         the plot ID
      * @param description    the description
      * @param sanctionTypeId the sanction type ID
@@ -36,7 +48,7 @@ public class ModerationsRestClient {
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        
+
         body.add("file", new ByteArrayResource(new byte[0]) {
             @Override
             public String getFilename() {

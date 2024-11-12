@@ -81,7 +81,8 @@ public interface AuthRepository extends JpaRepository<AuthEntity, Long> {
      * @return the most recent authorization record for the given visitor,
      * or null if not found.
      */
-    @Query("SELECT a FROM AuthEntity a WHERE a.isActive = true AND a.visitorType = :visitorType AND a.visitor.documentType = :documentType AND a.visitor.docNumber = :docNumber ORDER BY a.authId DESC")
+    @Query("SELECT a FROM AuthEntity a WHERE a.isActive = true AND a.visitorType = :visitorType AND a.visitor.documentType = :documentType"
+    + "AND a.visitor.docNumber = :docNumber ORDER BY a.authId DESC")
     AuthEntity findTopByIsActiveTrueAndVisitorTypeAndDocumentTypeAndDocNumberOrderByAuthIdDesc(
         @Param("visitorType") VisitorType visitorType,
         @Param("documentType") DocumentType documentType,
