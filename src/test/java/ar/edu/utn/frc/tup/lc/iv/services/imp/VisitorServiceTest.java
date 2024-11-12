@@ -315,4 +315,24 @@ class VisitorServiceTest {
         assertNull(result);
         verify(visitorRepository).findByDocNumber(nonExistentDoc);
     }
+
+    @Test
+    void getBydocNumberAndDocTypeTest() {
+        VisitorEntity visitorEntity = new VisitorEntity(1L, "juan", "perez",DocumentType.DNI, 40252203L, LocalDate.now(), true);
+        when(visitorRepository.findByDocNumberAndDocumentType(40252203L , DocumentType.DNI))
+                .thenReturn(visitorEntity);
+
+        VisitorDTO visitorDTO = visitorService.getVisitorByDocNumberAndDocumentType(40252203L , DocumentType.DNI);
+        assertEquals(visitorEntity.getDocNumber(), visitorDTO.getDocNumber());
+        assertEquals(visitorEntity.getDocumentType(), DocumentType.DNI);
+    }
+
+    @Test
+    void getBydocNumberAndDocTypeTestNull() {
+        when(visitorRepository.findByDocNumberAndDocumentType(40252203L , DocumentType.DNI))
+                .thenReturn(null);
+
+        VisitorDTO visitorDTO = visitorService.getVisitorByDocNumberAndDocumentType(40252203L , DocumentType.DNI);
+        assertNull(visitorDTO);
+    }
 }

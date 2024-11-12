@@ -7,6 +7,7 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
+import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 
 /**
@@ -105,6 +106,14 @@ public interface IAuthService {
      * @return the deleted {@link AuthDTO}
      */
     AuthDTO deleteAuthorization(Long authId);
+    /**
+     * Deletes the authorizations by document number.
+     * @param docNumber document number of the authorized person.
+     * @param documentType document type of authorized person.
+     * @return the deleted {@link AuthDTO}
+     */
+    List<AuthDTO> deleteAllAuthorizationsByDocNumber(Long docNumber, DocumentType documentType);
+
     /**
      * Activates the authorization by ID.
      * @param authId    the ID of the authorization to activate

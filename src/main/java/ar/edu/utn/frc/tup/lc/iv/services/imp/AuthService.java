@@ -13,6 +13,7 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthRange;
+import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import ar.edu.utn.frc.tup.lc.iv.repositories.specification.auth.AuthSpecification;
 import jakarta.persistence.EntityNotFoundException;
@@ -488,6 +489,31 @@ public class AuthService implements IAuthService {
         } else {
             throw new EntityNotFoundException("No se encontró la autorización con el ID " + authId);
         }
+    }
+
+    /**
+     * Deletes all authorizations by document number.
+     * @param docNumber document number of the authorized person.
+     * @param documentType document type of the authorized person.
+     * @return the deleted {@link AuthDTO}.
+     */
+    @Override
+    public List<AuthDTO> deleteAllAuthorizationsByDocNumber(Long docNumber, DocumentType documentType) {
+        VisitorDTO visitorDTO = visitorService.getVisitorByDocNumberAndDocumentType(docNumber, documentType);
+        VisitorEntity visitorEntity = modelMapper.map(visitorDTO, VisitorEntity.class);
+
+        List<AuthEntity> authEntityList =  authRepository.findByVisitor(visitorEntity);
+
+        if (authEntityList.isEmpty()) {
+            throw new EntityNotFoundException("No se encontraron autorizaciones para el " + documentType + " " + docNumber);
+        }
+
+        for (AuthEntity authEntity : authEntityList) {
+            authEntity.setActive(false);
+            authRepository.save(authEntity);
+        }
+        return authEntityList.stream()
+                .map(auth -> modelMapper.map(auth, AuthDTO.class)).collect(Collectors.toList());
     }
 
     /**

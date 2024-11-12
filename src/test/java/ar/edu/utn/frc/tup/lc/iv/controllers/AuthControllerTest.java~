@@ -214,7 +214,7 @@ class AuthControllerTest {
         when(authService.deleteAllAuthorizationsByDocNumber(docNumber, DocumentType.DNI)).thenReturn(mockResponse);
 
         // Realizar la solicitud DELETE y verificar la respuesta
-        mockMvc.perform(delete("/auths/"+ DocumentType.DNI+'/'+ docNumber + "/authorizations")
+        mockMvc.perform(delete("/auths/" + docNumber + "/authorizations")
                         .header("x-user-id", userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
