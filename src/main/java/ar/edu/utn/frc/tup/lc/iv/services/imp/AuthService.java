@@ -477,6 +477,8 @@ public class AuthService implements IAuthService {
                     boolean isSameDay = access.getActionDate().toLocalDate().isEqual(LocalDate.now());
                     isLate = !isSameDay &&
                             auth.getAuthRanges().get(0).getHourFrom().plusMinutes(15).isBefore(LocalTime.now());
+                } else {
+                    isLate = auth.getAuthRanges().get(0).getHourFrom().plusMinutes(15).isBefore(LocalTime.now());;
                 }
 
             }
