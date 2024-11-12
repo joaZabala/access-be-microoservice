@@ -136,5 +136,5 @@ public interface IAccessesService {
     Long getInconsistentAccessCount(LocalDateTime from,
                                     LocalDateTime to,
                                     VisitorType visitorType);
-    Optional<AccessEntity> getLastAccessByAuthId(Long authId);
+    AccessEntity getLastAccessByAuthId(Long authId);
 }

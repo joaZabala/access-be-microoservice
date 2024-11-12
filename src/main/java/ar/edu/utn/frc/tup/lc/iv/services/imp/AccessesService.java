@@ -430,8 +430,8 @@ public class AccessesService implements IAccessesService {
      * @return an optional last access
      * */
     @Override
-    public Optional<AccessEntity> getLastAccessByAuthId(Long authId) {
-        return accessesRepository.findLastAccessByAuthId(authId);
-
+    public AccessEntity getLastAccessByAuthId(Long authId) {
+        List<AccessEntity> accesses = accessesRepository.findAccessByAuthIdDesc(authId);
+        return accesses.isEmpty() ? null : accesses.get(0);
     }
 }

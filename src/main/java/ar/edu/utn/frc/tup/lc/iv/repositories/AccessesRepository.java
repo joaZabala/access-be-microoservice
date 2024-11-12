@@ -233,8 +233,8 @@ public interface AccessesRepository extends JpaRepository<AccessEntity, Long> {
     /**
      * Retrieves a last access
      */
-    @Query("SELECT a FROM AccessEntity a WHERE a.auth.id = :authId ORDER BY a.actionDate DESC")
-    Optional<AccessEntity> findLastAccessByAuthId(@Param("authId") Long authId);
 
+    @Query("SELECT a FROM AccessEntity a WHERE a.auth.authId = :authId ORDER BY a.actionDate DESC")
+    List<AccessEntity> findAccessByAuthIdDesc(@Param("authId") Long authId);
 }
 
