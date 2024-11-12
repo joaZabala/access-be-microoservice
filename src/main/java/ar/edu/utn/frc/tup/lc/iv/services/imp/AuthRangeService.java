@@ -169,8 +169,8 @@ public class AuthRangeService implements IAuthRangeService {
                 && (authRangeDTO.getDateTo() == null || !currentDate.isAfter(authRangeDTO.getDateTo()))
                 && (authRangeDTO.getHourFrom() == null || !currentTime.isBefore(authRangeDTO.getHourFrom()))
                 && (authRangeDTO.getHourTo() == null || !currentTime.isAfter(authRangeDTO.getHourTo()))
-                && authRangeDTO.getDaysOfWeek() == null || authRangeDTO.getDaysOfWeek().contains(currentDate.getDayOfWeek())
-                || authRangeDTO.getDaysOfWeek().isEmpty();
+                && (authRangeDTO.getDaysOfWeek() == null || authRangeDTO.getDaysOfWeek().isEmpty()
+                    || authRangeDTO.getDaysOfWeek().contains(currentDate.getDayOfWeek()));
     }
 
     /**
