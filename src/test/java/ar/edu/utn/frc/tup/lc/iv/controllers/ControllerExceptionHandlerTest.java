@@ -27,14 +27,11 @@ class ControllerExceptionHandlerTest {
 
     @Test
     void handleError_Exception() {
-        // Arrange
         String errorMessage = "Test general error";
         Exception exception = new Exception(errorMessage);
 
-        // Act
         ResponseEntity<ErrorApi> response = exceptionHandler.handleError(exception);
 
-        // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertErrorApiFields(response.getBody(),
@@ -45,7 +42,6 @@ class ControllerExceptionHandlerTest {
 
     @Test
     void handleError_HttpClientErrorException() {
-        // Arrange
         String errorMessage = "Bad request error";
         HttpClientErrorException exception = HttpClientErrorException.create(
                 HttpStatus.BAD_REQUEST,
@@ -54,10 +50,8 @@ class ControllerExceptionHandlerTest {
                 null,
                 null);
 
-        // Act
         ResponseEntity<ErrorApi> response = exceptionHandler.handleError(exception);
 
-        // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertErrorApiFields(response.getBody(),
@@ -68,15 +62,12 @@ class ControllerExceptionHandlerTest {
 
     @Test
     void handleError_MethodArgumentNotValidException() {
-        // Arrange
         MethodArgumentNotValidException exception = mock(MethodArgumentNotValidException.class);
         String errorMessage = "Validation failed";
         when(exception.getMessage()).thenReturn(errorMessage);
 
-        // Act
         ResponseEntity<ErrorApi> response = exceptionHandler.handleError(exception);
 
-        // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertErrorApiFields(response.getBody(),
@@ -87,16 +78,13 @@ class ControllerExceptionHandlerTest {
 
     @Test
     void handleError_ResponseStatusException() {
-        // Arrange
         String reason = "Custom status error";
         ResponseStatusException exception = new ResponseStatusException(
                 HttpStatus.FORBIDDEN,
                 reason);
 
-        // Act
         ResponseEntity<ErrorApi> response = exceptionHandler.handleError(exception);
 
-        // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertErrorApiFields(response.getBody(),
@@ -107,14 +95,11 @@ class ControllerExceptionHandlerTest {
 
     @Test
     void handleError_EntityNotFoundException() {
-        // Arrange
         String errorMessage = "Entity not found";
         EntityNotFoundException exception = new EntityNotFoundException(errorMessage);
 
-        // Act
         ResponseEntity<ErrorApi> response = exceptionHandler.handleError(exception);
 
-        // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertErrorApiFields(response.getBody(),
@@ -125,10 +110,8 @@ class ControllerExceptionHandlerTest {
 
     @Test
     void noArgsConstructor_CreatesInstance() {
-        // Act
         ControllerExceptionHandler handler = new ControllerExceptionHandler();
 
-        // Assert
         assertNotNull(handler);
     }
 
@@ -141,7 +124,6 @@ class ControllerExceptionHandlerTest {
         assertEquals(expectedStatus, errorApi.getStatus());
         assertEquals(expectedError, errorApi.getError());
 
-        // Verificar que el timestamp es una fecha válida
         assertNotNull(errorApi.getTimestamp());
         assertDoesNotThrow(() -> {
             ZonedDateTime.parse(errorApi.getTimestamp().replace(" ", "T") + "Z");

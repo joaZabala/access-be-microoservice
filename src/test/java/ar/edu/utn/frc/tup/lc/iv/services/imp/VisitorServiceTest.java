@@ -85,11 +85,9 @@ class VisitorServiceTest {
 
     @Test
     void saverOrUpdateVisitorExistingVisitorTest() {
-        //given
         VisitorRequest visitorRequest =
                 new VisitorRequest("joaquin","zabala", DocumentType.DNI,12345678L,LocalDate.of(2005,3,17));
 
-        //when
         VisitorEntity visitorEntity = new VisitorEntity(1L, "","",DocumentType.DNI,0L,LocalDate.now(),false);
         when(visitorRepository.findByDocNumber(12345678L)).thenReturn(visitorEntity);
 
@@ -99,7 +97,6 @@ class VisitorServiceTest {
         VisitorEntity visitorEntitySave = new VisitorEntity(1L, "joaquin","zabala",DocumentType.DNI,12345678L,LocalDate.of(2005,3,17),true);
         when(visitorRepository.save(any(VisitorEntity.class))).thenReturn(visitorEntitySave);
 
-        //then
         VisitorDTO visitorDTOExpected =
                 new VisitorDTO(1L,"joaquin","zabala",DocumentType.DNI,12345678L,LocalDate.of(2005,3,17),null, true);
 
@@ -111,11 +108,9 @@ class VisitorServiceTest {
 
     @Test
     void saveOrUpdateVisitorNoExistVisitorTest() {
-        //given
         VisitorRequest visitorRequest =
                 new VisitorRequest("joaquin","zabala", DocumentType.DNI,12345678L,LocalDate.of(2005,3,17));
 
-        //when
         when(visitorRepository.findByDocNumber(12345678L)).thenReturn(null);
 
         UserDto userDto = new UserDto(1L,"Carlos Sainz");
@@ -124,7 +119,6 @@ class VisitorServiceTest {
         VisitorEntity visitorEntitySave = new VisitorEntity(1L, "joaquin","zabala",DocumentType.DNI,12345678L,LocalDate.of(2005,3,17),true);
         when(visitorRepository.save(any(VisitorEntity.class))).thenReturn(visitorEntitySave);
 
-        //then
         VisitorDTO visitorDTOExpected =
                 new VisitorDTO(1L, "joaquin","zabala",DocumentType.DNI,12345678L,LocalDate.of(2005,3,17),null,true);
 

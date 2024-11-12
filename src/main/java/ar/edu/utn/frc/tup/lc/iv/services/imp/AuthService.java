@@ -422,6 +422,8 @@ public class AuthService implements IAuthService {
 
         AuthEntity authEntity = authRepository.findById(authDTOs.get(0).getAuthId()).get();
 
+        Boolean isInconsistentAccess = !accessesService.canDoAction(accessDTO.getVehicleReg(), accessDTO.getAction());
+
         AccessEntity accessEntity = AccessEntity.builder()
                 .createdUser(guardID)
                 .lastUpdatedUser(guardID)
@@ -434,6 +436,7 @@ public class AuthService implements IAuthService {
                 .plotId(authEntity.getPlotId())
                 .supplierEmployeeId(authDTOs.get(0).getExternalID())
                 .comments(accessDTO.getComments())
+                .isInconsistent(isInconsistentAccess)
                 .build();
 
         return accessesService.registerAccess(accessEntity);

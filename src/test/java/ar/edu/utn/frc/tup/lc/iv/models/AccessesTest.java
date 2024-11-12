@@ -10,10 +10,8 @@ class AccessesTest {
 
     @Test
     void testNoArgsConstructor() {
-        // When
         Accesses access = new Accesses();
 
-        // Then
         assertNotNull(access);
         assertNull(access.getAccessId());
         assertNull(access.getAuthRangeId());

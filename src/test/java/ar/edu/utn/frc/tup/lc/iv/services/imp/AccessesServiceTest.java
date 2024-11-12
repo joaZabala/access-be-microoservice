@@ -3,17 +3,16 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserDetailDto;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserDto;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.EntryReport.EntryReport;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.PaginatedResponse;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.AccessesFilter;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.accesses.DataType;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.dashboard.DashboardDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
-import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
-import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
-import ar.edu.utn.frc.tup.lc.iv.models.VehicleTypes;
-import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
+import ar.edu.utn.frc.tup.lc.iv.models.*;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AccessesRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.MockitoAnnotations;
@@ -28,14 +27,20 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -346,5 +351,178 @@ public class AccessesServiceTest {
         assertEquals(5L, result.get(5).getValue());
 
         verify(accessesRepository).findAccessCountsByDayOfWeekNative(from, to);
+    }
+
+    @Test
+    public void testGetInconsistentAccessCount() {
+        LocalDateTime from = LocalDateTime.of(2024, 11, 1, 0, 0);
+        LocalDateTime to = LocalDateTime.of(2024, 11, 2, 23, 59);
+        VisitorType visitorType = VisitorType.VISITOR;
+
+        when(accessesRepository.findAccessInconsistentCounts(from, to, visitorType)).thenReturn(5L);
+
+        Long result = accessesService.getInconsistentAccessCount(from, to, visitorType);
+
+        assertEquals(5L, result);
+        verify(accessesRepository).findAccessInconsistentCounts(from, to, visitorType);
+    }
+
+    @Test
+    public void testGetAccessByDate() {
+        LocalDate dateFrom = LocalDate.of(2024, 1, 1);
+        LocalDate dateTo = LocalDate.of(2024, 1, 2);
+
+        EntryReport expectedReport = new EntryReport();
+        expectedReport.setEntryCount(10L);
+        expectedReport.setExitCount(5L);
+
+        when(accessesRepository.countEntriesAndExitsBetweenDates(
+                dateFrom.atStartOfDay(),
+                dateTo.atTime(LocalTime.MAX)
+        )).thenReturn(expectedReport);
+
+        EntryReport result = accessesService.getAccessByDate(dateFrom, dateTo);
+
+        assertNotNull(result);
+        assertEquals(expectedReport.getEntryCount(), result.getEntryCount());
+        assertEquals(expectedReport.getExitCount(), result.getExitCount());
+
+        verify(accessesRepository).countEntriesAndExitsBetweenDates(
+                dateFrom.atStartOfDay(),
+                dateTo.atTime(LocalTime.MAX)
+        );
+    }
+    @Test
+    public void testGetAccessesByVisitor() {
+        LocalDateTime from = LocalDateTime.of(2024, 1, 1, 0, 0);
+        LocalDateTime to = LocalDateTime.of(2024, 1, 2, 23, 59);
+
+        List<Object[]> mockResults = new ArrayList<>();
+        mockResults.add(new Object[]{"VISITOR", 10L, 5L});
+
+        when(accessesRepository.findAccessCountsByVisitorType(eq(from), eq(to)))
+                .thenReturn(mockResults);
+
+        List<DashboardDTO> result = accessesService.getAccessesByVisitor(from, to);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+
+        DashboardDTO dto = result.get(0);
+        assertEquals("VISITOR", dto.getKey());
+        assertEquals(10L, dto.getValue());
+        assertEquals(5L, dto.getSecondaryValue());
+
+        verify(accessesRepository).findAccessCountsByVisitorType(from, to);
+    }
+
+    @Test
+    public void testGetAccessGroupedByDay() {
+        LocalDateTime from = LocalDateTime.of(2024, 1, 1, 0, 0);
+        LocalDateTime to = LocalDateTime.of(2024, 1, 2, 23, 59);
+        VisitorType visitorType = VisitorType.VISITOR;
+        ActionTypes actionType = ActionTypes.ENTRY;
+
+        List<Object[]> mockResults = new ArrayList<>();
+        mockResults.add(new Object[]{"2024-01-01", 5L});
+        mockResults.add(new Object[]{"2024-01-02", 8L});
+
+        when(accessesRepository.findAccessCountsByGroup(
+                eq(from), eq(to), eq(visitorType), eq(actionType), eq("%Y-%m-%d")))
+                .thenReturn(mockResults);
+
+        List<DashboardDTO> result = accessesService.getAccessGrouped(
+                from, to, visitorType, actionType, GroupByPeriod.DAY, DataType.ALL
+        );
+
+        assertEquals(2, result.size());
+        assertEquals("2024-01-01", result.get(0).getKey());
+        assertEquals(5L, result.get(0).getValue());
+        assertEquals("2024-01-02", result.get(1).getKey());
+        assertEquals(8L, result.get(1).getValue());
+    }
+
+    @Test
+    public void testGetAccessGroupedWithInconsistencies() {
+        LocalDateTime from = LocalDateTime.of(2024, 1, 1, 0, 0);
+        LocalDateTime to = LocalDateTime.of(2024, 1, 2, 23, 59);
+        VisitorType visitorType = VisitorType.VISITOR;
+        ActionTypes actionType = ActionTypes.ENTRY;
+
+        List<Object[]> mockResults = new ArrayList<>();
+        mockResults.add(new Object[]{"2024-01-01", 3L});
+
+        when(accessesRepository.findInconsistentAccessCountsByGroup(
+                eq(from), eq(to), eq(visitorType), eq(actionType), eq("%Y-%m-%d")))
+                .thenReturn(mockResults);
+
+        List<DashboardDTO> result = accessesService.getAccessGrouped(
+                from, to, visitorType, actionType, GroupByPeriod.DAY, DataType.INCONSISTENCIES
+        );
+
+        assertEquals(2, result.size());
+        assertEquals("2024-01-01", result.get(0).getKey());
+        assertEquals(3L, result.get(0).getValue());
+    }
+
+    @Test
+    public void testGetAccessGroupedWithLateData() {
+        LocalDateTime from = LocalDateTime.of(2024, 1, 1, 0, 0);
+        LocalDateTime to = LocalDateTime.of(2024, 1, 2, 23, 59);
+        VisitorType visitorType = VisitorType.VISITOR;
+        ActionTypes actionType = ActionTypes.ENTRY;
+
+        List<Object[]> mockResults = new ArrayList<>();
+        mockResults.add(new Object[]{"2024-01-01", 2L});
+
+        when(accessesRepository.findLateAccessCountsByGroup(
+                eq(from), eq(to), eq(visitorType), eq(actionType), eq("%Y-%m-%d")))
+                .thenReturn(mockResults);
+
+        List<DashboardDTO> result = accessesService.getAccessGrouped(
+                from, to, visitorType, actionType, GroupByPeriod.DAY, DataType.LATE
+        );
+
+        assertEquals(2, result.size());
+        assertEquals("2024-01-01", result.get(0).getKey());
+        assertEquals(2L, result.get(0).getValue());
+    }
+
+    @Test
+    public void testGetAccessGroupedByWeek() {
+        LocalDateTime from = LocalDateTime.of(2024, 1, 1, 0, 0);
+        LocalDateTime to = LocalDateTime.of(2024, 1, 7, 23, 59);
+        VisitorType visitorType = VisitorType.VISITOR;
+        ActionTypes actionType = ActionTypes.ENTRY;
+
+        List<Object[]> mockResults = new ArrayList<>();
+        mockResults.add(new Object[]{"2024-01", 15L});
+
+        when(accessesRepository.findAccessCountsByGroup(
+                eq(from), eq(to), eq(visitorType), eq(actionType), eq("%Y-%u")))
+                .thenReturn(mockResults);
+
+        List<DashboardDTO> result = accessesService.getAccessGrouped(
+                from, to, visitorType, actionType, GroupByPeriod.WEEK, DataType.ALL
+        );
+
+        assertFalse(result.isEmpty());
+        assertEquals("2024-01", result.get(0).getKey());
+        assertEquals(15L, result.get(0).getValue());
+    }
+
+    @Test
+    public void testGetAccessGroupedInvalidPeriod() {
+        LocalDateTime from = LocalDateTime.of(2024, 1, 1, 0, 0);
+        LocalDateTime to = LocalDateTime.of(2024, 1, 2, 23, 59);
+        VisitorType visitorType = VisitorType.VISITOR;
+        ActionTypes actionType = ActionTypes.ENTRY;
+        GroupByPeriod invalidPeriod = null;
+
+        assertThrows(NullPointerException.class, () -> {
+            accessesService.getAccessGrouped(
+                    from, to, visitorType, actionType, invalidPeriod, DataType.ALL
+            );
+        });
     }
 }
