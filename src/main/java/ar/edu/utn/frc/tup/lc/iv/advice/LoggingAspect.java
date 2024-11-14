@@ -16,7 +16,11 @@ import java.time.format.DateTimeFormatter;
 @Aspect
 @Component
 public class LoggingAspect {
-    private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
+    /**
+     * The LoggerFactory is a utility class
+     * producing Loggers for various logging APIs.
+     **/
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspect.class);
 
     /**
      * Logs an error message when an exception is thrown
@@ -30,7 +34,7 @@ public class LoggingAspect {
     )
     public void logAfterThrowingServices(Exception exception) {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        logger.error("ACCESSES | Services  [{}]: {}", timestamp, exception.getMessage(), exception);
+        LOGGER.error("ACCESSES | Services  [{}]: {}", timestamp, exception.getMessage(), exception);
     }
 
     /**
@@ -45,7 +49,7 @@ public class LoggingAspect {
     )
     public void logAfterThrowingInControllers(Exception exception) {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        logger.error("ACCESSES | Controllers [{}]: {}", timestamp, exception.getMessage(), exception);
+        LOGGER.error("ACCESSES | Controllers [{}]: {}", timestamp, exception.getMessage(), exception);
     }
 
     /**
@@ -55,13 +59,13 @@ public class LoggingAspect {
      * @param exception the exception that was thrown
      */
     @AfterThrowing(
-            pointcut = "execution(* ar.edu.utn.frc.tup.lc.iv..*(..)) " +
-                    "&& !execution(* ar.edu.utn.frc.tup.lc.iv.services.impl.*.*(..))" +
-                    "&& !execution(* ar.edu.utn.frc.tup.lc.iv.controllers.*.*(..))",
+            pointcut = "execution(* ar.edu.utn.frc.tup.lc.iv..*(..)) "
+                    + "&& !execution(* ar.edu.utn.frc.tup.lc.iv.services.impl.*.*(..))"
+                    + "&& !execution(* ar.edu.utn.frc.tup.lc.iv.controllers.*.*(..))",
             throwing = "exception"
     )
     public void logAfterThrowing(Exception exception) {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        logger.error("ACCESSES [{}]: {}", timestamp, exception.getMessage(), exception);
+        LOGGER.error("ACCESSES [{}]: {}", timestamp, exception.getMessage(), exception);
     }
 }
