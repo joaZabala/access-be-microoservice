@@ -135,4 +135,12 @@ public interface IAccessesService {
     Long getInconsistentAccessCount(LocalDateTime from,
                                     LocalDateTime to,
                                     VisitorType visitorType);
+
+
+    /**
+     * Retrieves the last access of an authorized person.
+     * @param authId
+     * @return the last access of the authorized person.
+     */
+    AccessEntity getLastAccessByAuthId(Long authId);
 }

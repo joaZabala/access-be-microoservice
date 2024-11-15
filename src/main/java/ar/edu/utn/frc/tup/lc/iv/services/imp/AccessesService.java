@@ -423,4 +423,14 @@ public class AccessesService implements IAccessesService {
         return accessesRepository.findAccessInconsistentCounts(from, to, visitorType);
 
     }
+    /**
+     * Retrieves last access.
+     * @param authId authId
+     * @return an optional last access
+     * */
+    @Override
+    public AccessEntity getLastAccessByAuthId(Long authId) {
+        List<AccessEntity> accesses = accessesRepository.findAccessByAuthIdDesc(authId);
+        return accesses.isEmpty() ? null : accesses.get(0);
+    }
 }

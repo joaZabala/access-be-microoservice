@@ -5,11 +5,14 @@ import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 
 import java.util.List;
 
+import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -67,5 +70,23 @@ public interface AuthRepository extends JpaRepository<AuthEntity, Long> {
      * @return records that match the given specification and pagination.
      */
     Page<AuthEntity> findAll(Specification<AuthEntity> spec, Pageable pageable);
+
+
+    /**
+     * Retrieves the most recent authorization record for a visitor
+     * based on the visitor type, document type, and document number.
+     * @param visitorType   the type of visitor.
+     * @param documentType  the type of document.
+     * @param docNumber     the document number.
+     * @return the most recent authorization record for the given visitor,
+     * or null if not found.
+     */
+    @Query("SELECT a FROM AuthEntity a WHERE a.isActive = true AND a.visitorType = :visitorType "
+    + "AND a.visitor.documentType = :documentType AND a.visitor.docNumber = :docNumber ORDER BY a.authId DESC")
+    AuthEntity findTopByIsActiveTrueAndVisitorTypeAndDocumentTypeAndDocNumberOrderByAuthIdDesc(
+        @Param("visitorType") VisitorType visitorType,
+        @Param("documentType") DocumentType documentType,
+        @Param("docNumber") Long docNumber
+    );
 
 }
