@@ -427,7 +427,7 @@ public class AuthService implements IAuthService {
     @Override
     public AccessDTO authorizeVisitor(AccessDTO accessDTO, Long guardID) {
         List<AuthDTO> authDTOs = getValidAuthsByDocNumber(accessDTO.getDocNumber());
-        AuthEntity authEntity;
+        AuthEntity authEntity = null;
         boolean isNotified = false;
 
         if (authDTOs.isEmpty() && accessDTO.getAction() == ActionTypes.ENTRY) {
@@ -448,18 +448,22 @@ public class AuthService implements IAuthService {
                         moderationsRestClient.sendModeration(authEntity.getPlotId().toString(), description,
                                 sanctionTypeId.toString());
                     } catch (Exception e) {
-                        System.err.println("Error al enviar moderación: " + e.getMessage());
+                        System.err.println("Error al enviar moderación:  " + e.getMessage());
                     }
                 }
             }
-        } else {
-            authEntity = authRepository.findById(authDTOs.get(0).getAuthId()).get();
         }
+
+        if (authDTOs.isEmpty() && authEntity == null) {
+           authEntity =  accessesService.getLastAccessByDocNumber(accessDTO.getDocNumber()).getAuth();
+        }
+
         AuthDTO auth;
         boolean isLate = false;
 
         if (!authDTOs.isEmpty()) {
             auth = authDTOs.get(0);
+            authEntity = authRepository.findByAuthId(auth.getAuthId());
             if ((auth.getVisitorType() == VisitorType.WORKER
                     || auth.getVisitorType() == VisitorType.EMPLOYEE) && accessDTO.getAction() == ActionTypes.ENTRY) {
 

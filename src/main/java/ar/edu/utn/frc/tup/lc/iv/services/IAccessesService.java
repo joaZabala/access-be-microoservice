@@ -143,4 +143,10 @@ public interface IAccessesService {
      * @return the last access of the authorized person.
      */
     AccessEntity getLastAccessByAuthId(Long authId);
+    /**
+     * retrieves last access by document number.
+     * @param docNumber document number.
+     * @return last access.
+     */
+    public AccessEntity getLastAccessByDocNumber(Long docNumber);
 }

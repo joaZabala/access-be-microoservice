@@ -206,6 +206,18 @@ public class AccessesService implements IAccessesService {
     }
 
     /**
+     * retrieves last access by document number.
+     * @param docNumber document number.
+     * @return last access.
+     */
+    @Override
+    public AccessEntity getLastAccessByDocNumber(Long docNumber) {
+        AccessEntity acc = accessesRepository.findByAuthVisitorDocNumber(docNumber).stream()
+                .max(Comparator.comparing(AccessEntity::getActionDate))
+                .orElse(null);
+        return acc;
+    }
+    /**
      * Maps an AccessEntity to an AccessDTO.
      * @param accessEntity AccessEntity to be mapped.
      * @return AccessDTO representing the AccessEntity.
