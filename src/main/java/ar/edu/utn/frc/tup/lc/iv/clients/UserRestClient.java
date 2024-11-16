@@ -118,4 +118,13 @@ public class UserRestClient {
             return new ArrayList<>();
         } //ver qeu hacer, si esto devuelve null, mostarlo en el front o no?
     }
+    /**
+     * fallback for fetches users by ids.
+     * @param ids all ids for filter
+     * @param e Exception
+     * @return list of users.
+     */
+    public List<UserDetailDto> fallback(List<Long> ids, Exception e) {
+        return new ArrayList<>();
+    }
 }
