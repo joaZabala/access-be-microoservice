@@ -114,7 +114,7 @@ public class AuthService implements IAuthService {
      * @param filter object with fitlers
      * @param page   The page number for pagination (default is 0).
      * @param size   The number of records per page (default is 10).
-     * @return List<AuthDTO>
+     * @return list of all auths
      */
     @Override
     public List<AuthDTO> getAllAuths(AuthFilter filter, int page, int size) {
