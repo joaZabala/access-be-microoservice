@@ -30,7 +30,7 @@ public class ModerationsRestClient {
     /**
     * The URL of the moderation service.
     */
-    @Value("http://localhost:8080")
+    @Value("${moderations.service.url}")
     private String moderationsServiceUrl;
 
     /**
