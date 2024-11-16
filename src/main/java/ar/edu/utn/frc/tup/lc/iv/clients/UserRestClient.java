@@ -98,12 +98,13 @@ public class UserRestClient {
     public List<UserDetailDto> getUsersByIds(List<Long> ids) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        String url = userServiceUrl + "/users/byIds";
 
         HttpEntity<List<Long>> requestEntity = new HttpEntity<>(ids, headers);
 
         try {
             ResponseEntity<UserDetailDto[]> response = restTemplate.postForEntity(
-                    userServiceUrl + "users/byIds",
+                    url,
                     requestEntity,
                     UserDetailDto[].class
             );
