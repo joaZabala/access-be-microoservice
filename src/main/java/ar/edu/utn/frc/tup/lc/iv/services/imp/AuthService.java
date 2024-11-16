@@ -139,7 +139,7 @@ public class AuthService implements IAuthService {
                 UserDetailDto userDetail = userDetailMap.get(authEntity.getCreatedUser());
 
                 if (userDetail != null) {
-                    authDTO.setAuthName(userDetail.getUserName());
+                    authDTO.setAuthName(userDetail.getFirstName());
                     authDTO.setAuthLastName(userDetail.getLastName());
                 }
                 authDTO.setAuthorizerId(authEntity.getCreatedUser());
