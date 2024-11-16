@@ -64,6 +64,7 @@ CREATE TABLE accesses (
     auth_id BIGINT DEFAULT NULL,
     is_inconsistent BIT(1) DEFAULT b'0',
     notified BIT(1) DEFAULT b'0',
+    is_late BIT(1) DEFAULT b'0',
     PRIMARY KEY (id),
     KEY FK_authvisit (auth_id),
     CONSTRAINT FK_authvisit FOREIGN KEY (auth_id) REFERENCES auths(id)

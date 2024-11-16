@@ -194,7 +194,7 @@ public class AccessController {
      * @param to date to.
      * @return entry report.
      */
-    @GetMapping("/getAccessCounts")
+    @GetMapping("/counts")
     public EntryReport getAccessByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
 

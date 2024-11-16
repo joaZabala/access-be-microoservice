@@ -206,6 +206,17 @@ public class AccessesService implements IAccessesService {
     }
 
     /**
+     * retrieves last access by document number.
+     * @param docNumber document number.
+     * @return last access.
+     */
+    @Override
+    public AccessEntity getLastAccessByDocNumber(Long docNumber) {
+        return accessesRepository.findByAuthVisitorDocNumber(docNumber).stream()
+                .max(Comparator.comparing(AccessEntity::getActionDate))
+                .orElse(null);
+    }
+    /**
      * Maps an AccessEntity to an AccessDTO.
      * @param accessEntity AccessEntity to be mapped.
      * @return AccessDTO representing the AccessEntity.
@@ -422,5 +433,15 @@ public class AccessesService implements IAccessesService {
                                                          VisitorType visitorType) {
         return accessesRepository.findAccessInconsistentCounts(from, to, visitorType);
 
+    }
+    /**
+     * Retrieves last access.
+     * @param authId authId
+     * @return an optional last access
+     * */
+    @Override
+    public AccessEntity getLastAccessByAuthId(Long authId) {
+        List<AccessEntity> accesses = accessesRepository.findAccessByAuthIdDesc(authId);
+        return accesses.isEmpty() ? null : accesses.get(0);
     }
 }

@@ -2,8 +2,10 @@ package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
+import ar.edu.utn.frc.tup.lc.iv.clients.ModerationsRestClient;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserDetailDto;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
@@ -12,6 +14,7 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeRequestDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
+import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthRange;
 import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
 import ar.edu.utn.frc.tup.lc.iv.models.VisitorType;
@@ -100,12 +103,18 @@ public class AuthService implements IAuthService {
     private UserRestClient userRestClient;
 
     /**
+     * moderationsRestClient.
+     */
+    @Autowired
+    private ModerationsRestClient moderationsRestClient;
+
+    /**
      * Get all authorizations.
      *
      * @param filter object with fitlers
      * @param page   The page number for pagination (default is 0).
      * @param size   The number of records per page (default is 10).
-     * @return List<AuthDTO>
+     * @return list of all auths
      */
     @Override
     public List<AuthDTO> getAllAuths(AuthFilter filter, int page, int size) {
@@ -278,8 +287,10 @@ public class AuthService implements IAuthService {
 
         return existingAuth; // Devuelve la autorización actualizada
     }
+
     /**
      * update authorization authorized ranges.
+     *
      * @param visitorAuthRequest request
      * @return updated authorization.
      */
@@ -301,23 +312,24 @@ public class AuthService implements IAuthService {
         authDTO.setActive(authEntity.isActive());
 
         /*
-        if (visitorAuthRequest.getVisitorType() == VisitorType.PROVIDER
-        || visitorAuthRequest.getVisitorType() == VisitorType.WORKER) {
-            authDTO.setAuthRanges(authRangeService.
-            getAuthRangesByAuthExternalID(visitorAuthRequest.getExternalID()));
-        } else {
-        */
+         * if (visitorAuthRequest.getVisitorType() == VisitorType.PROVIDER
+         * || visitorAuthRequest.getVisitorType() == VisitorType.WORKER) {
+         * authDTO.setAuthRanges(authRangeService.
+         * getAuthRangesByAuthExternalID(visitorAuthRequest.getExternalID()));
+         * } else {
+         */
         AuthRangeDTO[] rangelist = authRangeService.updateAuthRangeByAuthId(authEntity.getAuthId(),
-                        visitorAuthRequest.getAuthRangeRequest());
+                visitorAuthRequest.getAuthRangeRequest());
 
-            authDTO.setAuthRanges(Arrays.stream(rangelist)
-                    .filter(Objects::nonNull)
-                    .map(auth -> modelMapper.map(auth, AuthRangeDTO.class))
-                    .collect(Collectors.toList()));
-        /*}*/
+        authDTO.setAuthRanges(Arrays.stream(rangelist)
+                .filter(Objects::nonNull)
+                .map(auth -> modelMapper.map(auth, AuthRangeDTO.class))
+                .collect(Collectors.toList()));
+        /* } */
 
         return authDTO;
     }
+
     /**
      * Create a new authorization.
      *
@@ -415,13 +427,63 @@ public class AuthService implements IAuthService {
     @Override
     public AccessDTO authorizeVisitor(AccessDTO accessDTO, Long guardID) {
         List<AuthDTO> authDTOs = getValidAuthsByDocNumber(accessDTO.getDocNumber());
+        AuthEntity authEntity = null;
+        boolean isNotified = false;
 
-        if (authDTOs.isEmpty()) {
+        if (authDTOs.isEmpty() && accessDTO.getAction() == ActionTypes.ENTRY) {
             throw new EntityNotFoundException(
                     "No existen autorizaciones validas para el documento " + accessDTO.getDocNumber());
+        } else if (accessDTO.getAction() == ActionTypes.EXIT) {
+            authEntity = authRepository.findTopByIsActiveTrueAndVisitorTypeAndDocumentTypeAndDocNumberOrderByAuthIdDesc(
+                    VisitorType.WORKER, DocumentType.DNI, accessDTO.getDocNumber());
+            if (authEntity != null) {
+                LocalTime targetTime = LocalTime.of(18, 30);
+                LocalTime currentTime = LocalTime.now();
+                if (currentTime.isAfter(targetTime)) {
+                    isNotified = true;
+                    String description = "El trabajador " + authEntity.getVisitor().getName() + " "
+                            + authEntity.getVisitor().getLastName() + " salió del barrio fuera del horario permitido";
+                    Long sanctionTypeId = 1002L;
+                    try {
+                        moderationsRestClient.sendModeration(authEntity.getPlotId().toString(), description,
+                                sanctionTypeId.toString());
+                    } catch (Exception e) {
+                        System.err.println("Error al enviar moderación:  " + e.getMessage());
+                    }
+                }
+            }
         }
 
-        AuthEntity authEntity = authRepository.findById(authDTOs.get(0).getAuthId()).get();
+        if (authDTOs.isEmpty() && authEntity == null) {
+           authEntity =  accessesService.getLastAccessByDocNumber(accessDTO.getDocNumber()).getAuth();
+        }
+
+        AuthDTO auth;
+        boolean isLate = false;
+
+        if (!authDTOs.isEmpty()) {
+            auth = authDTOs.get(0);
+            authEntity = authRepository.findByAuthId(auth.getAuthId());
+            if ((auth.getVisitorType() == VisitorType.WORKER
+                    || auth.getVisitorType() == VisitorType.EMPLOYEE) && accessDTO.getAction() == ActionTypes.ENTRY) {
+
+                if (auth.getAuthRanges().isEmpty()) {
+                    throw new EntityNotFoundException(
+                            "No existen rangos para  el documento " + accessDTO.getDocNumber());
+                }
+                auth.getAuthRanges().sort(Comparator
+                        .comparing(AuthRangeDTO::getDateFrom)
+                        .thenComparing(AuthRangeDTO::getHourFrom));
+                AccessEntity lastAccess = accessesService.getLastAccessByAuthId(auth.getAuthId());
+                if (lastAccess != null) {
+                    boolean isSameDay = lastAccess.getActionDate().toLocalDate().isEqual(LocalDate.now());
+                    isLate = !isSameDay && auth.getAuthRanges().get(0).getHourFrom().plusMinutes(15).isBefore(LocalTime.now());
+                } else {
+                    isLate = auth.getAuthRanges().get(0).getHourFrom().plusMinutes(15).isBefore(LocalTime.now());
+                }
+
+            }
+        }
 
         Boolean isInconsistentAccess = !accessesService.canDoAction(accessDTO.getVehicleReg(), accessDTO.getAction());
 
@@ -435,9 +497,11 @@ public class AuthService implements IAuthService {
                 .vehicleReg(accessDTO.getVehicleReg())
                 .vehicleDescription(accessDTO.getVehicleDescription())
                 .plotId(authEntity.getPlotId())
-                .supplierEmployeeId(authDTOs.get(0).getExternalID())
+                .supplierEmployeeId(authEntity.getExternalID())
                 .comments(accessDTO.getComments())
                 .isInconsistent(isInconsistentAccess)
+                .isLate(isLate)
+                .notified(isNotified)
                 .build();
 
         return accessesService.registerAccess(accessEntity);
