@@ -141,7 +141,7 @@ class UserRestClientTest {
         ResponseEntity<UserDetailDto[]> responseEntity = new ResponseEntity<>(userDetails, HttpStatus.OK);
 
         when(restTemplate.postForEntity(
-                eq(userService + "/byIds"),
+                eq(userService + "users/byIds"),
                 any(HttpEntity.class),
                 eq(UserDetailDto[].class)
         )).thenReturn(responseEntity);
