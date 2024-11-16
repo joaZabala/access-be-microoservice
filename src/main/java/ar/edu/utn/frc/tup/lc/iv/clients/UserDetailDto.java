@@ -77,4 +77,24 @@ public class UserDetailDto {
      */
     @JsonProperty(value = "roles")
     private List<RoleDTO> roles;
+    /**
+     * Created Date.
+     */
+    @JsonProperty(value = "created_date")
+    private String createdDate;
+    /**
+     * Document Number.
+     */
+    @JsonProperty(value = "document_number")
+    private String documentNumber;
+    /**
+     * Document Type.
+     */
+    @JsonProperty(value = "document_type")
+    private String documentType;
+    /**
+     * birthDate.
+     */
+    @JsonProperty(value = "birthdate")
+    private String birthDate;
 }

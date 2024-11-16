@@ -134,14 +134,14 @@ class UserRestClientTest {
 
         UserDetailDto[] userDetails = {
                 new UserDetailDto(1L, "John", "Doe", "johndoe", "johndoe@example.com", true, 100L, 200L,
-                        List.of(address), List.of(contact), List.of(role)),
+                        List.of(address), List.of(contact), List.of(role), null, null, null, null),
                 new UserDetailDto(2L, "Jane", "Doe", "janedoe", "janedoe@example.com", true, 101L, 201L,
-                        List.of(address), List.of(contact), List.of(role))
+                        List.of(address), List.of(contact), List.of(role), null, null, null, null)
         };
         ResponseEntity<UserDetailDto[]> responseEntity = new ResponseEntity<>(userDetails, HttpStatus.OK);
 
         when(restTemplate.postForEntity(
-                eq(userService + "/byIds"),
+                eq(userService + "/users/byIds"),
                 any(HttpEntity.class),
                 eq(UserDetailDto[].class)
         )).thenReturn(responseEntity);

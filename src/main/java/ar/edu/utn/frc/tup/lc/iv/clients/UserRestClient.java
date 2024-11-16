@@ -98,12 +98,13 @@ public class UserRestClient {
     public List<UserDetailDto> getUsersByIds(List<Long> ids) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        String url = userServiceUrl + "/users/byIds";
 
         HttpEntity<List<Long>> requestEntity = new HttpEntity<>(ids, headers);
 
         try {
             ResponseEntity<UserDetailDto[]> response = restTemplate.postForEntity(
-                    userServiceUrl + "/byIds",
+                    url,
                     requestEntity,
                     UserDetailDto[].class
             );
@@ -116,5 +117,14 @@ public class UserRestClient {
         } catch (Exception e) {
             return new ArrayList<>();
         } //ver qeu hacer, si esto devuelve null, mostarlo en el front o no?
+    }
+    /**
+     * fallback for fetches users by ids.
+     * @param ids all ids for filter
+     * @param e Exception
+     * @return list of users.
+     */
+    public List<UserDetailDto> fallback(List<Long> ids, Exception e) {
+        return new ArrayList<>();
     }
 }
