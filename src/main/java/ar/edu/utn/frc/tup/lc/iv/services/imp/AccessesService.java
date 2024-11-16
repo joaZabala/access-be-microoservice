@@ -212,10 +212,9 @@ public class AccessesService implements IAccessesService {
      */
     @Override
     public AccessEntity getLastAccessByDocNumber(Long docNumber) {
-        AccessEntity acc = accessesRepository.findByAuthVisitorDocNumber(docNumber).stream()
+        return accessesRepository.findByAuthVisitorDocNumber(docNumber).stream()
                 .max(Comparator.comparing(AccessEntity::getActionDate))
                 .orElse(null);
-        return acc;
     }
     /**
      * Maps an AccessEntity to an AccessDTO.

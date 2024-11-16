@@ -148,5 +148,5 @@ public interface IAccessesService {
      * @param docNumber document number.
      * @return last access.
      */
-    public AccessEntity getLastAccessByDocNumber(Long docNumber);
+    AccessEntity getLastAccessByDocNumber(Long docNumber);
 }
