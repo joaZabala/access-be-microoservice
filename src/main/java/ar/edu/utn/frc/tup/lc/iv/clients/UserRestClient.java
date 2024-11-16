@@ -103,7 +103,7 @@ public class UserRestClient {
 
         try {
             ResponseEntity<UserDetailDto[]> response = restTemplate.postForEntity(
-                    userServiceUrl + "/byIds",
+                    userServiceUrl + "users/byIds",
                     requestEntity,
                     UserDetailDto[].class
             );
