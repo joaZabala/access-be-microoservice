@@ -1,6 +1,10 @@
 package ar.edu.utn.frc.tup.lc.iv.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +25,13 @@ import java.time.LocalTime;
 @Audited
 @AuditTable("setup_audit")
 public class SetupEntity {
+    /**
+     * Unique identifier of the Setup.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
     /**
      * Grace period in minutes before marking an entry as late.
      */

@@ -3,9 +3,15 @@ package ar.edu.utn.frc.tup.lc.iv.dtos.common.Setup;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
 
+@AllArgsConstructor
+@Data
+@NoArgsConstructor
 public class SetupDTO {
     /**
      * Format for time as "HH:mm:ss".

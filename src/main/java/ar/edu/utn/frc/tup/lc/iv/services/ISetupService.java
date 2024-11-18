@@ -7,9 +7,9 @@ public interface ISetupService {
      * @param setup setup times
      * @return retrieves a setup config
      * */
-    SetupDTO updateSetup(SetupDTO setup);
+    SetupDTO updateSetup(SetupDTO setup) throws Exception;
     /**
      * @return retrieves setup config
      * */
-    SetupDTO getSetup();
+    SetupDTO getSetup() throws Exception;
 }
