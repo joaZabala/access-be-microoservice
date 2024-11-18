@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AuthEntity;
+import ar.edu.utn.frc.tup.lc.iv.entities.AuthRangeEntity;
 import ar.edu.utn.frc.tup.lc.iv.entities.VisitorEntity;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRangeRepository;
 import ar.edu.utn.frc.tup.lc.iv.repositories.AuthRepository;
@@ -426,16 +427,26 @@ public class AuthService implements IAuthService {
      */
     @Override
     public AccessDTO authorizeVisitor(AccessDTO accessDTO, Long guardID) {
-        List<AuthDTO> authDTOs = getValidAuthsByDocNumber(accessDTO.getDocNumber());
-        AuthEntity authEntity = null;
-        boolean isNotified = false;
+        Optional<AuthEntity> optinalAuth = authRepository.findById(accessDTO.getAuthId());
 
-        if (authDTOs.isEmpty() && accessDTO.getAction() == ActionTypes.ENTRY) {
+        AuthEntity authEntity = null;
+
+        Boolean isNotified = false;
+
+        if (accessDTO.getAction() == ActionTypes.ENTRY && optinalAuth.isEmpty()) {
             throw new EntityNotFoundException(
                     "No existen autorizaciones validas para el documento " + accessDTO.getDocNumber());
-        } else if (accessDTO.getAction() == ActionTypes.EXIT) {
-            authEntity = authRepository.findTopByIsActiveTrueAndVisitorTypeAndDocumentTypeAndDocNumberOrderByAuthIdDesc(
-                    VisitorType.WORKER, DocumentType.DNI, accessDTO.getDocNumber());
+        }
+
+        if (accessDTO.getAction() == ActionTypes.EXIT) {
+            AccessEntity accessEntity = accessesService.getLastAccessByDocNumber(accessDTO.getDocNumber());
+
+            if(accessEntity == null){
+                throw new EntityNotFoundException("No se encontró ningun ingreso para el numero de documento " + accessDTO.getDocNumber());
+            }
+
+            authEntity = accessEntity.getAuth();
+
             if (authEntity != null) {
                 LocalTime targetTime = LocalTime.of(18, 30);
                 LocalTime currentTime = LocalTime.now();
@@ -443,7 +454,7 @@ public class AuthService implements IAuthService {
                     isNotified = true;
                     String description = "El trabajador " + authEntity.getVisitor().getName() + " "
                             + authEntity.getVisitor().getLastName() + " salió del barrio fuera del horario permitido";
-                    Long sanctionTypeId = 1002L;
+                    Long sanctionTypeId = 1001L;
                     try {
                         moderationsRestClient.sendModeration(authEntity.getPlotId().toString(), description,
                                 sanctionTypeId.toString());
@@ -454,32 +465,33 @@ public class AuthService implements IAuthService {
             }
         }
 
-        if (authDTOs.isEmpty() && authEntity == null) {
-           authEntity =  accessesService.getLastAccessByDocNumber(accessDTO.getDocNumber()).getAuth();
+        if (accessDTO.getAction() == ActionTypes.ENTRY) {
+            authEntity = optinalAuth.get();
         }
 
-        AuthDTO auth;
         boolean isLate = false;
 
-        if (!authDTOs.isEmpty()) {
-            auth = authDTOs.get(0);
-            authEntity = authRepository.findByAuthId(auth.getAuthId());
-            if ((auth.getVisitorType() == VisitorType.WORKER
-                    || auth.getVisitorType() == VisitorType.EMPLOYEE) && accessDTO.getAction() == ActionTypes.ENTRY) {
+        if (!optinalAuth.isEmpty()) {
 
-                if (auth.getAuthRanges().isEmpty()) {
+            List<AuthRangeEntity> authRanges = authRangeRepository.findByAuthId(authEntity);
+
+            if ((authEntity.getVisitorType() == VisitorType.WORKER
+                    || authEntity.getVisitorType() == VisitorType.EMPLOYEE) && accessDTO.getAction() == ActionTypes.ENTRY) {
+
+                if (authRanges.isEmpty()) {
                     throw new EntityNotFoundException(
                             "No existen rangos para  el documento " + accessDTO.getDocNumber());
                 }
-                auth.getAuthRanges().sort(Comparator
-                        .comparing(AuthRangeDTO::getDateFrom)
-                        .thenComparing(AuthRangeDTO::getHourFrom));
-                AccessEntity lastAccess = accessesService.getLastAccessByAuthId(auth.getAuthId());
+                authRanges.sort(Comparator
+                        .comparing(AuthRangeEntity::getDateFrom)
+                        .thenComparing(AuthRangeEntity::getHourFrom));
+                AccessEntity lastAccess = accessesService.getLastAccessByAuthId(authEntity.getAuthId());
                 if (lastAccess != null) {
                     boolean isSameDay = lastAccess.getActionDate().toLocalDate().isEqual(LocalDate.now());
-                    isLate = !isSameDay && auth.getAuthRanges().get(0).getHourFrom().plusMinutes(15).isBefore(LocalTime.now());
+                    isLate = !isSameDay
+                            && authRanges.get(0).getHourFrom().plusMinutes(15).isBefore(LocalTime.now());
                 } else {
-                    isLate = auth.getAuthRanges().get(0).getHourFrom().plusMinutes(15).isBefore(LocalTime.now());
+                    isLate = authRanges.get(0).getHourFrom().plusMinutes(15).isBefore(LocalTime.now());
                 }
 
             }
@@ -557,7 +569,8 @@ public class AuthService implements IAuthService {
 
     /**
      * Deletes all authorizations by document number.
-     * @param docNumber document number of the authorized person.
+     * 
+     * @param docNumber    document number of the authorized person.
      * @param documentType document type of the authorized person.
      * @return the deleted {@link AuthDTO}.
      */
@@ -566,10 +579,11 @@ public class AuthService implements IAuthService {
         VisitorDTO visitorDTO = visitorService.getVisitorByDocNumberAndDocumentType(docNumber, documentType);
         VisitorEntity visitorEntity = modelMapper.map(visitorDTO, VisitorEntity.class);
 
-        List<AuthEntity> authEntityList =  authRepository.findByVisitor(visitorEntity);
+        List<AuthEntity> authEntityList = authRepository.findByVisitor(visitorEntity);
 
         if (authEntityList.isEmpty()) {
-            throw new EntityNotFoundException("No se encontraron autorizaciones para el " + documentType + " " + docNumber);
+            throw new EntityNotFoundException(
+                    "No se encontraron autorizaciones para el " + documentType + " " + docNumber);
         }
 
         for (AuthEntity authEntity : authEntityList) {

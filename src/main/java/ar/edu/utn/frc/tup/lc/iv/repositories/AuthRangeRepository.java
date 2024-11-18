@@ -42,4 +42,6 @@ public interface AuthRangeRepository extends JpaRepository<AuthRangeEntity, Long
      */
     // PMD ignore MethodNamingConventions
     List<AuthRangeEntity> findByAuthIdExternalIDAndAuthIdPlotId(Long externalID, Long plotId);
+
+    
 }
