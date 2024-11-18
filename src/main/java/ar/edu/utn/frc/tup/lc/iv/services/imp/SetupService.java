@@ -4,10 +4,15 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.Setup.SetupDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.SetupEntity;
 import ar.edu.utn.frc.tup.lc.iv.repositories.SetupRepository;
 import ar.edu.utn.frc.tup.lc.iv.services.ISetupService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
+/**
+ * Service for setup entity.
+ * */
+@Service
 public class SetupService implements ISetupService {
     /**
      * repository of authorizations.
@@ -19,12 +24,12 @@ public class SetupService implements ISetupService {
      * @return retrieves a setup config
      * */
     @Override
-    public SetupDTO updateSetup(SetupDTO setup) throws Exception {
+    public SetupDTO updateSetup(SetupDTO setup) {
 
-        Optional<SetupEntity> optionalSetup = setupRepository.findById(1L);
+        Optional<SetupEntity> optionalSetup = setupRepository.findFirstByOrderByIdAsc();
 
         if (optionalSetup.isEmpty()) {
-            throw new Exception("La configuracion inicial no está cargada");
+            throw new EntityNotFoundException("La configuracion inicial no está cargada");
         }
 
         SetupEntity setupEntity = optionalSetup.get();
@@ -38,11 +43,11 @@ public class SetupService implements ISetupService {
      * @return retrieves setup config
      * */
     @Override
-    public SetupDTO getSetup() throws Exception {
-        Optional<SetupEntity> optionalSetup = setupRepository.findById(1L);
+    public SetupDTO getSetup() {
+        Optional<SetupEntity> optionalSetup = setupRepository.findFirstByOrderByIdAsc();
 
         if (optionalSetup.isEmpty()) {
-            throw new Exception("La configuracion inicial no está cargada");
+            throw new EntityNotFoundException("La configuracion inicial no está cargada");
         }
         SetupEntity setupEntity = optionalSetup.get();
 
