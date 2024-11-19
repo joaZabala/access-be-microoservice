@@ -15,7 +15,6 @@ import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeRequestDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
-import ar.edu.utn.frc.tup.lc.iv.entities.SetupEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthRange;
 import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
@@ -427,11 +426,11 @@ public class AuthService implements IAuthService {
      */
     @Override
     public AccessDTO authorizeVisitor(AccessDTO accessDTO, Long guardID) {
-        if(accessDTO.getAuthId() == null && accessDTO.getAction() == ActionTypes.EXIT){
+        if (accessDTO.getAuthId() == null && accessDTO.getAction() == ActionTypes.EXIT) {
             accessDTO.setAuthId(0L);
         }
 
-        if(accessDTO.getAuthId() == null && accessDTO.getAction() == ActionTypes.ENTRY){
+        if (accessDTO.getAuthId() == null && accessDTO.getAction() == ActionTypes.ENTRY) {
             throw new EntityNotFoundException("No se encontró la autorización para el ingreso");
         }
 
@@ -450,7 +449,7 @@ public class AuthService implements IAuthService {
         if (accessDTO.getAction() == ActionTypes.EXIT) {
             AccessEntity accessEntity = accessesService.getLastAccessByDocNumber(accessDTO.getDocNumber());
 
-            if(accessEntity == null){
+            if (accessEntity == null) {
                 throw new EntityNotFoundException("No se encontró ningun ingreso para el numero de documento " + accessDTO.getDocNumber());
             }
 
@@ -581,7 +580,7 @@ public class AuthService implements IAuthService {
 
     /**
      * Deletes all authorizations by document number.
-     * 
+     *
      * @param docNumber    document number of the authorized person.
      * @param documentType document type of the authorized person.
      * @return the deleted {@link AuthDTO}.

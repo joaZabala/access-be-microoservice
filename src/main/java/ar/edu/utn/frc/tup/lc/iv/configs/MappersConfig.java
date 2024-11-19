@@ -27,19 +27,14 @@ public class MappersConfig {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
-        
+
         // Configure specific mapping for AccessEntity to AccessDTO
         PropertyMap<AccessEntity, AccessDTO> accessMapping = new PropertyMap<AccessEntity, AccessDTO>() {
             @Override
             protected void configure() {
-                // Explicitly map the authId field
                 map().setAuthId(source.getAuth().getAuthId());
-                
-                // Skip other ambiguous fields if any
                 skip().setAuthDocNumber(null);
                 skip().setAuthDocType(null);
-                
-                // Map other fields that need explicit mapping
                 map().setVehicleType(source.getVehicleType());
                 map().setVehicleReg(source.getVehicleReg());
                 map().setVehicleDescription(source.getVehicleDescription());
@@ -49,9 +44,9 @@ public class MappersConfig {
                 map().setIsLate(source.getIsLate());
             }
         };
-        
+
         modelMapper.addMappings(accessMapping);
-        
+
         return modelMapper;
     }
 
