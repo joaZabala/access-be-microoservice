@@ -433,6 +433,16 @@ public class AuthService implements IAuthService {
      */
     @Override
     public AccessDTO authorizeVisitor(AccessDTO accessDTO, Long guardID) {
+        if(accessDTO.getAuthId() == null && accessDTO.getAction() == ActionTypes.EXIT){
+            accessDTO.setAuthId(0L);
+        }
+
+        if(accessDTO.getAuthId() == null && accessDTO.getAction() == ActionTypes.ENTRY){
+            throw new EntityNotFoundException("No se encontró la autorización para el ingreso");
+        }
+
+
+
         Optional<AuthEntity> optinalAuth = authRepository.findById(accessDTO.getAuthId());
 
         AuthEntity authEntity = null;
