@@ -26,10 +26,8 @@ public class SetupDTO {
     /**
      * Grace period in minutes before marking an entry as late.
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TIME_FORMAT)
-    @Schema(type = STRING_TYPE, pattern = TIME_FORMAT, example = "17:00:00")
     @JsonProperty("time_of_grace")
-    private LocalTime timeOfGrace;
+    private Integer timeOfGrace;
     /**
      * Final time after which employees
      * must leave the facility.

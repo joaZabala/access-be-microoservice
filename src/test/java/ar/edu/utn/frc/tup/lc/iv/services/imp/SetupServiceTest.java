@@ -38,18 +38,18 @@ public class SetupServiceTest {
     public void setUp() {
         setupEntity = new SetupEntity();
         setupEntity.setTargetTime(LocalTime.of(17, 0));
-        setupEntity.setTimeOfGrace(LocalTime.of(15, 0));
+        setupEntity.setTimeOfGrace(15);
 
-        setupDTO = new SetupDTO(LocalTime.of(15, 0), LocalTime.of(17, 0));
+        setupDTO = new SetupDTO(15, LocalTime.of(17, 0));
     }
 
     @Test
     void testUpdateSetup() {
         SetupEntity setupEntity = new SetupEntity();
-        setupEntity.setTimeOfGrace(LocalTime.of(10, 0));
+        setupEntity.setTimeOfGrace(10);
         setupEntity.setTargetTime(LocalTime.of(18, 0));
 
-        SetupDTO setupDTO = new SetupDTO(LocalTime.of(9, 0), LocalTime.of(17, 0));
+        SetupDTO setupDTO = new SetupDTO(9, LocalTime.of(17, 0));
 
         when(setupRepository.findFirstByOrderByIdAsc()).thenReturn(Optional.of(setupEntity));
 
@@ -65,7 +65,7 @@ public class SetupServiceTest {
     @Test
     void testGetSetup() throws Exception {
         SetupEntity setupEntity = new SetupEntity();
-        setupEntity.setTimeOfGrace(LocalTime.of(10, 0));
+        setupEntity.setTimeOfGrace(10);
         setupEntity.setTargetTime(LocalTime.of(18, 0));
 
         when(setupRepository.findFirstByOrderByIdAsc()).thenReturn(Optional.of(setupEntity));

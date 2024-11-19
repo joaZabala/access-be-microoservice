@@ -35,7 +35,7 @@ public class SetupEntity {
     /**
      * Grace period in minutes before marking an entry as late.
      */
-    private LocalTime timeOfGrace;
+    private Integer timeOfGrace;
     /**
      * Final time after which employees
      * must leave the facility.
