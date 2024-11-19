@@ -56,7 +56,7 @@ public class SetupServiceTest {
         SetupDTO result = setupService.updateSetup(setupDTO);
 
         assertNotNull(result);
-        assertEquals(result.getTimeOfGrace(), LocalTime.of(9, 0));
+        assertEquals(result.getTimeOfGrace(), 9);
         assertEquals(result.getTargetTime(), LocalTime.of(17, 0));
 
         verify(setupRepository, times(1)).save(setupEntity);
@@ -73,7 +73,7 @@ public class SetupServiceTest {
         SetupDTO result = setupService.getSetup();
 
         assertNotNull(result);
-        assertEquals(result.getTimeOfGrace(), LocalTime.of(10, 0));
+        assertEquals(result.getTimeOfGrace(), 10);
         assertEquals(result.getTargetTime(), LocalTime.of(18, 0));
     }
 }
