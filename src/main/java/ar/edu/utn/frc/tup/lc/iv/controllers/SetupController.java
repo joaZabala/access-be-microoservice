@@ -6,11 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller for handling setup requests.
@@ -46,11 +42,13 @@ public class SetupController {
      * Endpoint to update the setup configuration.
      *
      * @param setupDTO the new setup configuration.
+     * @param userId request.
      * @return the updated setup configuration.
      */
     @PutMapping
     @Operation(summary = "Update setup configuration", description = "Updates the current setup configuration")
-    public ResponseEntity<SetupDTO> updateSetup(@RequestBody SetupDTO setupDTO) {
+    public ResponseEntity<SetupDTO> updateSetup(@RequestBody SetupDTO setupDTO,
+        @RequestHeader("x-user-id") Long userId) {
         try {
             SetupDTO updatedSetup = setupService.updateSetup(setupDTO);
             return ResponseEntity.ok(updatedSetup);

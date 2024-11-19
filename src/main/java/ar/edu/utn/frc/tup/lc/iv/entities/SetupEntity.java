@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
@@ -24,7 +25,8 @@ import java.time.LocalTime;
 @Table(name = "setup")
 @Audited
 @AuditTable("setup_audit")
-public class SetupEntity {
+@EqualsAndHashCode(callSuper = true)
+public class SetupEntity extends AuditBaseEntity {
     /**
      * Unique identifier of the Setup.
      */
