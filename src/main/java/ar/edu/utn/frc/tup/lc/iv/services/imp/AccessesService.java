@@ -182,21 +182,12 @@ public class AccessesService implements IAccessesService {
     @Override
     public AccessDTO registerAccess(AccessEntity accessEntity) {
         AccessEntity savedAccess = accessesRepository.save(accessEntity);
-        AccessDTO accessDTO = new AccessDTO();
+        AccessDTO accessDTO = modelMapper.map(savedAccess, AccessDTO.class);
         accessDTO.setName(savedAccess.getAuth().getVisitor().getName());
         accessDTO.setLastName(savedAccess.getAuth().getVisitor().getLastName());
         accessDTO.setDocNumber(savedAccess.getAuth().getVisitor().getDocNumber());
         accessDTO.setDocType(savedAccess.getAuth().getVisitor().getDocumentType());
         accessDTO.setVisitorType(savedAccess.getAuth().getVisitorType());
-        accessDTO.setAction(savedAccess.getAction());
-        accessDTO.setActionDate(savedAccess.getActionDate());
-        accessDTO.setAuthorizerId(savedAccess.getCreatedUser());
-        accessDTO.setVehicleType(savedAccess.getVehicleType());
-        accessDTO.setVehicleReg(savedAccess.getVehicleReg());
-        accessDTO.setVehicleDescription(savedAccess.getVehicleDescription());
-        accessDTO.setComments(savedAccess.getComments());
-        accessDTO.setIsLate(savedAccess.getIsLate());
-        accessDTO.setAuthId(savedAccess.getAuth().getAuthId());
         return accessDTO;
     }
     /**
