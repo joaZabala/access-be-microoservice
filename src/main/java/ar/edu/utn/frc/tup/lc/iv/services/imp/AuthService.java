@@ -8,12 +8,14 @@ import java.util.List;
 import ar.edu.utn.frc.tup.lc.iv.clients.ModerationsRestClient;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserDetailDto;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.Setup.SetupDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthFilter;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthRangeRequestDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorizedRanges.VisitorAuthRequest;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.visitor.VisitorDTO;
 import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
+import ar.edu.utn.frc.tup.lc.iv.entities.SetupEntity;
 import ar.edu.utn.frc.tup.lc.iv.models.ActionTypes;
 import ar.edu.utn.frc.tup.lc.iv.models.AuthRange;
 import ar.edu.utn.frc.tup.lc.iv.models.DocumentType;
@@ -61,7 +63,11 @@ public class AuthService implements IAuthService {
      */
     @Autowired
     private AuthRepository authRepository;
-
+    /**
+     * setup service injection.
+     */
+    @Autowired
+    private SetupService setupService;
     /**
      * service of authorization ranges.
      */
@@ -438,6 +444,7 @@ public class AuthService implements IAuthService {
                     "No existen autorizaciones validas para el documento " + accessDTO.getDocNumber());
         }
 
+        SetupDTO setup = setupService.getSetup();
         if (accessDTO.getAction() == ActionTypes.EXIT) {
             AccessEntity accessEntity = accessesService.getLastAccessByDocNumber(accessDTO.getDocNumber());
 
@@ -448,7 +455,7 @@ public class AuthService implements IAuthService {
             authEntity = accessEntity.getAuth();
 
             if (authEntity != null) {
-                LocalTime targetTime = LocalTime.of(18, 30);
+                LocalTime targetTime = setup.getTargetTime();
                 LocalTime currentTime = LocalTime.now();
                 if (currentTime.isAfter(targetTime)) {
                     isNotified = true;
@@ -489,9 +496,11 @@ public class AuthService implements IAuthService {
                 if (lastAccess != null) {
                     boolean isSameDay = lastAccess.getActionDate().toLocalDate().isEqual(LocalDate.now());
                     isLate = !isSameDay
-                            && authRanges.get(0).getHourFrom().plusMinutes(15).isBefore(LocalTime.now());
+                            && authRanges.get(0).getHourFrom().plusMinutes(setup.getTimeOfGrace())
+                            .isBefore(LocalTime.now());
                 } else {
-                    isLate = authRanges.get(0).getHourFrom().plusMinutes(15).isBefore(LocalTime.now());
+                    isLate = authRanges.get(0).getHourFrom().plusMinutes(setup.getTimeOfGrace())
+                            .isBefore(LocalTime.now());
                 }
 
             }
