@@ -318,7 +318,13 @@ public class AuthService implements IAuthService {
         authDTO.setVisitor(modelMapper.map(authEntity.getVisitor(), VisitorDTO.class));
         authDTO.setActive(authEntity.isActive());
 
-
+        /*
+         * if (visitorAuthRequest.getVisitorType() == VisitorType.PROVIDER
+         * || visitorAuthRequest.getVisitorType() == VisitorType.WORKER) {
+         * authDTO.setAuthRanges(authRangeService.
+         * getAuthRangesByAuthExternalID(visitorAuthRequest.getExternalID()));
+         * } else {
+         */
         AuthRangeDTO[] rangelist = authRangeService.updateAuthRangeByAuthId(authEntity.getAuthId(),
                 visitorAuthRequest.getAuthRangeRequest());
 

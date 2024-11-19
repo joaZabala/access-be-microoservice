@@ -29,7 +29,7 @@ public class LoggingAspect {
      * @param exception the exception that was thrown
      */
     @AfterThrowing(
-            pointcut = "execution(* ar.edu.utn.frc.tup.lc.iv.services.impl.*.*(..))",
+            pointcut = "execution(* ar.edu.utn.frc.tup.lc.iv.services.imp.*.*(..))",
             throwing = "exception"
     )
     public void logAfterThrowingServices(Exception exception) {
@@ -60,7 +60,7 @@ public class LoggingAspect {
      */
     @AfterThrowing(
             pointcut = "execution(* ar.edu.utn.frc.tup.lc.iv..*(..)) "
-                    + "&& !execution(* ar.edu.utn.frc.tup.lc.iv.services.impl.*.*(..))"
+                    + "&& !execution(* ar.edu.utn.frc.tup.lc.iv.services.imp.*.*(..))"
                     + "&& !execution(* ar.edu.utn.frc.tup.lc.iv.controllers.*.*(..))",
             throwing = "exception"
     )
