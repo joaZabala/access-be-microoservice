@@ -223,23 +223,15 @@ public class AccessesService implements IAccessesService {
      * @param accessEntity AccessEntity to be mapped.
      * @return AccessDTO representing the AccessEntity.
      */
-    public AccessDTO mapToAccessDTO(AccessEntity savedAccess) {
-        AccessDTO accessDTO = new AccessDTO();
+    public AccessDTO mapToAccessDTO(AccessEntity accessEntity) {
+        AccessDTO accessDTO = modelMapper.map(accessEntity, AccessDTO.class);
 
-        accessDTO.setName(savedAccess.getAuth().getVisitor().getName());
-        accessDTO.setLastName(savedAccess.getAuth().getVisitor().getLastName());
-        accessDTO.setDocNumber(savedAccess.getAuth().getVisitor().getDocNumber());
-        accessDTO.setDocType(savedAccess.getAuth().getVisitor().getDocumentType());
-        accessDTO.setVisitorType(savedAccess.getAuth().getVisitorType());
-        accessDTO.setAction(savedAccess.getAction());
-        accessDTO.setActionDate(savedAccess.getActionDate());
-        accessDTO.setAuthorizerId(savedAccess.getCreatedUser());
-        accessDTO.setVehicleType(savedAccess.getVehicleType());
-        accessDTO.setVehicleReg(savedAccess.getVehicleReg());
-        accessDTO.setVehicleDescription(savedAccess.getVehicleDescription());
-        accessDTO.setComments(savedAccess.getComments());
-        accessDTO.setIsLate(savedAccess.getIsLate());
-        accessDTO.setAuthId(savedAccess.getAuth().getAuthId());
+        accessDTO.setAuthorizerId(accessEntity.getCreatedUser());
+        accessDTO.setDocType(accessEntity.getAuth().getVisitor().getDocumentType());
+        accessDTO.setName(accessEntity.getAuth().getVisitor().getName());
+        accessDTO.setLastName(accessEntity.getAuth().getVisitor().getLastName());
+        accessDTO.setDocNumber(accessEntity.getAuth().getVisitor().getDocNumber());
+        accessDTO.setVisitorType(accessEntity.getAuth().getVisitorType());
 
         return accessDTO;
     }
