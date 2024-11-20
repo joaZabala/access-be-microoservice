@@ -1,0 +1,46 @@
+package ar.edu.utn.frc.tup.lc.iv.entities;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
+
+import java.time.LocalTime;
+/**
+ * Entity for configuring key time settings in the system.
+ * Audited in the "setup_audit" table.
+ */
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "setup")
+@Audited
+@AuditTable("setup_audit")
+@EqualsAndHashCode(callSuper = true)
+public class SetupEntity extends AuditBaseEntity {
+    /**
+     * Unique identifier of the Setup.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+    /**
+     * Grace period in minutes before marking an entry as late.
+     */
+    private Integer timeOfGrace;
+    /**
+     * Final time after which employees
+     * must leave the facility.
+     */
+    private LocalTime targetTime;
+}

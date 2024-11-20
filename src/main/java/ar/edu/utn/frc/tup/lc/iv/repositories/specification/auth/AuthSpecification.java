@@ -49,6 +49,10 @@ public class AuthSpecification {
                 predicates.add(criteriaBuilder.equal(root.get("visitorType"), filter.getVisitorType()));
             }
 
+            if (filter.getCreatedUser() != null && filter.getCreatedUser() > 0) {
+                predicates.add(criteriaBuilder.equal(root.get("createdUser"), filter.getCreatedUser()));
+            }
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
