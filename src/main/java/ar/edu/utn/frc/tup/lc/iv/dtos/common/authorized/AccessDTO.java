@@ -124,4 +124,10 @@ public class AccessDTO {
     @JsonProperty("is_late")
     private Boolean isLate;
 
+    /**
+     * The id of the auth.
+     */
+    @JsonProperty("auth_id")
+    private Long authId;
+
 }

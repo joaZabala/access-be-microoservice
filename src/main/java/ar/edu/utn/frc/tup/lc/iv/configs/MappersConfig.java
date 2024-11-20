@@ -3,8 +3,13 @@ package ar.edu.utn.frc.tup.lc.iv.configs;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
+import ar.edu.utn.frc.tup.lc.iv.entities.AccessEntity;
+
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,7 +26,28 @@ public class MappersConfig {
      */
     @Bean
     public ModelMapper modelMapper() {
-        return new ModelMapper();
+        ModelMapper modelMapper = new ModelMapper();
+
+        // Configure specific mapping for AccessEntity to AccessDTO
+        PropertyMap<AccessEntity, AccessDTO> accessMapping = new PropertyMap<AccessEntity, AccessDTO>() {
+            @Override
+            protected void configure() {
+                map().setAuthId(source.getAuth().getAuthId());
+                skip().setAuthDocNumber(null);
+                skip().setAuthDocType(null);
+                map().setVehicleType(source.getVehicleType());
+                map().setVehicleReg(source.getVehicleReg());
+                map().setVehicleDescription(source.getVehicleDescription());
+                map().setComments(source.getComments());
+                map().setAction(source.getAction());
+                map().setActionDate(source.getActionDate());
+                map().setIsLate(source.getIsLate());
+            }
+        };
+
+        modelMapper.addMappings(accessMapping);
+
+        return modelMapper;
     }
 
     /**

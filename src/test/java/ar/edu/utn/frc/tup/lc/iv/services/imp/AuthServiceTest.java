@@ -1,7 +1,9 @@
 package ar.edu.utn.frc.tup.lc.iv.services.imp;
 
+import ar.edu.utn.frc.tup.lc.iv.clients.ModerationsRestClient;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserDetailDto;
 import ar.edu.utn.frc.tup.lc.iv.clients.UserRestClient;
+import ar.edu.utn.frc.tup.lc.iv.dtos.common.Setup.SetupDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AccessDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthDTO;
 import ar.edu.utn.frc.tup.lc.iv.dtos.common.authorized.AuthFilter;
@@ -71,6 +73,12 @@ class AuthServiceTest {
 
     @MockBean
     private UserRestClient userRestClient;
+
+    @MockBean
+    private SetupService setupService;
+
+    @MockBean
+    private ModerationsRestClient moderationsRestClient;
 
     @MockBean(name = "modelMapper")
     private ModelMapper modelMapper;
@@ -164,6 +172,12 @@ class AuthServiceTest {
         assertEquals(1, result.size());
         verify(visitorRepository).findByDocNumber(123456L);
         verify(authRepository).findByVisitor(visitorEntity);
+    }
+
+    @Test
+    void getAuthsByDocNumberVisitorExceptionTest(){
+        when(visitorRepository.findByDocNumber(123456L)).thenReturn(null);
+        assertThrows(EntityNotFoundException.class, () -> authService.getAuthsByDocNumber(123456L));
     }
 
     @Test
@@ -270,11 +284,14 @@ class AuthServiceTest {
         AccessDTO accessDTO = new AccessDTO();
         accessDTO.setDocNumber(documentNumber);
         accessDTO.setAction(ActionTypes.ENTRY);
+        accessDTO.setAuthId(1L);
 
         VisitorEntity mockVisitor = new VisitorEntity();
         when(visitorRepository.findByDocNumber(documentNumber)).thenReturn(mockVisitor);
 
         when(authRepository.findByVisitor(mockVisitor)).thenReturn(Collections.emptyList());
+
+        when(authRepository.findById(1L)).thenReturn(Optional.empty());
 
         when(authService.getValidAuthsByDocNumber(documentNumber)).thenReturn(Collections.emptyList());
 
@@ -284,6 +301,123 @@ class AuthServiceTest {
 
         assertEquals("No existen autorizaciones validas para el documento 12345", thrown.getMessage(),
                 "Exception message does not match expected text");
+    }
+
+
+    @Test
+    void authorizeVisitorEmptyAuhtId() {
+        Long documentNumber = 12345L;
+        AccessDTO accessDTO = new AccessDTO();
+        accessDTO.setDocNumber(documentNumber);
+        accessDTO.setAction(ActionTypes.ENTRY);
+
+
+        VisitorEntity mockVisitor = new VisitorEntity();
+        when(visitorRepository.findByDocNumber(documentNumber)).thenReturn(mockVisitor);
+
+        when(authRepository.findByVisitor(mockVisitor)).thenReturn(Collections.emptyList());
+
+        when(authRepository.findById(1L)).thenReturn(Optional.empty());
+
+        when(authService.getValidAuthsByDocNumber(documentNumber)).thenReturn(Collections.emptyList());
+
+        EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () -> {
+            authService.authorizeVisitor(accessDTO, 1L);
+        });
+
+        assertEquals("No se encontró la autorización para el ingreso", thrown.getMessage(),
+                "Exception message does not match expected text");
+    }
+
+    @Test
+    void authorizeVisitor() {
+        Long documentNumber = 12345L;
+        AccessDTO accessDTO = new AccessDTO();
+        accessDTO.setDocNumber(documentNumber);
+        accessDTO.setAction(ActionTypes.ENTRY);
+        accessDTO.setAuthId(1L);
+        accessDTO.setVisitorType(VisitorType.OWNER);
+
+        AuthRangeEntity authRangeEntity = new AuthRangeEntity();
+        authRangeEntity.setAuthId(authEntity);
+        authRangeEntity.setDaysOfWeek("MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY");
+
+
+        VisitorEntity mockVisitor = new VisitorEntity();
+        when(visitorRepository.findByDocNumber(documentNumber)).thenReturn(mockVisitor);
+
+        when(authRepository.findByVisitor(mockVisitor)).thenReturn(Collections.emptyList());
+
+        when(authRepository.findById(1L)).thenReturn(Optional.of(authEntity));
+
+        when(authRangeRepository.findByAuthId(authEntity)).thenReturn(Collections.singletonList(authRangeEntity));
+        when(setupService.getSetup()).thenReturn(new SetupDTO(15 , LocalTime.of(18, 0)));
+        when(authService.getValidAuthsByDocNumber(documentNumber)).thenReturn(Collections.emptyList());
+        when(accessesService.getLastAccessByAuthId(authEntity.getAuthId())).thenReturn(null);
+        when(accessesService.canDoAction(accessDTO.getVehicleReg() , accessDTO.getAction())).thenReturn(true);
+        when(accessesService.registerAccess(any(AccessEntity.class))).thenReturn(accessDTO);
+
+        AccessDTO result = authService.authorizeVisitor(accessDTO, 1L);
+
+        assertNotNull(result);
+        assertEquals(VisitorType.OWNER, result.getVisitorType());
+        assertEquals(1L , result.getAuthId());
+    }
+
+
+    @Test
+    void authorizeExitWithoutEntry() {
+        Long documentNumber = 12345L;
+        AccessDTO accessDTO = new AccessDTO();
+        accessDTO.setDocNumber(documentNumber);
+        accessDTO.setAction(ActionTypes.EXIT);
+        accessDTO.setAuthId(1L);
+        accessDTO.setVisitorType(VisitorType.OWNER);
+
+
+
+
+        VisitorEntity mockVisitor = new VisitorEntity();
+        when(visitorRepository.findByDocNumber(documentNumber)).thenReturn(mockVisitor);
+        when(authRepository.findByVisitor(mockVisitor)).thenReturn(Collections.emptyList());
+        when(authRepository.findById(1L)).thenReturn(Optional.empty());
+        when(setupService.getSetup()).thenReturn(new SetupDTO(15 , LocalTime.of(18, 0)));
+
+        EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () -> {
+            authService.authorizeVisitor(accessDTO, 1L);
+        });
+
+        assertEquals("No se encontró ningun ingreso para el numero de documento "+accessDTO.getDocNumber(), thrown.getMessage(),
+                "Exception message does not match expected text");
+
+    }
+
+    @Test
+    void authorizeVisitorExit_InconsistentAccess_Flagged() {
+        Long documentNumber = 12345L;
+        AccessDTO accessDTO = new AccessDTO();
+        accessDTO.setDocNumber(documentNumber);
+        accessDTO.setAction(ActionTypes.EXIT);
+        accessDTO.setAuthId(1L);
+        accessDTO.setVisitorType(VisitorType.WORKER);
+        accessDTO.setVehicleReg("ABC123");
+
+        AccessEntity lastAccessEntity = new AccessEntity();
+        lastAccessEntity.setAuth(authEntity);
+
+
+        when(accessesService.getLastAccessByDocNumber(documentNumber)).thenReturn(lastAccessEntity);
+        when(setupService.getSetup()).thenReturn(new SetupDTO(15, LocalTime.of(18, 0)));
+        when(accessesService.canDoAction(accessDTO.getVehicleReg(), accessDTO.getAction())).thenReturn(false);
+        when(accessesService.registerAccess(any(AccessEntity.class))).thenAnswer(invocation -> {
+            AccessEntity capturedEntity = invocation.getArgument(0);
+            assertTrue(capturedEntity.getIsInconsistent(), "Access should be flagged as inconsistent");
+            return accessDTO;
+        });
+
+        AccessDTO result = authService.authorizeVisitor(accessDTO, 1L);
+
+        assertNotNull(result);
     }
 
     @Test
@@ -349,6 +483,13 @@ class AuthServiceTest {
         assertNotNull(result);
         assertFalse(authEntity.isActive());
         verify(authRepository).save(authEntity);
+    }
+
+    @Test
+    void deleteAuthorizationThrowTest() {
+
+        when(authRepository.findByAuthId(1L)).thenReturn(null);
+        assertThrows(EntityNotFoundException.class, () -> authService.deleteAuthorization(1L));
     }
 
     @Test
