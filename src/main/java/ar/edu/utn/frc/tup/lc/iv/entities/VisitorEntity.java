@@ -60,7 +60,7 @@ public class VisitorEntity extends AuditBaseEntity {
     /**
      * Document Number of the authorized person.
      */
-    @Column(name = "doc_number")
+    @Column(name = "doc_number", unique = true)
     private Long docNumber;
     /**
      * Birth Date of the authorized person.
