@@ -36,4 +36,8 @@ public class AuthFilter {
      * End date for filtering access records.
      */
     private LocalDate toDate;
+    /**
+     * filter for own registers.
+     */
+    private Long createdUser;
 }
