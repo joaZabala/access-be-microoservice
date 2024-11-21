@@ -41,7 +41,7 @@ public class VisitorSpecification {
                 predicates.add(criteriaBuilder.equal(root.get("isActive"), filter.getActive()));
             }
 
-            if (filter.getCreatedUser() != null) {
+            if(filter.getCreatedUser() != null) {
                 predicates.add(criteriaBuilder.equal(root.get("createdUser"), filter.getCreatedUser()));
             }
 
